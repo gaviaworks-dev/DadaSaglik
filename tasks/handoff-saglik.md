@@ -13,8 +13,9 @@
 - Ajanlar commit atmaz; iki ajan aynı dosyaya yazmaz.
 
 ## ▶ ŞU AN
-- ☑ 1 Araştırma (Kids repo, seçki kalıbı, yerel sqlite verisi) · ◐ partner ajanı `partner-arastirma` (tasks/saglik-kaynaklar.md + logolar varlik/saglik/partner/ham/) · ◐ içerik ajanı `icerik` (veri/icerik.json)
+- ☑ 1 Araştırma (Kids repo, seçki kalıbı, yerel sqlite verisi) · ◐ partner ajanı `partner-arastirma` (tasks/saglik-kaynaklar.md + logolar varlik/saglik/partner/ham/) · ☑ içerik ajanı `icerik` (veri/icerik.json)
 - ☑ 2 Plan tasks/saglik-plan.md
 - ☑ 3 Kur: build.mjs, src/saglik/{malzeme,modlar,ortak}.mjs, sayfalar {hub,mod,dolap,tarif,bilgi}, saglik.css + css/mod.css, saglik.js + js/{katalog,dolap,detay}.js · sunucu 8790
-- ◐ 4 Kapılar: ☑ mod 14/14 · ☑ davranış yeşil · ☐ varlık · ☐ radius · ☐ boşluk · ☐ denge · ☐ partner logoları webp'ye (ajan bitince) · ☐ eksik şeffaf ikonlar (galeta, soya sosu… şimdilik mod ikonu yer tutucu)
-- ☐ 5 git ilk commit'ler + GitHub repo gaviaworks-dev/DadaSaglik + push + Pages · ☐ 6 canlı kapılar · ☐ 7 rapor (6 mod 1440+390 görüntü, partner tablosu, mod başına tarif sayısı) → DUR
+- ☑ 4 Kapılar YEREL YEŞİL: mod 14/14 · davranış · varlık 48/48 · radius 28/28 · boşluk 40/40 · denge 44/44 · partner logoları (17 webp/svg) · eksik şeffaf ikon 3 (soya sosu, krema, ayran → mod ikonu yer tutucu; kredi harcanmadı, taban 560)
+- ☑ 5 9 commit (db1bfca…b66def9) · repo gaviaworks-dev/DadaSaglik (public) push · Pages açıldı (main /) · Pages derlendi (b66def9)
+- ☑ 6 CANLI kapılar yeşil: mod 14/14 · davranış · varlık 48/48 · radius 28/28 · denge 44/44 · boşluk 40/40 · görüntüler rapor/tmp/teslim/ (pafta-1440.png, pafta-390.png) · ☐ 7 rapor (6 mod 1440+390 görüntü, partner tablosu, mod başına tarif sayısı) → DUR
