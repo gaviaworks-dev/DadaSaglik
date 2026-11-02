@@ -5,3 +5,5 @@
    çözülür") bu ağırlıkları ExtraBold dosyasına bağlar; burada aynı Gastro dosyası, aynı aile adıyla 600–900 aralığına bağlanır.
    Yeni font dosyası yok; URL tokens CSS'teki ile aynı (tek indirme). Yalnız Health sayfalarında yüklenir (araclar/build.mjs). */
 @font-face { font-family: Gilroy; src: url("../../gastro/varliklar/fonts/gilroy/Gilroy-ExtraBold.woff2") format("woff2"); font-weight: 600 900; font-style: normal; font-display: swap; }
+/* Gastro GilroyBd yalnız 700 tanımlı; detaydaki 800 sayaçlar (şef kutusu, alışveriş listesi) sahte kalına düşmesin: aynı ExtraBold dosyası */
+@font-face { font-family: GilroyBd; src: url("../../gastro/varliklar/fonts/gilroy/Gilroy-ExtraBold.woff2") format("woff2"); font-weight: 701 900; font-style: normal; font-display: swap; }

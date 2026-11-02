@@ -441,3 +441,6 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
 .sg-kaydirici .sg-kaydirici__iz--kart > li { flex: 1 0 min(300px, 84%); display: flex; }
 .sg-kaydirici .sg-kaydirici__iz--kart > li > .sg-kart { flex: 1; }
 @media (prefers-reduced-motion: reduce) { .sg-kaydirici .sg-kaydirici__iz { scroll-behavior: auto; } }
+
+/* Izgara öğesi kaydırıcıyı taşırken min-content genişliğine uzamasın (390: H1 ekran dışına taşıyordu) */
+.sg-secki-izgara > * { min-width: 0; }

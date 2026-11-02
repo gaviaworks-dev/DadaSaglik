@@ -19,14 +19,15 @@ const BILGI = MODSAY.map((f) => f.replace('.html', '-bilgi.html'));
   const metin = (f) => readFileSync(f, 'utf8').replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ');
   const iddia = saglik.flatMap((f) => [...metin(f).matchAll(/[^.]{0,40}(tedavi eder|tedavi etmek|iyileştir|şifa|detoks|hastalığı önler|geçirir)[^.]{0,20}/gi)].map((m) => f + ': ' + m[0].trim()));
   ok(!iddia.length, 'tıbbi iddia yok (tedavi eder / iyileştirir / şifa / detoks)' + (iddia.length ? ' → ' + iddia.slice(0, 3).join(' | ') : ''));
-  for (const f of [...MODSAY, ...BILGI, 'saglik-tarif.html']) { const n = metin(f).split(UYARI).length - 1; ok(n === 1, `${f}: uyarı satırı tam 1 kez (${n})`); }
+  // tarif detayı istemcide çizilir: uyarı detay.js şablonunda
+  for (const f of [...MODSAY, ...BILGI, 'varlik/saglik/js/detay.js']) { const n = metin(f).split(UYARI).length - 1; ok(n === 1, `${f}: uyarı satırı tam 1 kez (${n})`); }
   const onay = saglik.flatMap((f) => [...metin(f).replace(/Kurumların bu sayfayı onayladığı ya da desteklediği anlamına gelmez\./g, '').matchAll(/[^.]{0,30}(onayladı|onaylı|destekliyor|desteğiyle|resmî partner|resmi partner|iş ortağımız)[^.]{0,20}/gi)].map((m) => f + ': ' + m[0].trim()));
   ok(!onay.length, 'partner: onay/destek ifadesi yok' + (onay.length ? ' → ' + onay.slice(0, 3).join(' | ') : ''));
   for (const f of BILGI) {
     const h = readFileSync(f, 'utf8'); const b = h.match(/<section class="sg-bolum sg-partnerler"[^>]*>[\s\S]*?<\/section>/);
     if (!b) { ok(false, `${f}: iş birliği bölümü yok`); continue; }
     const kart = (b[0].match(/class="sg-kart sg-partner"/g) || []).length, logo = (b[0].match(/class="sg-partner__logo"><img/g) || []).length;
-    const serit = h.match(/<div class="sg-logo-serit[^"]*" data-yalniz-admin="1">[\s\S]*?<\/ul><\/div>/);
+    const serit = h.match(/<div class="sg-logo-serit[^"]*"[^>]*data-yalniz-admin="1">[\s\S]*?<\/ul>/);
     ok(/data-yalniz-admin="1"/.test(b[0]) && kart > 0 && logo === kart && /rel="noopener nofollow"/.test(b[0]) && !/Olası iş birliği/.test(h), `${f}: iş birliği yalnız-admin, ${kart} kart ${logo} logo, "Olası iş birliği" etiketi yok`);
     ok(!!serit && (serit[0].match(/<img/g) || []).length === logo, `${f}: hero banner'da yalnız-admin logo şeridi (${serit ? (serit[0].match(/<img/g) || []).length : 0} logo)`);
   }
@@ -131,9 +132,9 @@ ok(await p.$eval('.sg-dcip[data-k="sogan"]', (c) => c.classList.contains('sg-dci
 
 // Detay: ikame uygulanmış malzeme listesi
 await p.goto(T + 'saglik-tarif.html?t=babagannus-tahinli-patlican-mezesi&mod=kalp', { waitUntil: 'networkidle' });
-await p.waitForSelector('[data-sg-malzeme] li');
-ok(await p.locator('[data-sg-malzeme] del').count() > 0 && await p.locator('[data-sg-malzeme] ins').count() > 0, 'detay: ikame edilen malzeme üstü çizili + karşılığı');
-ok(/Kalp dostu uyumlu/.test(await p.textContent('[data-sg-detay]')), 'detay: mod uyum rozeti');
+await p.waitForSelector('.ing-list .ing-row');  // Gastro detay şablonu (H20): ikame satır içinde <s>eski</s> yeni <small>Akıllı ikame</small>
+ok(await p.locator('.ing-list .ing-row s').count() > 0 && await p.locator('.ing-list .ing-row small', { hasText: 'Akıllı ikame' }).count() > 0, 'detay: ikame edilen malzeme üstü çizili + karşılığı');
+ok(/Kalp dostu/i.test(await p.textContent('.rd-badges')), 'detay: mod uyum rozeti (.rd-badges .tbadge)');
 ok(!jsHata.length, 'JS hatası yok' + (jsHata.length ? ' → ' + jsHata.slice(0, 2).join(' | ') : ''));
 
 // Reduced motion: sticky geçişi anında

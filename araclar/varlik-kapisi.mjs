@@ -28,7 +28,7 @@ for (const w of GENISLIK) {
       const out = { yatay: document.documentElement.scrollWidth - innerWidth, kirik: [], kesik: [], gorselsiz: [], bitisik: [], kesim: [], alt: [] };
       const kids = document.body.classList.contains('pg-saglik');
       // kırık görsel
-      document.querySelectorAll('img').forEach((i) => { if (i.complete && i.naturalWidth === 0 && getComputedStyle(i).display !== 'none' && i.getBoundingClientRect().width > 0) out.kirik.push(i.getAttribute('src')); });
+      document.querySelectorAll('img').forEach((i) => { if (i.complete && i.naturalWidth === 0 && i.getAttribute('src') && getComputedStyle(i).display !== 'none' && i.getBoundingClientRect().width > 0) out.kirik.push(i.getAttribute('src')); });
       if (!kids) return out;
       // kesilme: ilk ekrandaki h1/h2/hero görselleri yapışkan Sağlık menüsünün altında kalmasın; başlıklar taşmasın
       const ust = document.querySelector('.sg-ust'); const ustAlt = ust ? ust.getBoundingClientRect().bottom : 0;
@@ -42,7 +42,7 @@ for (const w of GENISLIK) {
       // V2 (lead kararı 2026-11-01): profesyonel dil metin-only yardımcı bölümleri kabul eder → tema / güven / araç durumu /
       // araç açıklama bölümleri muaf: .sg-tema-alan, .sg-dguven-bolum, #atSuren, güven/açıklama kutusu taşıyan bölüm
       // (.sg-ar-guven, .sg-mguven, .sg-dguven, .sg-onay), ya da data-varlik-serbest="gerekçe".
-      const YARDIMCI = '.sg-tema-alan, .sg-dguven-bolum, #atSuren, [data-varlik-serbest]';
+      const YARDIMCI = '.sg-tema-alan, .sg-dguven-bolum, #atSuren, [data-varlik-serbest], .sg-sekme-bolum, .sg-ok-suz, .sg-okumalar'; // sekme bandı · yazı süzgeç şeridi · okuma satranç kartları (Gastro .topic-card görselsiz)
       document.querySelectorAll('.sg-sayfa section').forEach((sec) => {
         if (sec.closest('[hidden]') || sec.getBoundingClientRect().height < 80) return;
         if (sec.matches(YARDIMCI) || sec.querySelector('.sg-ar-guven, .sg-mguven, .sg-dguven, .sg-onay')) { out.muaf = (out.muaf || 0) + 1; return; }

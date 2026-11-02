@@ -19,8 +19,8 @@ const t = await chromium.launch();
 let R = null, R2 = null, R3 = null, kirmizi = 0, toplam = 0;
 // Etiket köşesi (Beyar 2 Kas): Gastro --radius-sm (.r-chip/.chip/.cbx) yalnız etiket/rozet/chip/onay kutusu sınıflarında
 const PANEL = '.sg-secki-hero + section';   // Gastro .lst-sec hero altı paneli: 22px üst köşe
-const KART = '.sg-kart, .sg-mod-kart__medya > img, .r-card, .sg-secki-kutu, .lst-side, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge';
-const ETIKET = '.r-chip, .sg-r-ikame, .sg-sekmeler__n, .sg-uyum, .sg-al, .sg-chip, .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden, .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx';
+const KART = '.sg-kart, .sg-mod-kart__medya > img, .r-card, .sg-secki-kutu, .lst-side, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge, .sg-konu-kart, .sg-mkart';
+const ETIKET = '.r-chip, .sg-r-ikame, .sg-sekmeler__n, .sg-uyum, .sg-al, .sg-chip, .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden, .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx, .sg-ok-sure, .sg-ok-suz__n';
 { // ölçüm: Gastro "Giriş Yap"
   const p = await t.newPage({ viewport: { width: 1440, height: 900 } });
   await p.goto(TABAN + 'index.html', { waitUntil: 'domcontentloaded' });
@@ -49,6 +49,8 @@ for (const w of GENISLIK) {
       for (const e of document.querySelectorAll('body *')) {
         if (e instanceof SVGElement || /^(SCRIPT|STYLE|TEMPLATE|BR|SOURCE|TD|TH|TR|THEAD|TBODY|OPTION)$/.test(e.tagName)) continue;
         if (!kidsMi(e)) continue;
+        if (e.closest('.lst-side, .lst-bar, .r-card, .disc-tabs, .sg-alerjen-sec__liste') && !e.matches('.lst-side')) continue; // Gastro bileşeni (filtre/sıralama/kart/sekme): Gastro'nun kendi köşesi (parite kapısı ölçer)
+        if (e.matches('#lstSide')) continue; // Gastro mobil filtre sayfası (24px üst köşe, Gastro tarif-liste.css)
         const c = getComputedStyle(e), r = e.getBoundingClientRect();
         if (!gorunur(e, c, r) || !e.getClientRects().length) continue;
         const ham = ['TopLeft', 'TopRight', 'BottomRight', 'BottomLeft'].map((k) => { const v = c['border' + k + 'Radius'].split(' ')[0]; return v.endsWith('%') ? parseFloat(v) / 100 * r.width : parseFloat(v) || 0; });
