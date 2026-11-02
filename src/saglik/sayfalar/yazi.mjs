@@ -42,6 +42,48 @@ export function kaynakHtml(o, k) {
     : `<span>${o.esc(k)}</span>`;
 }
 
+/* H32 (Beyar 3 Kas): yazı gövdesinde anahtar terimler kalın. Yazı başına elle seçilmiş 3–6 terim; her terim yazıda
+   YALNIZ İLK geçtiği yerde <strong> olur (aşırı kalın yok). Eşleşme Türkçe büyük/küçük harf duyarsız, terimin geçtiği
+   kelime ekleriyle birlikte kalınlaşır ("çapraz bulaşmadır" → tüm kelime). */
+const TERIM = {
+  'colyak-capraz-bulasma': ['çapraz bulaşma', 'ayrı', 'kırıntı', 'glutensiz olanı önce'],
+  'colyak-gizli-gluten': ['paketli ürünler', 'içindekiler listesi', 'malt', 'buğday nişastası', 'uyarı satırları'],
+  'colyak-glutensiz-unlar': ['esneklik ve yapı', 'birkaç unu karıştırmak', 'pirinç unu', 'karabuğday unu', 'ksantan gam', 'psyllium'],
+  'diyabet-glisemik-indeks': ['glisemik indeks', 'tabağın bütünü', 'lif, protein ve yağ', 'tabağın yarısını sebzeyle'],
+  'diyabet-tatlandiricilar': ['hacim, nem, renk ve gevreklik', 'stevia', 'eritritol', 'karamelleşmez'],
+  'diyabet-lif-protein': ['miktarı ve neyle birlikte', 'lif ve protein', 'tam tahıllı ekmek', 'ara öğün'],
+  'alerji-eser-miktar': ['içindekiler listesi', 'eser miktarda içerebilir', 'aynı bantta üretilmiştir', 'partiden partiye'],
+  'alerji-misafir-sofrasi': ['önceden sormak', 'menüyü sade tutmak', 'önce, temiz tezgâhta', 'ayrı servis'],
+  'alerji-ikameler': ['başka bir alerjen getirmemesi', 'keten tohumu', 'elma püresi', 'sirkeyle karbonat'],
+  'laktoz-ispa-farki': ['laktoz intoleransı', 'İSPA', 'laktozsuz inek sütü uygun değildir', 'kazein'],
+  'laktoz-sutsuz-pisirme': ['zaten sütsüz', 'zeytinyağı', 'hindistan cevizi yağı', 'besin mayası'],
+  'laktoz-bitkisel-sutler': ['yulaf sütü', 'pirinç sütü', 'badem sütü', 'soya sütü', 'hindistan cevizi sütü'],
+  'ibs-fodmap-nedir': ['kısa zincirli karbonhidrat', 'geçici bir düzen', 'üç aşama', 'diyetisyen'],
+  'ibs-sogansiz-lezzet': ['fruktan', 'yağda çözünmez', 'yeşil kısmı', 'asafetida'],
+  'ibs-porsiyon-mantigi': ['porsiyon büyüdükçe', 'miktar', 'süzülüp durulanmış', 'birden fazla sınırda besin'],
+  'kalp-dash-tabak': ['DASH', 'tabağın bütününe', 'tuz, doymuş yağ ve eklenmiş şeker', 'tuz miktarında'],
+  'kalp-tuzsuz-lezzet': ['ekşi, aromatik, acı ve kavrulmuş', 'ekşilik', 'kuru tavada', 'taze ot'],
+  'kalp-gizli-sodyum': ['tuzluktan değil', 'etiket okumak', '100 gram', '2,5 katı', 'doymuş yağ'],
+};
+const esc = (x) => String(x ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); // ortak.mjs esc ile aynı
+const _kucuk = (x) => x.toLocaleLowerCase('tr');
+/** Paragraf dizisinde (kaçışlı HTML) her terimin ilk geçişini kelime sonuna kadar <strong> yapar. */
+function kalinla(slug, paragraflar) {
+  const kalan = new Set(TERIM[slug] || []);
+  return paragraflar.map((ham) => {
+    let html = esc(ham);
+    for (const t of [...kalan]) {
+      const iz = _kucuk(html).indexOf(_kucuk(esc(t)));
+      if (iz < 0) continue;
+      const once = iz === 0 ? '' : html[iz - 1];
+      if (once && /[\p{L}\p{N}]/u.test(once)) continue; // kelime ortası değil
+      let son = iz + esc(t).length; while (son < html.length && /[\p{L}\p{N}]/u.test(html[son])) son++;
+      html = html.slice(0, iz) + '<strong>' + html.slice(iz, son) + '</strong>' + html.slice(son);
+      kalan.delete(t);
+    }
+    return html;
+  });
+}
 const ipucuSay = (a) => (a.maddeler || []).length;
 const kaynakSay = (a) => (a.kaynaklar || []).length;
 
@@ -104,7 +146,7 @@ export default async function (o) {
  <div class="wrap">
   <div class="sg-ok-kolon">
    <p class="sg-ok-giris">${esc(a.ozet)}</p>
-   ${(a.govde || []).map((p) => `<p>${esc(p)}</p>`).join('\n   ')}
+   ${kalinla(a.slug, a.govde || []).map((p) => `<p>${p}</p>`).join('\n   ')}
    ${ipucuSay(a) ? `<h2>Mutfakta pratik adımlar</h2>
    <ul class="sg-ok-liste">${a.maddeler.map((x) => `<li>${ui('tik', 16)}<span>${esc(x)}</span></li>`).join('')}</ul>` : ''}
    ${kaynakSay(a) ? `<h2>Kaynaklar</h2>

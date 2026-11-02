@@ -15,6 +15,8 @@
 ## ▶ ŞU AN
 - ☑ H31 (Beyar 3 Kas) canlı: saglik-tarif.html = canlı Gastro tarif detayı (donör: dadagastro.com/tarif/sebzeli-tavuk-sote-tavada-pratik, Beyar'ın açık izniyle genişlik başına TEK salt okuma yüklemesi; DOM/CSS/görüntüler rapor/tmp/h31/canli/). 15 bölüm 1440/390 Δ0 (fark yalnız mod çipi, uyarı satırı ve yerel veride olmayan şef/eşleşme satırı); yan yana rapor/tmp/h31/yan-yana/.
   Değerlendirmeler (Beyar: "prototip, yapay değerlendirme koy, Dada Gastro'daki gibi"): puan/sayılar kayıtlı değerler (kartla aynı), 5→1 dağılım slug tohumlu örnek (toplam = kayıtlı sayı, ortalama ≈ kayıtlı), örnek yorum listesi data-ornek="1" — GERÇEK KULLANICI DEĞİL; Gastro'ya taşınırken gerçek veriyle değiştirilmeli (tarif.mjs tohum/ornekDagilim, detay.js ornekYorumlar).
+- ☑ H30 + H32 (Beyar 3 Kas; önceden iletilmemişti, başlıklarına göre yapıldı) canlı: yazı detayında gövde paragrafları iki yana yaslı (okuma.css; madde satırları sola dayalı — 390'da boşluk açılıyordu; Chrome Türkçe hecelemeyi uygulamıyor, dar ekranda kelime arası hafif açılabilir) · anahtar terimler kalın: yazi.mjs TERIM sözlüğü, yazı başına 3–6 terim, her terim yalnız ilk geçişte <strong>. Duman/font/davranış YEŞİL.
+▶ DUR — yeni tur Beyar'dan.
 
 ## ▶ SIRADAKİ
 - H31 kalan farklar (veri/kapsam): sote'de şef yok (yerel sef_id NULL; canlıda var) · canlıdaki "Yanında ne iyi gider?" eşleşme satırı yerel veride/kaynakta yok · canlı r-card'da kaydet kalbi (r-save) var, Health kartında yok (kart kodu; yerel Gastro donöründe de yok) · Health alt menüsü header ile kırıntı arasında (hero 1440'ta 62px aşağıda).

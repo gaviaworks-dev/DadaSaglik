@@ -156,3 +156,8 @@ a.sg-ok-hero__kat:hover { text-decoration: underline; text-underline-offset: 3px
   .sg-ok-suz__chipler { padding-right: var(--sg-s4); }
 }
 @media (prefers-reduced-motion: reduce) { .sg-ok * { transition: none !important; } }
+
+/* H30 (Beyar 3 Kas): yazı detayında paragraflar iki yana yaslı (kısa madde satırları sola dayalı: 390da kelime arası boşluk açılıyordu); Türkçe heceleme açık (lang="tr"), dar ekranda boşluk açılmasın diye */
+.sg-ok-kolon > p:not(.sg-ok-uyari) { text-align: justify; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+/* H32: anahtar terim vurgusu = Gastro kalın metni (strong) */
+.sg-ok-kolon > p strong { font-weight: 700; color: var(--ok-murekkep, inherit); }
