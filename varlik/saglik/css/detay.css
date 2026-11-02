@@ -4,6 +4,3 @@
    0) Alt menü header'ın altında (mod sayfalarındaki .sg-sayfa boşluğunun aynısı); Gastro .rd-top'un header boşluğunu alt menü üstlenir. */
 .pg-tarif-detay .page-main > .sg-ust { margin-top: calc(var(--header-offset, 112px) + 1px); }
 .pg-saglik.pg-tarif-detay .rd-top { padding-top: 16px; } /* Gastro: header altı → sayfa yolu 15–16px (1440 ölçüldü) */
-/* 1) Puan formu (#revForm, Gastro'nun üye kalıbı): Gastro misafirde gizler (tarif-detay.css `body:not(.is-auth) #revForm`); prototipte
-      oturum yok, yıldız seçimi yerelde çalışsın diye görünür — gönderim Gastro'nun giriş kapısını açar, yorum yayımlanmaz. */
-.pg-saglik.pg-tarif-detay:not(.is-auth) #revForm { display: flex; }

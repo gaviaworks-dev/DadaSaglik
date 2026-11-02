@@ -21,13 +21,16 @@ ad_ = {r['id']: r['ad'] for r in c.execute('select id, ad from eksen_degerleri')
 kat_ad = {r['slug']: r['ad'] for r in c.execute("select ed.slug, ed.ad from eksen_degerleri ed join eksenler e on e.id = ed.eksen_id where e.kod = 'kategori'")}
 
 malz = {}
+# H31: Gastro ölçü balonunun gram satırı (SunumHaritasi::olcuNotu) — olcu_donusumleri: malzeme id → ölçü slug → gram
+olcu_gram = {(r[0], r[1]): r[2] for r in c.execute('select d.malzeme_id, b.slug, d.gram_karsiligi from olcu_donusumleri d join olcu_birimleri b on b.id = d.olcu_birimi_id')}
 for r in c.execute('''select tm.tarif_id, tm.grup_basligi, tm.sira, tm.miktar, coalesce(ob.kisa_ad, ob.ad, tm.olcu_birimi_slug) birim,
-                      m.ad mad, m.slug mslug, tm.serbest_ad, tm.aciklama
+                      m.ad mad, m.slug mslug, tm.serbest_ad, tm.aciklama, tm.malzeme_id, tm.olcu_birimi_slug
                       from tarif_malzemeleri tm left join malzemeler m on m.id = tm.malzeme_id
                       left join olcu_birimleri ob on ob.id = tm.olcu_birimi_id order by tm.tarif_id, tm.sira'''):
     malz.setdefault(r['tarif_id'], []).append({
         'grup': r['grup_basligi'] or None, 'miktar': r['miktar'], 'birim': r['birim'] or '',
-        'ad': (r['mad'] or r['serbest_ad'] or '').strip(), 'aciklama': (r['aciklama'] or '').strip()})
+        'ad': (r['mad'] or r['serbest_ad'] or '').strip(), 'aciklama': (r['aciklama'] or '').strip(),
+        'malzeme_id': r['malzeme_id'], 'gram': olcu_gram.get((r['malzeme_id'], r['olcu_birimi_slug']))})
 
 adim = {}
 for r in c.execute('select tarif_id, sira, baslik, metin, sure_dk from tarif_adimlari where coalesce(pasif_mi,0)=0 order by tarif_id, sira'):

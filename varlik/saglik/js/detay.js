@@ -3,7 +3,7 @@
    {malzemeler, paylas, yorumlar, aksiyon-cubugu, pisirme-modu}.blade.php + ana tarif blade'i):
    section.rd-top (rd-crumb · rd-gallery: rd-stage [r-chip · r-save] + kunye-col [Porsiyon · Süre · Zorluk · Pişirme Derecesi ·
    çipler] · rd-head) → section.rd-body (rd-cols: rd-main [adımlar + Pişirme Moduna Geç + adım süreleri, hatırlatma, besin,
-   etiketler + paylaş, değerlendirme: puan özeti + dağılım + puan formu + boş durum] · rd-aside [malzeme paneli + Listeye ekle,
+   etiketler + paylaş, değerlendirme: puan özeti + dağılım + giriş kutusu + boş durum/liste] · rd-aside [malzeme paneli + Listeye ekle,
    şef kutusu]) → section.sec.simrec (Benzer Tarifler) → main dışında rd-actbar + rdSharePop, lightbox, cookmode, lgGate.
    Tek ek: .rd-badges içinde Gastro'nun .tbadge.t-diyet rozetiyle mod etiketi. Akıllı ikame malzeme satırının içinde.
    Çizimden sonra Gastro'nun kendi detay betikleri (donör sırasıyla) yüklenir. app.js DOMContentLoaded'da bağladığı ve geç
@@ -90,7 +90,7 @@
     }
     var X = (EK.t && EK.t[slug]) || { e: [], s: [], pd: '', r: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], c: 0 };
     var R = X.r || [], dgN = R[0] || 0, ort = Number(R[1]) || 0, dag = [R[2] || 0, R[3] || 0, R[4] || 0, R[5] || 0, R[6] || 0];
-    var yorumsuz = R[7] || 0, yorumN = R[8] || 0, deneme = R[9] || 0, alkis = R[10] || 0, dagVar = R[11] === 1; // puan/sayılar kartla aynı kayıtlı değerler (Beyar karar 3)
+    var yorumsuz = R[7] || 0, yorumN = R[8] || 0, deneme = R[9] || 0, alkis = R[10] || 0; // kayıtlı puan/sayılar (kartla aynı) + prototip örnek dağılımı (tarif.mjs) — Beyar H31 son karar
     var modlar = Object.keys(V.modlar).filter(function (k) { return V.modlar[k].t[slug]; });
     var mod = modlar.indexOf(istenen) > -1 ? istenen : modlar[0], M = V.modlar[mod], ik = M.t[slug] || [];
     var al = window.DadaSaglik && window.DadaSaglik.alerjenler ? window.DadaSaglik.alerjenler() : [];
@@ -142,7 +142,7 @@
       return '<article class="step-card no-img "> <div class="sc-body"> <span class="sc-num" data-step-label="' + esc(a[0] || (i + 1) + '. adım') + '" role="button">' + (i + 1) + '</span> <div class="step-card__body"> <div class="sc-top"> <h3>' + esc(a[0] || (i + 1) + '. adım') + '</h3>' + dk + ' </div> <p>' + esc(a[1]) + '</p> </div> </div> </article>';
     }).join(' ');
     var hat = String(t.h || '').replace(/^\s*Hatırlatma\s*/i, '').trim();
-    var notlar = '<div class="remind-box"> <span class="rb-ico">' + fa('bell') + '</span> <div class="rb-body"> <h4>Hatırlatma</h4> <p>' + (hat ? esc(hat) + ' ' : '') + '<span data-a="" data-sg-uyari>' + UYARI + '</span> Paketli ürünlerde etiketi her zaman kontrol edin; içerikler üreticiye göre değişebilir.</p> </div> </div>';
+    var notlar = '<div class="remind-box"> <span class="rb-ico">' + fa('bell') + '</span> <div class="rb-body"> <h4>Hatırlatma</h4> <p>' + (hat ? esc(hat) + ' ' : '') + '<span data-a="" data-sg-uyari>' + UYARI + '</span></p> </div> </div>';
     if (istenen && istenen !== mod && V.modlar[istenen]) notlar += ' <div class="remind-box"> <span class="rb-ico">' + fa('circle-info') + '</span> <div class="rb-body"> <h4>Mod uyumu</h4> <p>Bu tarif <b>' + esc(V.modlar[istenen].kisa) + '</b> modunun kuralına uymuyor; <b>' + esc(M.kisa) + '</b> modundaki hâli gösteriliyor.</p> </div> </div>';
     if (gizli) notlar += ' <div class="remind-box"> <span class="rb-ico">' + fa('triangle-exclamation') + '</span> <div class="rb-body"> <h4>Alerjen süzgeci</h4> <p><b>Dikkat:</b> Bu tarif seçtiğin alerjen süzgecine uymuyor; listelerde gizleniyor.</p> </div> </div>';
     var besin = '';
@@ -169,25 +169,29 @@
       + ' <button class="share-btn cp" id="shareCopy" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala">' + fa('link') + '</button>'
       + ' <button class="share-btn ts-share-mobile" type="button" data-share-toggle="" aria-haspopup="true" aria-expanded="false" aria-label="Diğer paylaşım seçenekleri"><i class="fa-solid fa-ellipsis ts-ic-more" aria-hidden="true"></i><i class="fa-solid fa-share-nodes ts-ic-share" aria-hidden="true"></i></button> </div> </div>';
 
-    // Değerlendirme (parcalar/tarif-detay/yorumlar.blade.php): sayılar gerçek `degerlendirmeler` satırlarından; sahte yorum yok.
+    // Değerlendirme (parcalar/tarif-detay/yorumlar.blade.php): puan, değerlendirme ve yorum sayısı KAYITLI değerler (kartla aynı);
+    // 5★…1★ dağılımı ve yorum listesi prototip örneğidir (aşağıda ornekYorumlar).
     var tavsiye = dgN ? Math.round((dag[0] + dag[1]) * 100 / dgN) : 0;
     var cubuklar = [5, 4, 3, 2, 1].map(function (k, i) { return '<div class="rs-bar"> <span class="lbl">' + k + ' ' + fa('star') + '</span> <span class="track"><i style="width:' + (dgN ? Math.round(dag[i] * 100 / dgN) : 0) + '%"></i></span> <span class="cnt">' + dag[i] + '</span> </div>'; }).join(' ');
-    var yildizDugme = [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" aria-label="' + n + ' yıldız">' + fa('star') + '</button>'; }).join(' ');
     var degerlendirme = '<div class="rd-sec-head" style="margin-top:26px;margin-bottom:14px" id="yorumlar"> <div> <span class="eyebrow">' + fa('comments') + ' Değerlendirmeler</span> <h2>Yorumlar (' + yorumN + ')</h2> </div> </div>'
-      + ' <div class="rev-summary" aria-label="Puan özeti"> <div class="rs-avg"> <b>' + ort.toFixed(1) + '</b> ' + yildiz(ort) + ' <span>' + dgN + ' değerlendirme</span>' + (dagVar ? ' <span class="rs-rec">' + fa('thumbs-up') + ' %' + tavsiye + '\'si tavsiye ediyor</span>' : '')
-      + (yorumsuz > 0 ? ' <span>' + yorumsuz + ' kişi yorum yazmadan puan verdi</span>' : '') + ' </div>' + (dagVar || !dgN ? ' <div class="rs-bars"> ' + cubuklar + ' </div>' : '') + ' </div>'
+      + ' <div class="rev-summary" aria-label="Puan özeti"> <div class="rs-avg"> <b>' + ort.toFixed(1) + '</b> ' + yildiz(ort) + ' <span>' + dgN + ' değerlendirme</span> <span class="rs-rec">' + fa('thumbs-up') + ' %' + tavsiye + '\'si tavsiye ediyor</span>'
+      + (yorumsuz > 0 ? ' <span>' + yorumsuz + ' kişi yorum yazmadan puan verdi</span>' : '') + ' </div> <div class="rs-bars"> ' + cubuklar + ' </div> </div>'
       + ' <div class="rev-login" id="revLogin"> <span class="rl-ico">' + fa('lock') + '</span> <div class="rl-body"> <b>Yorum yapmak için giriş yap</b> <p>Bu tarifi puanlamak, deneyimini paylaşmak ve yorumlara katılmak için DadaGastro hesabına giriş yapman gerekiyor. Yorumları okumak serbest.</p> <div class="rl-acts"> <a class="btn btn-primary" href="' + GASTRO + '/giris" rel="nofollow">' + fa('user') + ' Giriş Yap</a> <a class="btn btn-ghost" href="' + GASTRO + '/kayit">Üye Ol</a> </div> </div> </div>'
-      // Gastro'nun üye puan formu (#revForm): yıldız seçimi + "Puan zorunlu" kuralı Gastro tarif-detay.js'te; gönderim yerelde giriş kapısını açar (yorum yayımlanmaz)
-      + ' <form class="rev-form" id="revForm" data-sg-yerel> <input type="hidden" name="puan" id="rfRatingInput" value=""> <div class="av av-init">' + fa('user') + '</div> <div class="rf-body"> <div class="rf-top"> <span class="t">Tarifi değerlendir</span> <span class="rf-stars" id="rfStars" role="radiogroup" aria-label="Yıldız puanı"> ' + yildizDugme + ' </span> <span class="rf-hint" id="rfHint" role="status">Puan zorunlu</span> </div>'
-      + ' <textarea class="rf-text" name="govde" placeholder="Bu tarifi denedin mi? Deneyimini, küçük dokunuşlarını yaz..." aria-label="Yorumun"></textarea> <div class="rf-foot"> <button class="btn btn-primary" id="rfSubmit" type="submit">' + fa('paper-plane', 'fa-regular') + ' Yorumu Paylaş</button> </div>'
-      + ' <p class="rf-disc">Yorumlar denetim sonrası yayınlanır. Yazılan yorumlar hiçbir şekilde DadaGastro\'nun görüş ve düşüncelerini yansıtmaz.</p> </div> </form>'
-      + (yorumN ? '' : ' <div class="rev-empty-first"> ' + fa('comment-dots') + ' <p>Bu tarife henüz yorum yapılmamış. İlk yorumu sen yaz.</p> </div>');
+      + (yorumN ? ornekYorumlar(slug, yorumN, dag, t.ty) : ' <div class="rev-empty-first"> ' + fa('comment-dots') + ' <p>Bu tarife henüz yorum yapılmamış. İlk yorumu sen yaz.</p> </div>');
 
     var ikAd = {}; ik.forEach(function (x) { ikAd[x[0]] = x; });
     var grupOnce = null, sayac = 0;
+    // Ölçü balonunun gram satırı (Gastro SunumHaritasi::olcuMalzemeBalonlari): malzeme id → ölçü → [["<Ad> ile", "≈ N g"]]
+    var OLC = X.o || [], olcuMalzeme = {};
+    t.m.forEach(function (x, i) {
+      var ol = OLC[i] || [], u = trSlug(x[2]);
+      if (!ol[0] || !ol[1] || !u || (olcuMalzeme[ol[0]] && olcuMalzeme[ol[0]][u])) return;
+      (olcuMalzeme[ol[0]] = olcuMalzeme[ol[0]] || {})[u] = [[String(x[3]).trim() + ' ile', '≈ ' + String(Number(ol[1])).replace('.', ',') + ' g']];
+    });
     var satirlar = t.m.map(function (x) {
       var g = ''; if (x[0] && x[0] !== grupOnce) { g = '<li class="ing-group">' + fa('circle-notch') + ' ' + esc(x[0]) + '</li> '; grupOnce = x[0]; }
       sayac++;
+      var ol = OLC[sayac - 1] || [];
       var ad = String(x[3]).trim(), n = ad.toLocaleLowerCase('tr').replace(/̇/g, ''), yer2 = ikAd[n];
       var bs = trSlug(x[2]), bet = ETIKET[bs] || String(x[2] || '').toLocaleLowerCase('tr');
       var miktar = x[1] === '' || x[1] == null ? '' : '<span data-amount="" data-base-amount="' + Number(x[1]) + '">' + sayi(x[1]) + '</span>';
@@ -198,7 +202,7 @@
       // Listeye eklenen ad: akıllı ikame varsa yerine geçen malzeme
       var listeAd = (yer2 ? yer2[1] : ad).toLocaleLowerCase('tr');
       var ekle = '<form onclick="event.stopPropagation()" data-m-bagli="1" data-sg-yerel> <button class="ing-add " type="submit" title="Alışveriş listesine ekle" aria-label="Alışveriş listesine ekle" data-m-bagli="1" data-tarif-eylem="liste-ekle" data-liste-kod="alisveris-listem" data-liste-ad="Alışveriş Listem" data-ad="' + esc(listeAd) + '" data-kaynak="' + esc(slug) + '">' + fa('cart-plus') + '</button> </form>';
-      return g + '<li class="ing-row "> <label> <input type="checkbox"> ' + iq + ' ' + inn + ' </label> <div class="ing-acts"> ' + ekle + ' </div> </li>';
+      return g + '<li class="ing-row " data-malzeme-id="' + (ol[0] || '') + '"> <label> <input type="checkbox"> ' + iq + ' ' + inn + ' </label> <div class="ing-acts"> ' + ekle + ' </div> </li>';
     }).join(' ');
     var panelBas = Number.isSafeInteger(t.p) && t.p > 0;
     var C = sefVar ? X.c : null;
@@ -209,7 +213,7 @@
     var malzeme = '<div class="ing-panel"' + (panelBas ? ' data-gastro-portion="" data-portion-base="' + t.p + '"' : '') + '> <script type="application/json" data-porsiyon-kurallari>' + KURAL + '<\/script>'
       + ' <div class="ing-head"> <h2>' + fa('basket-shopping') + ' Malzemeler</h2> <p class="ing-count">' + sayac + ' malzeme' + (panelBas ? ' · <span id="ingServEcho" data-portion-servings="">' + t.p + '</span> ' + esc(t.pb || 'kişilik') + ' için' : '') + '</p> </div>'
       + (panelBas ? ' <div class="serv-step" role="group" aria-label="Porsiyon sayısı"> <button type="button" id="servDown" data-portion-dec="" aria-label="Porsiyonu azalt">' + fa('minus') + '</button> <div class="sv"><b id="servVal" data-portion-servings="" data-portion-unit="' + esc(t.pb || 'kişilik') + '">' + esc(por) + '</b><span>Porsiyon</span></div> <button type="button" id="servUp" data-portion-inc="" aria-label="Porsiyonu artır">' + fa('plus') + '</button> </div>' : '')
-      + ' <ul class="ing-list" id="ingList" data-olcu-balon="' + esc(OLCU) + '"> ' + satirlar + ' </ul>'
+      + ' <ul class="ing-list" id="ingList" data-olcu-balon="' + esc(OLCU) + '" data-olcu-malzeme="' + esc(JSON.stringify(olcuMalzeme)) + '"> ' + satirlar + ' </ul>'
       + ' <div class="ing-foot"> <form data-m-bagli="1" data-sg-yerel> <button class="btn btn-primary" id="addAllBtn" type="submit" data-m-bagli="1" data-tarif-eylem="liste-ekle-tumu" data-liste-kod="alisveris-listem" data-liste-ad="Alışveriş Listem" data-kaynak="' + esc(slug) + '">' + fa('cart-plus') + ' Tümünü Listeye Ekle</button> </form>'
       + ' <div id="listeGeriBildirim" class="liste-geri-bildirim" role="status" aria-live="polite" hidden><a class="btn btn-ghost liste-gor-dugme" href="' + GASTRO + '/hesabim/menulerim#alisveris"><span class="liste-gor-durum">' + fa('circle-check') + ' <span>Listende <b data-liste-adet>0</b> malzeme</span></span><span class="liste-gor-git">Listeyi Gör ' + fa('arrow-right') + '</span></a></div>'
       + ' <span class="ing-note">' + fa('circle-check') + ' Miktarlar porsiyona göre otomatik güncellenir</span> </div>'
@@ -228,7 +232,7 @@
     var adaylar = Object.keys(M.t).filter(function (s) { return s !== slug && V.tarifler[s] && !gizliMi(V.tarifler[s]); }); // alerjen süzgecine uymayan benzer tarif önerilmez
     var ayniKat = adaylar.filter(function (s) { return t.ka && V.tarifler[s].ka === t.ka; });
     var secim = ayniKat.concat(adaylar.filter(function (s) { return ayniKat.indexOf(s) < 0; })).slice(0, 4);
-    var benzer = secim.length ? '<section class="sec simrec"> <div class="wrap"> <div class="sec-head"> <div> <span class="eyebrow">' + fa('bowl-food') + ' Benzer Tarifler</span> <h2>Bunları da seveceksin</h2> <p class="lead">' + esc(M.kisa) + ' modunun kuralına uyan, aynı sofraya yakışan tarifler.</p> </div>'
+    var benzer = secim.length ? '<section class="sec simrec"> <div class="wrap"> <div class="sec-head"> <div> <span class="eyebrow">' + fa('bowl-food') + ' Benzer Tarifler</span> <h2>Bunları da seveceksin</h2> <p class="lead">Bu tarifi beğenenlerin denediği, aynı sofraya yakışan tarifler.</p> </div>'
       + ' <div class="sec-tools"> <a class="see-all" href="' + esc(M.dosya) + '">Tamamını Gör ' + fa('arrow-right') + '</a> <div class="row-nav"> <button data-slider-dir="prev" data-slider-for="simTrack" aria-label="Önceki">' + fa('chevron-left') + '</button> <button data-slider-dir="next" data-slider-for="simTrack" aria-label="Sonraki">' + fa('chevron-right') + '</button> </div> </div> </div>'
       + ' <div class="grid-4 row-track drag-scroll" id="simTrack"> ' + secim.map(function (s) { return window.DadaSaglik && window.DadaSaglik.gastroKart ? window.DadaSaglik.gastroKart(V, s, mod) : ''; }).join(' ') + ' </div> </div> </section>' : '';
 
@@ -265,17 +269,60 @@
     girisKapisi();
     pisirmeModu();
     alisverisListesi();
-    // Puan formu: yıldız seçimi ve "Puan vermeden yorum gönderilemez" Gastro tarif-detay.js'te; puan seçiliyken gönderim giriş kapısını açar
-    var rf = document.getElementById('revForm');
-    if (rf) rf.addEventListener('submit', function () {
-      var p = document.getElementById('rfRatingInput');
-      if (p && p.value) kapiAc('Yorum yapmak için giriş yap', 'Bu tarifi puanlamak, deneyimini paylaşmak ve yorumlara katılmak için DadaGastro hesabına giriş yapman gerekiyor. Yorumları okumak serbest.');
-    });
     betikler(['varlik/gastro/gastro/porsiyon-yuvarlama.js', 'varlik/gastro/varliklar/reference/tarif-detay/tarif-detay.js', 'varlik/gastro/revize/tur5/tr-heceleme.js', 'varlik/gastro/revize/p1/tarif-malzeme.js', 'varlik/gastro/revize/p1/tarif-pisirme.js', 'varlik/gastro/gastro/alt-eylem-cubugu.js', 'varlik/gastro/revize/p1/tarif-liste-veri.js']);
   }).catch(function (er) {
     yer.innerHTML = '<div class="wrap"><div class="rd-head"><p class="rd-sub">Tarif yüklenemedi; sayfayı yenileyin.</p></div></div>';
     if (window.console) console.warn('[DadaSaglik detay]', er);
   });
+
+  // ---------- Yorum listesi: prototip örnek yorumları — gerçek kullanıcı değil; Gastro'ya taşınırken gerçek veriyle değiştirilir ----------
+  // Beyar H31: canlı Gastro'daki gibi dolu liste. Markup Gastro'nun kendi kalıbı (yorumlar.blade.php · misafir görünümü: #revFilter ·
+  // #revEmpty · #revList > .c-item[data-stars] · .c-head [.c-who · .c-stars · .c-date] · .c-text · .c-acts [Beğen · Yanıtla · Bildir]).
+  // Tarif slug'ıyla tohumlanan belirlenimci üretim: sayı = kayıtlı yorum sayısı ("Yorumlar (N)"), yıldızlar örnek dağılımdan, tarih tarifin
+  // yayın tarihi ile 1 Kasım 2026 arası. Gastro tarif listesi ilk 30 üst yorumu basar, "daha fazla" denetimi tarifte yok — burada da yok.
+  // Her öğe data-ornek="1" taşır. Metinler sağlık/tıp iddiası içermez; adlar genel (ad + soyadı baş harfi), gerçek kişi/kurum yok.
+  function tohum(metin) { // src/saglik/sayfalar/tarif.mjs tohum() ile aynı (FNV-1a → mulberry32)
+    var h = 2166136261; Array.from(String(metin)).forEach(function (c) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); });
+    return function () { h = (h + 0x6D2B79F5) | 0; var t = Math.imul(h ^ (h >>> 15), 1 | h); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  var ORNEK_AD = ['Ayşe K.', 'Mehmet D.', 'Elif S.', 'Burak T.', 'Zeynep A.', 'Can Y.', 'Selin Ö.', 'Emre B.', 'Deniz Ç.', 'Merve G.', 'Hakan E.', 'Gizem U.', 'Onur Ş.', 'Ebru İ.', 'Kerem N.', 'Pınar H.', 'Seda M.', 'Tolga R.'];
+  var ORNEK_METIN = {
+    5: ['Tam tarif edildiği gibi yaptım, evde herkes çok beğendi.', 'Ölçüler çok iyi oturuyor, ikinci kez yapıyorum.', 'Pratik ve lezzetli, hafta içi akşamları için kurtarıcı oldu.', 'Adımlar çok net anlatılmış, ilk denemede güzel oldu.', 'Baharat dengesi tam kıvamında, eline sağlık.', 'Misafirlere yaptım, tarifini soran oldu.', 'Malzemelerin hepsi evde vardı, kısa sürede sofraya geldi.'],
+    4: ['Güzel oldu; bir dahaki sefere tuzu biraz azaltacağım.', 'Lezzeti çok iyi, pişirme süresi bende birkaç dakika uzun sürdü.', 'Ailece sevdik, porsiyonu biraz artırarak yaptım.', 'Tarif güzel, ben üstüne biraz taze maydanoz ekledim.', 'Kıvamı çok hoş oldu, sunumu da kolay.'],
+    3: ['Fena değil ama benim damak zevkime göre biraz sade kaldı.', 'Güzel bir temel tarif; baharatı artırınca daha çok sevdim.', 'Süreler bende biraz farklı çıktı, yine de keyifle yedik.'],
+    2: ['Bende istediğim kıvamı tutmadı, bir kez daha deneyeceğim.', 'Ölçüleri kendime göre değiştirmem gerekti.'],
+    1: ['Bu sefer olmadı, sanırım ocağın ısısı fazla geldi; tekrar deneyeceğim.']
+  };
+  function onceYazi(tarihMs) { // Carbon diffForHumans (tr) kalıbı
+    var g = Math.max(1, Math.floor((Date.now() - tarihMs) / 864e5));
+    if (g < 7) return g + ' gün önce'; if (g < 30) return Math.floor(g / 7) + ' hafta önce'; if (g < 365) return Math.floor(g / 30) + ' ay önce'; return Math.floor(g / 365) + ' yıl önce';
+  }
+  function ornekYorumlar(slug, n, dag, yayin) {
+    var r = tohum(slug + '|yorum'), puanlar = [];
+    [5, 4, 3, 2, 1].forEach(function (y, i) { for (var k = 0; k < dag[i]; k++) puanlar.push(y); });
+    for (var i = puanlar.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), x = puanlar[i]; puanlar[i] = puanlar[j]; puanlar[j] = x; }
+    var bas = Date.parse(String(yayin || '2026-01-01').slice(0, 10)) || Date.parse('2026-01-01'), son = Date.parse('2026-11-01');
+    var adlar = ORNEK_AD.slice(), kullanilan = {}, liste = [];
+    for (var k = 0; k < Math.min(n, 30); k++) {
+      var y = puanlar[k] || 5, havuz = ORNEK_METIN[y], m = havuz[Math.floor(r() * havuz.length)];
+      if (kullanilan[m] && havuz.length > 1) m = havuz.filter(function (z) { return !kullanilan[z]; })[0] || m; kullanilan[m] = 1;
+      var ad = adlar.splice(Math.floor(r() * adlar.length), 1)[0];
+      liste.push({ y: y, m: m, ad: ad, t: bas + 864e5 + r() * Math.max(864e5, son - bas - 864e5), b: Math.floor(r() * 5) });
+    }
+    liste.sort(function (a, b) { return b.t - a.t; }); // en yeni önce (Gastro)
+    var say = function (f) { return liste.filter(f).length; };
+    var filtre = '<div class="rev-filter" id="revFilter"> <button class="chip on" data-f="all" type="button">Tümü (' + liste.length + ')</button> <button class="chip" data-f="photo" type="button">' + fa('camera') + 'Fotoğraflı (0)</button>'
+      + ' <button class="chip" data-f="5" type="button">5 yıldız (' + say(function (x) { return x.y === 5; }) + ')</button> <button class="chip" data-f="4" type="button">4 yıldız (' + say(function (x) { return x.y === 4; }) + ')</button> <button class="chip" data-f="low" type="button">3 ve altı (' + say(function (x) { return x.y <= 3; }) + ')</button> </div>';
+    var oge = liste.map(function (x, i) {
+      var yildizlar = ''; for (var s = 0; s < 5; s++) yildizlar += ' ' + fa('star', s < x.y ? 'fa-solid' : 'fa-regular');
+      return '<div class="c-item" id="yorum-ornek-' + (i + 1) + '" data-stars="' + x.y + '" data-ornek="1"> <div class="av av-init">' + esc(x.ad.charAt(0)) + '</div> <div class="c-main"> <div class="c-head"> <a class="c-who"><b>' + esc(x.ad) + '</b></a>'
+        + ' <span class="c-stars">' + yildizlar + ' </span> <span class="c-date"> ' + onceYazi(x.t) + ' </span> </div> <p class="c-text">' + esc(x.m) + '</p>'
+        + ' <div class="c-acts"> <button class="c-like" type="button" data-engagement-toggle data-active="0" data-icon-on="fa-solid fa-thumbs-up" data-icon-off="fa-regular fa-thumbs-up" data-lg-title="Yorumu beğenmek için giriş yap" data-lg-desc="Yorumları beğenmek için DadaGastro hesabına giriş yapman gerekiyor."> ' + fa('thumbs-up', 'fa-regular') + ' Beğen <b data-engagement-count>' + x.b + '</b> </button>'
+        + ' <button class="c-reply-btn" type="button" data-lg-gate data-lg-title="Yanıtlamak için giriş yap" data-lg-desc="Yorumlara yanıt yazmak için DadaGastro hesabına giriş yapman gerekiyor.">' + fa('comment', 'fa-regular') + ' Yanıtla</button>'
+        + ' <button class="c-report" type="button" data-lg-gate data-lg-title="Bildirmek için giriş yap" data-lg-desc="Bir yorumu bildirmek için DadaGastro hesabına giriş yapman gerekiyor.">' + fa('flag', 'fa-regular') + ' Bildir</button> </div> </div> </div>';
+    }).join(' ');
+    return ' ' + filtre + ' <div class="rev-empty" id="revEmpty" hidden>' + fa('comment-dots') + ' Bu filtreye uyan yorum ilk sayfada yok.</div> <div class="rev-list" id="revList"> ' + oge + ' </div>';
+  }
 
   // ---------- Giriş kapısı: Gastro app.js $t() + fs() + ps()/ws() misafir dalının birebiri ----------
   function kapiAc(baslik, aciklama) {
