@@ -57,7 +57,7 @@ ok(await p.locator('a.sg-fct-saglik[href="saglik-kalp.html"]').count() === 1 && 
 await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
 const menu = await p.$$eval('.sg-ust__menu > a', (l) => l.map((a) => a.textContent.trim() || a.getAttribute('aria-label')));
 ok(menu.length === 7 && /ana sayfa/i.test(menu[0]), `alt menü: ev ikonu + 6 mod (${menu.join(' | ')})`);
-ok(await p.$eval('.sg-ust__menu .dt.active[aria-current="page"]', (a) => a.textContent.trim()) === 'Glutensiz', 'aktif sekme işaretli');
+ok(await p.$eval('.sg-ust__menu > a[aria-current="page"]', (a) => a.textContent.trim()) === 'Glutensiz', 'aktif sekme işaretli');
 const rozet = await p.$eval('.header .brand', (b) => getComputedStyle(b, '::after').content);
 ok(/health/.test(rozet), `header logosu yanında "health" rozeti (CSS ::after: ${rozet})`);
 await p.mouse.wheel(0, 900); await p.waitForTimeout(250); await p.mouse.wheel(0, 300); await p.waitForTimeout(500);
@@ -86,14 +86,14 @@ await p.click('.pagi .pg[data-sayfa="2"]'); await p.waitForTimeout(200);
 const ilk2 = await p.$eval('[data-sg-izgara] .sg-tarif:not([hidden])', (k) => k.dataset.slug);
 ok(once === 12 && await say() === 12 && ilk1 !== ilk2 && /sayfa=2/.test(p.url()) && await p.locator('.pagi .pg.is-active').textContent() === '2', `Gastro sayfalaması: sayfa 1 → 2 (12'şer kart, ?sayfa=2, aktif .pg)`);
 await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
-await p.click('label.sg-satir:has(input[name="ikamesiz"])'); await p.waitForTimeout(150);
+await p.click('label.fct-row:has(input[name="ikamesiz"])'); await p.waitForTimeout(150);
 const ik = await p.$$eval('[data-sg-izgara] .sg-tarif', (l) => l.filter((k) => !k.hidden).map((k) => +k.dataset.ikame));
 ok(ik.length > 0 && ik.every((x) => x === 0), `"Yalnız ikame gerektirmeyenler": ${ik.length} görünen kartın hepsi ikamesiz`);
 
 // Alerjen seçimi kalıcı + tüm listelere
 await p.goto(T + 'saglik-alerji.html', { waitUntil: 'networkidle' });
 const alOnce = +(await p.textContent('[data-sg-sonuc]')).match(/\d+/)[0];
-await p.click('label.sg-satir:has(input[value="sut"])'); await p.waitForTimeout(150);
+await p.click('label.fct-row:has(input[value="sut"])'); await p.waitForTimeout(150);
 const alSonra = +(await p.textContent('[data-sg-sonuc]')).match(/\d+/)[0];
 const depo = await p.evaluate(() => { try { return localStorage.getItem('dadagastrosaglik.alerjen.v1'); } catch (e) { return 'HATA'; } });
 ok(alSonra < alOnce && depo === '["sut"]', `alerjen seçimi: ${alOnce} → ${alSonra} tarif, localStorage ${depo}`);
@@ -107,7 +107,7 @@ await p.evaluate(() => { try { localStorage.removeItem('dadagastrosaglik.alerjen
   const c2 = await tar.newContext(); await c2.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('kapalı'); } }); });
   const p2 = await c2.newPage(); const h2 = []; p2.on('pageerror', (e) => h2.push(e.message));
   await p2.goto(T + 'saglik-alerji.html', { waitUntil: 'networkidle' });
-  await p2.click('label.sg-satir:has(input[value="yumurta"])'); await p2.waitForTimeout(150);
+  await p2.click('label.fct-row:has(input[value="yumurta"])'); await p2.waitForTimeout(150);
   ok(!h2.length && /Yumurta/.test(await p2.textContent('[data-sg-alerjen-ozet]')), 'localStorage kapalıyken alerjen seçimi çalışır (hata yok)');
   await c2.close();
 }

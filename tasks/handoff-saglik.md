@@ -13,10 +13,18 @@
 - Ajanlar commit atmaz; iki ajan aynı dosyaya yazmaz.
 
 ## ▶ ŞU AN
-- ☑ 1–7 İlk teslim + revizeler canlıda (a797ee4: sekme sayfa içi, sayfalama, Gastro paneli, köşe üçlüsü).
-- ◐ TUR "Health" (Beyar 2 Kas): ☑ marka adı "Dada Gastro Health" (logo rozeti "health", kırıntı, menü, title/meta; dosya adları aynı) · ☑ mod sekmeleri + Tarifler/Bilgilendirme = Gastro `.disc-tabs/.dt/.dt.active` (kopya stil yok) · ☑ kart = Gastro `.r-card` birebir + `tarif-liste.css` + `.lst-grid` (şef/puan/görüntülenme/bütçe veriden; mod uyumu ve ikame Gastro `.rd-b` rozeti; hover yok) · ☑ font: tüm metin Gilroy, sahte kalın 0 (css/yazi.css: Gastro ExtraBold dosyası Gilroy 600–900'e bağlı; kanon §5) · ☑ başlık "Bizimle iş birliği yapan kurumlar" · ◐ tarif detayı Gastro detay şablonu birebir (ajan `detay`: src/saglik/sayfalar/tarif.mjs, js/detay.js) · ☐ duman → push → Pages → canlı linkler + Gastro yan yana 3 görüntü · ☐ kapılar push sonrası arka planda (yeni: araclar/font-kapisi.mjs, araclar/parite-kapisi.mjs)
+- ◐ TUR H12–H22 (Beyar 2 Kas): hepsi ☑ yerelde (duman YEŞİL, titreme CLS 0, font-rol YEŞİL, parite YEŞİL) → push + Pages doğrulama + kapılar arka planda.
+  Önce/sonra: rapor/tmp/teslim-h/once-sonra/ (araclar/teslim-goruntu.mjs once|sonra [taban] + araclar/once-sonra.mjs; "önce" canlı eski sürümden).
+  H12 menü = Kids alt menüsü (ortak.mjs altMenu, saglik.css §menü; seçili = kurum rengi AA tonu, ev = Gastro turuncu) · H14 öne çıkanlar kalktı ·
+  H15 okumalar satranç (css/ana.css; Gastro .topic-card ölçüleri) · H16 mod slider + H17 kurum tek satır kaydırıcı (ortak.mjs kaydirOklari, Gastro .row-nav) ·
+  H18 filtre = Gastro .lst-layout/.lst-side (mod.mjs, katalog.js) · H19 kart = Gastro (sütun 275, tam başlık, kısa biçim kuralı; kart.mjs ← ortak.mjs'ten ayrıldı) ·
+  H20 detay: pişirme modu, adım süreleri, değerlendirme, alışveriş listesi, etiketler, aksiyon çubuğu, paylaş, lightbox (detay.js; veri veri-hazirla.py) ·
+  H21 yazı detayı saglik-yazi-<slug>.html (yazi.mjs, okuma.css) · H22 saglik-bilgi.html liste + ?mod= süzgeci (bilgi.mjs, okuma.js) ·
+  H13 css/rol.css (tüm Health sayfalarında son katman; araclar/font-rol-olc.mjs).
 
 ## ▶ SIRADAKİ
+- Bilinçli farklar (Beyar'a raporlandı, karar onda): (1) Gastro "Gilroy 700"ü Medium'dan SAHTE kalın çizer; Health yazi.css ile Gastro'nun ExtraBold dosyasını kullanır → kalın metin 1–7 px geniş. Birebir görünüm istenirse css/yazi.css bağlaması kaldırılır (tek satır). (2) Menü yazı boyutu Kids'ten (14.5/13.5 px; Gastro header 15 px). (3) Mobil filtre perdesi Health'te görünür (Gastro donöründe .open/.is-open uyuşmazlığıyla hiç görünmüyor). (4) Tarif detayı puanı gerçek değerlendirmelerden (Gastro TarifDetayServisi: tarifler.ortalama_puan "SAHTE SAYAÇ"), kart puanı Gastro kartı gibi tarifler.puan → kartta 4.5, detayda 0.0 olabilir; istenirse ortak.mjs istemciVerisi `pg` + kart.mjs/saglik.js .r-rate.
+- Kapılar (davranış/radius/varlık/gölge/parite/font) bu turun işaretlemesine güncellendi; push sonrası arka planda koşuldu → sonuç aşağıya.
 - ☑ 75798c3 canlı: sekme geçişinde titreme giderildi (CLS 0; kök sebepler: yapışkan bar 112→113 px, Gilroy/FA geç değişimi, 390'da yükleme sonrası sekme kaydırması, boyutsuz kurum logoları) · sekme köşesi Gastro buton köşesi 12px · font ölçümü sapma 0. Kapı koşulmadı (Beyar). Ölçüm/kayıt araçları: araclar/titreme-olc.mjs, araclar/titreme-kayit.mjs.
 - ☑ 59d0705 canlı: seçili mod sekmesi öncü kurum renginde (kaynak: tasks/saglik-kaynaklar.md "Kurum renkleri"), kart/karo/panel/sekme çubuğunda gölge yok. Beyar: "revizeler gelecek, kapı koşma" → bu turda kapı koşulmadı; yeni araclar/golge-kapisi.mjs yazıldı, koşulmadı.
 - Kapı güncellemesi gerekli (önceki tur sonucu, sayfa hatası değil): radius-kapisi Gastro .dt'nin 8px köşesini (Gastro --radius-sm) ETİKET listesine almalı; varlik-kapisi .sg-sekme-bolum'u (sekme bandı) 'görselsiz bölüm' kuralından muaf tutmalı. mod/davranış kapıları yeşildi.

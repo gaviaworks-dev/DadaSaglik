@@ -42,12 +42,12 @@
 .pg-saglik, .pg-saglik .page-main { background: var(--sg-zemin); }
 .pg-saglik #pageMain { padding-bottom: 0; }
 .sg-sayfa { padding-top: var(--header-offset, 112px); background: var(--sg-zemin); color: var(--sg-murekkep); font-family: var(--sg-font); font-weight: 500; overflow-x: clip; }
-.sg-sayfa :is(h1, h2, h3, h4):not(.r-card *) { color: var(--sg-murekkep); font-family: var(--sg-font-kalin); font-weight: 700; letter-spacing: var(--ls-head, -.02em); line-height: var(--sg-satir-baslik); margin: 0; }
+.sg-sayfa :is(h1, h2, h3, h4):not(.r-card *, .lst-side *, .lst-empty *) { color: var(--sg-murekkep); font-family: var(--sg-font-kalin); font-weight: 700; letter-spacing: var(--ls-head, -.02em); line-height: var(--sg-satir-baslik); margin: 0; }
 .sg-sayfa h1 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.1rem); line-height: 1.08; }
 .sg-sayfa h2 { font-size: clamp(1.45rem, 1.1rem + 1.3vw, 2rem); }
-.sg-sayfa h3 { font-size: 1.12rem; }
+.sg-sayfa h3:not(.lst-side *, .lst-empty *) { font-size: 1.12rem; }
 .sg-sayfa p { line-height: var(--sg-satir-govde); }
-.sg-sayfa a:where(:not(.dt)) { color: inherit; }
+.sg-sayfa a:where(:not(.dt, .sg-ust__menu > a, .fil-clear)) { color: inherit; }
 .sg-sayfa :focus-visible { outline: 3px solid var(--r-k, var(--sg-tema)); outline-offset: 3px; border-radius: var(--sg-r); }
 .sg-sayfa img { max-width: 100%; height: auto; display: block; }
 .sg-sayfa [hidden] { display: none !important; }
@@ -55,32 +55,54 @@
 .sg-gizli { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .sg-dar { max-width: 880px; }
 
-/* 2 · Sağlık menü barı — tek yapışkan katman (davranış: saglik.js yapiskanKur; Kids R3 birebir) */
+/* 2 · Sağlık menü barı = Kids .kd-ust BİREBİR (kids.css §2; Beyar 2 Kas H12) — tek yapışkan katman (davranış: saglik.js yapiskanKur/menuAktifKur)
+   Ölçüler Kids'ten: bar 61/55px · bağ 44px yükseklik, 0 12px dolgu (≤640: 0 10px 13.5px · ≤600: 0 8px), 14.5px/700, gap 2px, ev 44×44 + 22px SVG.
+   Seçili = yalnız vurgu rengi + metin altında 2px çizgi (::after, sol/sağ 12px, alt 2px); zemin/gölge yok. Hover = açık ton zemin + vurgu rengi.
+   Vurgu: mod bağı → kendi kurum rengi (data-renk --r-k, AA koyu varyant; zemin --r-a) · ev (hub) → Gastro turuncusu. Kids'in Yardım düğmesi yok.
+   GÖLGE YOK: Kids'in yapışık hâl gölgesi (html.kd-ust-gizli .kd-ust) Health'te alınmadı. */
 :root { --sg-bar-h: 61px; --sg-bar-alt: calc(var(--sg-ust-bosluk, 0px) + var(--sg-bar-h)); }
 @media (max-width: 640px) { :root { --sg-bar-h: 55px; } }
-.sg-ust { position: sticky; top: var(--sg-ust-bosluk, 0px); z-index: 40; background: color-mix(in srgb, var(--sg-zemin) 94%, transparent); backdrop-filter: saturate(1.2) blur(10px); -webkit-backdrop-filter: saturate(1.2) blur(10px); border-bottom: 1px solid var(--sg-cizgi); transition: top .28s cubic-bezier(.2, .7, .2, 1), box-shadow .28s ease; }
+.sg-ust { position: sticky; top: var(--sg-ust-bosluk, 0px); z-index: 40; background: color-mix(in srgb, var(--sg-zemin) 94%, transparent); backdrop-filter: saturate(1.2) blur(10px); -webkit-backdrop-filter: saturate(1.2) blur(10px); border-bottom: 1px solid var(--sg-cizgi); transition: top .28s cubic-bezier(.2, .7, .2, 1); }
 .sg-ust .wrap { display: flex; align-items: center; gap: var(--sg-s3); min-height: 60px; }
-html.sg-ust-gizli .sg-ust { box-shadow: 0 6px 16px -12px rgba(42, 39, 36, .35); }
-.sg-ust__logo { flex: none; display: flex; align-items: center; max-width: 0; margin-right: calc(var(--sg-s3) * -1); opacity: 0; overflow: hidden; color: var(--tomato, #DC3D17); visibility: hidden; transition: max-width .28s ease, opacity .2s ease, margin .28s ease, visibility 0s linear .28s; }
-.sg-ust__logo-svg { display: block; width: 148px; height: auto; flex: none; }
-html.sg-ust-gizli .sg-ust__logo { max-width: 156px; margin-right: 0; opacity: 1; visibility: visible; transition-delay: 0s; }
-.sg-ust__menu { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 2px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: 6px 2px; }
+.sg-ust__logo { flex: none; display: flex; align-items: center; max-width: 0; margin-right: calc(var(--sg-s3) * -1); opacity: 0; overflow: hidden; color: var(--tomato, #DC3D17); text-decoration: none; visibility: hidden; transition: max-width .28s ease, opacity .2s ease, margin .28s ease, visibility 0s linear .28s; }
+.sg-ust__logo-svg { display: block; width: 142px; height: auto; flex: none; }   /* Kids kilidiyle aynı yükseklik (132px × health/kids viewBox oranı) */
+html.sg-ust-gizli .sg-ust__logo { max-width: 150px; margin-right: 0; opacity: 1; visibility: visible; transition-delay: 0s; }
+.sg-ust__menu { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 2px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: 6px 2px; scroll-padding-inline: var(--sg-s6); }
 .sg-ust__menu::-webkit-scrollbar { display: none; }
-/* Mod sekmeleri = Gastro .disc-tabs/.dt birebir (portal CSS); burada yalnız yerleşim: kaydırılabilir şerit, sarmasız */
-.sg-ust__sekmeler { flex: none; }
-.sg-ust__sekmeler > .dt { flex: none; white-space: nowrap; text-decoration: none; }
+.sg-ust__menu > a { --sg-ust-vurgu: var(--r-k); --sg-ust-ton: var(--r-a); position: relative; flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: var(--sg-r); font-size: 14.5px; font-weight: 700; font-family: var(--sg-font-kalin); line-height: 1; text-decoration: none; color: var(--sg-murekkep); white-space: nowrap; transition: color .2s ease, background .2s ease; }
+.sg-ust__menu > .sg-ust__ev { --sg-ust-vurgu: var(--tomato, #DC3D17); --sg-ust-ton: var(--tomato-tint, #FBE6E1); justify-content: center; min-width: 44px; padding: 0; margin-left: auto; }   /* ev ikonu ilk modun hemen solunda; grup ortada */
+.sg-ust__menu > a:not(.sg-ust__ev):last-child { margin-right: auto; }
+/* Bar zemini (#F8F6F1) ve hover tonu üstünde 14.5px metin ≥ 4.5:1: bugday #9E6A00 → 4.31, lila #9E6813 → 4.38 idi; aynı tonun koyusu (4.72 / 4.75) */
+.sg-ust__menu > a[data-renk="bugday"] { --sg-ust-vurgu: #966400; }
+.sg-ust__menu > a[data-renk="lila"] { --sg-ust-vurgu: #966312; }
+.sg-ust__ev svg { display: block; width: 22px; height: 22px; flex: none; }
+.sg-ust__menu > a:hover { background: var(--sg-ust-ton); color: var(--sg-ust-vurgu); }
+.sg-ust__menu > a[aria-current="page"] { background: transparent; color: var(--sg-ust-vurgu); box-shadow: none; }
+.sg-ust__menu > a[aria-current="page"]:hover { background: var(--sg-ust-ton); }
+.sg-ust__menu > a[aria-current="page"]:not(.sg-ust__ev)::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; background: currentColor; border-radius: var(--radius-sm, 8px); }
+.sg-ust__menu > a:focus-visible, .sg-ust__logo:focus-visible { outline: 3px solid var(--sg-ust-vurgu, var(--sg-tema)); outline-offset: -3px; }
 .pg-saglik header.header { transition: transform .28s cubic-bezier(.2, .7, .2, 1); }
 html.sg-ust-gizli .pg-saglik header.header { transform: translateY(calc(-1 * var(--sg-gastro-alt, 120px) - 8px)); }
-@media (max-width: 1100px) { .sg-ust__menu { justify-content: flex-start; } }
 @media (max-width: 640px) {
   .sg-ust .wrap { gap: var(--sg-s2); min-height: 54px; }
-  .sg-ust__logo-svg { width: 92px; }
-  html.sg-ust-gizli .sg-ust__logo { max-width: 96px; }
-  .sg-ust__menu { padding: 5px 0; gap: 0; }
+  .sg-ust__logo-svg { width: 90px; }
+  html.sg-ust-gizli .sg-ust__logo { max-width: 94px; }
+  .sg-ust__menu { padding: 5px 0; }
+  .sg-ust__menu > a { padding: 0 10px; font-size: 13.5px; }
 }
+@media (max-width: 600px) {
+  .sg-ust__logo-svg { width: 69px; }
+  html.sg-ust-gizli .sg-ust__logo { max-width: 69px; }
+  .sg-ust__menu > .sg-ust__ev { min-width: 44px; width: 44px; }
+  .sg-ust .wrap { gap: 6px; }
+  .sg-ust__menu { gap: 0; }
+  .sg-ust__menu > a { padding: 0 8px; }
+}
+/* Yatay taşmada kenar solması (saglik.js menuAktifKur sınıfları) */
 .sg-ust__menu.sg-tasma-sag { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
 .sg-ust__menu.sg-tasma-sol { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
 .sg-ust__menu.sg-tasma-sol.sg-tasma-sag { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
+@media (prefers-reduced-motion: reduce) { .sg-ust__menu > a { transition: none !important; } }
 
 /* Logo: header'da Gastro logosu aynen + "sağlık" rozeti yalnız CSS (Gastro DOM'una öğe eklenmez); bağımsız kilit SVG */
 .sg-logo-svg { display: block; height: auto; color: var(--tomato, #DC3D17); }
@@ -310,28 +332,13 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
    ===================================================================== */
 :root { --sg-r-etiket: var(--radius-sm, 8px); }
 .sg-uyum, .sg-al, .sg-chip, .nav .sg-mega-serit .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden,
-.sg-fct-saglik__etiket, .sg-dcip, .sg-cbx { border-radius: var(--sg-r-etiket); }
+.sg-fct-saglik__etiket, .sg-dcip { border-radius: var(--sg-r-etiket); }
 /* Kart üstü uyum etiketi = Gastro .r-chip ölçüsü (13px konum, 6/12 dolgu, 11.5px 700), mod renginde dolu */
 .sg-uyum { gap: 5px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; font-family: var(--sg-font-kalin); letter-spacing: .02em; line-height: 1.2; }
 .sg-uyum :is(svg, .sg-fa) { width: 13px; height: 13px; }
 /* Dolu düğmeler (Beyar: "filled buton kullan"): ikincil düğme de dolu — mod tonu zemin, koyu metin, çerçeve yok */
 .sg-btn--hafif { background: var(--r-a, var(--sg-tema-a)); color: var(--r-k, var(--sg-tema-k)) !important; box-shadow: none; }
 .sg-btn--hafif:hover { background: var(--r-o, color-mix(in srgb, var(--sg-tema) 22%, #fff)); color: var(--sg-murekkep) !important; }
-/* Süzgeç satırı — Gastro tarif listesi .fct-row (42px, 12px köşe) + .cbx (20px, 1px #D8D8D8, 8px köşe) */
-.sg-satirlar { display: grid; gap: 2px; }
-.sg-satir { position: relative; display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 6px 8px; box-sizing: border-box; border-radius: var(--sg-r); font-size: 14px; color: var(--sg-murekkep); cursor: pointer; }
-.sg-satir:hover { background: var(--sg-zemin); }
-.sg-satir input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
-.sg-cbx { flex: none; width: 20px; height: 20px; box-sizing: border-box; border: 1px solid #D8D8D8; background: #fff center / 12px no-repeat; transition: background-color .15s ease, border-color .15s ease; }
-.sg-cbx--radyo { border-radius: 50%; }
-.sg-satir input:checked + .sg-cbx { background-color: var(--r-k, var(--sg-tema)); border-color: var(--r-k, var(--sg-tema)); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
-.sg-satir input:checked + .sg-cbx--radyo { background-image: radial-gradient(circle, #fff 0 4px, transparent 4.5px); background-size: auto; }
-.sg-satir input:focus-visible + .sg-cbx { outline: 3px solid var(--r-k, var(--sg-tema)); outline-offset: 2px; }
-.sg-satir__ad { flex: 1; min-width: 0; font-weight: 500; }
-.sg-satir input:checked ~ .sg-satir__ad { font-family: var(--sg-font-kalin); font-weight: 700; }
-.sg-satir__n { flex: none; color: var(--sg-ikincil); font-size: 13px; }
-@media (prefers-reduced-motion: reduce) { .sg-cbx { transition: none; } }
-
 /* Mega şeridi (Beyar 2 Kas, 5. revize): chip zemini yok, sade metin bağları; logo ile çakışmaz (sola dizili, taşma kesilir) */
 .sg-mega-serit__chipler { justify-content: flex-start; overflow: hidden; gap: 2px; }
 .nav .sg-mega-serit .sg-mega-serit__chip, .nav .sg-mega-serit--kids .sg-mega-serit__chip { background: transparent; color: var(--sg-murekkep); padding: 4px 10px; font-family: var(--sg-font-kalin); font-weight: 700; }
@@ -381,7 +388,7 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
 .sg-mz[aria-pressed="true"] { border-color: var(--r-k, var(--sg-tema)); }
 .sg-mod-kart__ikon, .sg-eslesme, .sg-sss__dugme[aria-expanded="true"] { box-shadow: none !important; }
 .pg-saglik .r-card, .pg-saglik .r-card:hover { box-shadow: none !important; transform: none !important; }
-.sg-ust, html.sg-ust-gizli .sg-ust, .sg-ust .disc-tabs, .sg-sekmeler, .sg-mod-bar__sekmeler { box-shadow: none !important; }
+.sg-ust, html.sg-ust-gizli .sg-ust, .sg-ust__menu > a, .sg-sekmeler, .sg-mod-bar__sekmeler { box-shadow: none !important; }
 .sg-secki-hero + section, .sg-secki-hero + .sg-sekme-bolum { box-shadow: none !important; }
 
 /* =====================================================================
@@ -392,6 +399,45 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
    ===================================================================== */
 :root { --sg-ust-bosluk: calc(var(--header-offset, 112px) + 1px); }
 .sg-sayfa { padding-top: calc(var(--header-offset, 112px) + 1px); }
-/* Sekme köşesi = Gastro BUTON köşesi (--radius-md 12px; tokens-n1Tp8NEY.css:1 · portal-DQfW7by7.css:1 .btn/.btn-login border-radius:var(--radius-md)) */
-.sg-ust .disc-tabs, .sg-ust .disc-tabs .dt, .sg-sekmeler, .sg-sekmeler .dt, .sg-mod-bar__sekmeler, .sg-mod-bar__sekmeler .dt { border-radius: var(--radius-md, 12px); }
-.sg-ust__ev .fa-house { display: inline-block; width: 1.125em; text-align: center; } /* FA house 576/512 em: ikon yazı tipi gelmeden de aynı genişlik */
+/* Tarifler/Bilgilendirme ve Dolap sekmelerinin köşesi = Gastro BUTON köşesi (--radius-md 12px; tokens-n1Tp8NEY.css:1 · portal-DQfW7by7.css:1 .btn/.btn-login border-radius:var(--radius-md)) */
+.sg-sekmeler, .sg-sekmeler .dt, .sg-mod-bar__sekmeler, .sg-mod-bar__sekmeler .dt { border-radius: var(--radius-md, 12px); }
+
+/* =====================================================================
+   Tek satır kaydırıcı (Beyar 2 Kas, H16/H17) — Gastro .row-track + .row-nav kalıbı (portal CSS):
+   iz = tek satır flex, yatay kaydırma, scroll-snap (x mandatory, öğe start), kaydırma çubuğu gizli.
+   Oklar = Gastro .row-nav button (42px kare, --radius-md, 1px --line, hover turuncu dolgu); yalnız taşma varken görünür
+   ([data-tasar], saglik.js kaydiriciKur — visibility: yer hep ayrılı → CLS 0), uçlarda disabled. ≤640: oklar gizli, parmakla kaydırılır.
+   Seçici özgüllüğü (0,2,0): mod.css'teki eski ızgara/sarma kurallarını (.sg-logo-serit ul, .sg-kurum-kutu__izgara) ezer.
+   GÖLGE / kalkma / büyüme yok.
+   ===================================================================== */
+.sg-kaydirici .sg-kaydirici__iz { display: flex; flex-wrap: nowrap; gap: var(--sg-s3); margin: 0; padding: 0 0 2px; list-style: none; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; grid-template-columns: none; }
+.sg-kaydirici .sg-kaydirici__iz::-webkit-scrollbar { display: none; }
+.sg-kaydirici .sg-kaydirici__iz > * { flex: none; min-width: 0; scroll-snap-align: start; }
+.sg-kaydirici .sg-kaydirici__iz:focus-visible { outline: 3px solid var(--r-k, var(--sg-tema)); outline-offset: 2px; }
+.sg-kaydirici__bas { display: flex; align-items: center; justify-content: space-between; gap: var(--sg-s3); }
+.sg-kaydirici__ok { flex: none; visibility: hidden; }
+.sg-kaydirici[data-tasar] .sg-kaydirici__ok { visibility: visible; }
+.sg-kaydirici__ok button { display: inline-grid; place-items: center; padding: 0; box-shadow: none; }
+.sg-kaydirici__ok button:disabled { opacity: .4; cursor: default; background: var(--paper, #fff); border-color: var(--line, #ECECEC); color: var(--slate, #3A3A3A); }
+.sg-kaydirici__ok button:focus-visible { outline: 3px solid var(--r-k, var(--tomato, #DC3D17)); outline-offset: 2px; }
+.sg-bas .sg-kaydirici__ok { align-self: flex-end; }
+@media (max-width: 640px) { .sg-kaydirici__ok { display: none; } }
+
+/* H17 · kurum logoları tek satır */
+.sg-logo-serit .sg-kaydirici__bas { margin-bottom: var(--sg-s2); }
+.sg-logo-serit .sg-kaydirici__bas .sg-logo-serit__bas { margin-bottom: 0; }
+.sg-logo-serit .sg-kaydirici__ok button { width: 32px; height: 32px; font-size: 11px; }
+.sg-logo-serit .sg-kaydirici__iz { gap: var(--sg-s2); }
+.sg-logo-serit .sg-kaydirici__iz > li > a { min-width: 140px; }
+@media (max-width: 900px) { .sg-logo-serit .sg-kaydirici__iz > li > a { min-width: 0; } }
+.sg-kurum-kutu .sg-kaydirici__bas { margin-bottom: var(--sg-s3); }
+.sg-kurum-kutu .sg-kaydirici__bas h2 { margin: 0 !important; }
+.sg-kurum-kutu .sg-kaydirici__ok button { width: 36px; height: 36px; font-size: 12px; }
+.sg-kurum-kutu .sg-kaydirici__iz { gap: var(--sg-s2); }
+.sg-kurum-kutu .sg-kaydirici__iz > li { flex: 0 0 calc((100% - 2 * var(--sg-s2)) / 3); }
+@media (max-width: 640px) { .sg-kurum-kutu .sg-kaydirici__iz > li { flex-basis: calc((100% - var(--sg-s2)) / 2.4); } }
+/* H17 · partner kartları tek satır: sığarsa eşit genişlik (tek satır), sığmazsa kaydırıcı; eşit boy, CTA altta */
+.sg-kaydirici .sg-kaydirici__iz--kart { gap: var(--sg-izgara-bosluk); padding-bottom: 2px; }
+.sg-kaydirici .sg-kaydirici__iz--kart > li { flex: 1 0 min(300px, 84%); display: flex; }
+.sg-kaydirici .sg-kaydirici__iz--kart > li > .sg-kart { flex: 1; }
+@media (prefers-reduced-motion: reduce) { .sg-kaydirici .sg-kaydirici__iz { scroll-behavior: auto; } }

@@ -6,7 +6,7 @@ const TABAN = process.argv[2] || 'http://localhost:8790/DadaSaglik/';
 const O = process.argv[3] || 'rapor/tmp/titreme'; await mkdir(O, { recursive: true });
 const b = await chromium.launch();
 const ADIM = [['saglik-colyak.html', 'Kan Şekeri'], ['saglik-diyabet.html', 'Alerjen'], ['saglik-alerji.html', 'Sütsüz']];
-const SEC = { brand: 'header.header .brand', header: 'header.header', ust: '.sg-ust', sekmeler: '.sg-ust .disc-tabs', aktif: '.sg-ust .dt.active', ev: '.sg-ust__ev' };
+const SEC = { brand: 'header.header .brand', header: 'header.header', ust: '.sg-ust', sekmeler: '.sg-ust__menu', aktif: '.sg-ust__menu > a[aria-current="page"]', ev: '.sg-ust__ev' };
 for (const w of [1440, 390]) {
   const ctx = await b.newContext({ viewport: { width: w, height: w > 500 ? 900 : 844 } });
   const p = await ctx.newPage();
@@ -15,7 +15,7 @@ for (const w of [1440, 390]) {
   let n = 0;
   for (const [, hedef] of ADIM) {
     const izler = [];
-    const tik = p.locator('.sg-ust .dt', { hasText: hedef }).first();
+    const tik = p.locator('.sg-ust__menu > a', { hasText: hedef }).first();
     const t0 = Date.now();
     await tik.click({ noWaitAfter: true });
     for (let i = 0; i < 70; i++) {

@@ -1,3 +1,7 @@
+/* Gastro tarif listesi süzgecinin kendi CSS'i (H18): Gastro tarifler.html bu iki dosyayı tarif-liste.css'ten sonra yükler; Sağlık kabuğu
+   (tarif detayı) yüklemediği için buradan. Kopya stil yok — yalnız .lst-side/.sheet-* kuralları ve --f-* değişkenleri içerirler. */
+@import url("../../gastro/varliklar/reference/shared/dm-p4-f.css");
+@import url("../../gastro/revize/p1/tarifler.css");
 /* Sağlık sayfa bileşenleri: seçki hero (Gastro reklam seçki kalıbı), mod sayfası bölümleri, hub, dolap, detay, bilgi. */
 
 /* ── Seçki hero: sahne tam kaplar, mod renginde soldan sağa açılan katman (public/reklam/secki.css uyarlaması) ── */
@@ -74,33 +78,17 @@
 .sg-dolap-bant__git { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 6px; color: var(--r-k, var(--sg-tema-k)); font-family: var(--sg-font-ekstra); font-weight: 800; }
 @media (max-width: 640px) { .sg-dolap-bant a { flex-wrap: wrap; } .sg-dolap-bant__git { margin-left: 34px; } }
 
-/* ── Tarif listesi: sol filtre + sağ ızgara ── */
+/* ── Tarif listesi: sol süzgeç + sağ ızgara = Gastro .lst-layout/.lst-side/.lst-main (tarif-liste.css + yukarıdaki iki Gastro dosyası) ── */
 .sg-liste-sec { padding-block: clamp(40px, 5vw, 64px); background: linear-gradient(180deg, color-mix(in srgb, var(--r-a) 45%, var(--sg-zemin)) 0, var(--sg-zemin) 360px); }
-.sg-liste { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--sg-s6); align-items: start; }
-.sg-filtre { position: sticky; top: calc(var(--sg-bar-alt) + var(--sg-s4)); max-height: calc(100vh - var(--sg-bar-alt) - var(--sg-s6)); overflow: auto; overscroll-behavior: contain; padding: var(--sg-s4); border-radius: var(--sg-r); background: #fff; box-shadow: var(--sg-golge); }
-.sg-filtre form { display: grid; gap: var(--sg-s5); }
-.sg-filtre fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
-.sg-filtre legend { padding: 0; margin-bottom: var(--sg-s2); font-size: 14px; font-weight: 800; font-family: var(--sg-font-ekstra); }
-.sg-filtre__ust { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sg-s4); }
-.sg-filtre__ust h2 { display: flex; align-items: center; gap: var(--sg-s2); font-size: 1.1rem !important; }
-.sg-filtre__kapat { display: none !important; }
-.sg-sonuc-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sg-s3); margin-bottom: var(--sg-s4); }
-.sg-sonuc-bar > b { font-size: 1.05rem; font-family: var(--sg-font-kalin); font-weight: 700; }
-.sg-sonuc-bar > div { display: flex; gap: var(--sg-s2); align-items: center; }
-.sg-filtre-ac { display: none !important; }
-.sg-liste .lst-grid > [hidden] { display: none !important; } /* Gastro .r-card display:flex [hidden]'ı ezer */
-.sg-daha { display: flex; justify-content: center; margin-top: var(--sg-s5); }
+.lst-layout .lst-grid > [hidden] { display: none !important; } /* Gastro .r-card display:flex [hidden]'ı ezer */
+/* Süzgeçteki arama alanı: Gastro listesinde süzgeç içi arama yok (arama başlıkta) — Gastro .sort-btn kutusunun ölçü/tokenlarıyla en sade alan */
+.sg-fct-ara__alan { display: block; }
+.sg-fct-ara__alan input { display: block; width: 100%; box-sizing: border-box; margin: 0; font-family: inherit; font-size: 13.5px; font-weight: 500; color: var(--slate); padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper); }
+.sg-fct-ara__alan input::placeholder { color: var(--muted); }
+.sg-fct-ara__alan input:focus { outline: none; border-color: var(--tomato); }
+.sg-fct-ara__alan input:focus-visible { outline: 2px solid var(--tomato); outline-offset: 1px; }
 .sg-bos { padding: var(--sg-s6) var(--sg-s4); border-radius: var(--sg-r); background: #fff; box-shadow: inset 0 0 0 1.5px var(--sg-cizgi); text-align: center; }
 .sg-bos p { margin: var(--sg-s2) 0 0; color: var(--sg-ikincil); }
-.sg-perde { display: none; }
-@media (max-width: 1024px) {
-  .sg-liste { grid-template-columns: 1fr; }
-  .sg-filtre { position: fixed; inset: auto 0 0 0; top: auto; z-index: 1200; max-height: 84vh; border-radius: var(--sg-r) var(--sg-r) 0 0; transform: translateY(105%); transition: transform .3s ease; box-shadow: 0 -20px 50px -20px rgba(0, 0, 0, .35); padding-bottom: calc(var(--sg-s4) + env(safe-area-inset-bottom)); }
-  .sg-filtre:not(.sg-acik) { visibility: hidden; transition: transform .3s ease, visibility 0s linear .3s; }
-  .sg-filtre.sg-acik { transform: none; }
-  .sg-filtre__kapat, .sg-filtre-ac { display: inline-flex !important; }
-  .sg-perde.sg-acik { display: block; position: fixed; inset: 0; z-index: 1100; background: rgba(30, 28, 24, .38); }
-}
 
 /* ── Makale ve bilgi kartları ── */
 .sg-makale__medya { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--r-a); }
@@ -254,7 +242,7 @@
 .sg-yazi h3 { font-size: 1.35rem !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sg-filtre, .sg-anahtar__iz, .sg-anahtar__iz::after, .sg-dkat summary :is(svg, .sg-fa), .sg-mz, .sg-yapiskan-bar, .sg-mod-sec__oge { transition: none !important; }
+  .sg-anahtar__iz, .sg-anahtar__iz::after, .sg-dkat summary :is(svg, .sg-fa), .sg-mz, .sg-yapiskan-bar, .sg-mod-sec__oge { transition: none !important; }
 }
 
 /* Görselsiz bölüm kalmasın (Kids varlık kuralı): adım ikonları, dolap hero ikonları, boş durum ikonu */
@@ -282,10 +270,6 @@
 @media (max-width: 640px) { .sg-logo-serit a { height: 48px; padding: 6px var(--sg-s2); } .sg-logo-serit img { height: 34px; max-width: 120px; } }
 .sg-mod-sec__ikon { background: #fff; box-shadow: inset 0 0 0 1px var(--sg-cizgi); }
 .sg-mod-kart__ikon { background: #fff; }
-/* Süzgeç: Gastro düzeni (satırlar); alerjen seçici 3 sütun satır ızgarası */
-.sg-filtre form { gap: var(--sg-s4); }
-.sg-filtre fieldset + fieldset { padding-top: var(--sg-s3); border-top: 1px solid var(--sg-cizgi); }
-.sg-filtre__temizle { justify-self: start; }
 .sg-alerjen-sec__liste { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px var(--sg-s4); }
 @media (max-width: 900px) { .sg-alerjen-sec__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 480px) { .sg-alerjen-sec__liste { grid-template-columns: 1fr; } }
@@ -333,9 +317,8 @@
 .sg-secki-hero + .sg-sekme-bolum::before { height: 100%; }
 /* Köşe üçlüsü = Gastro'nun kendi değerleri (Beyar 2 Kas, 7. revize): kart/panel --radius-lg 16 (Gastro .r-card) · düğme/giriş/satır --radius-md 12 · etiket --radius-sm 8 */
 :root { --sg-r-kart: var(--radius-lg, 16px); }
-.sg-kart, .sg-secki-kutu, .sg-filtre, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge { border-radius: var(--sg-r-kart); }
+.sg-kart, .sg-secki-kutu, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge { border-radius: var(--sg-r-kart); }
 .sg-mod-kart__medya > img { border-radius: var(--sg-r-kart) var(--sg-r-kart) 0 0; }
-@media (max-width: 1024px) { .sg-filtre { border-radius: var(--sg-r-kart) var(--sg-r-kart) 0 0; } }
 
 /* Hero altı panel = Gastro tarif listesi .lst-sec (Beyar 2 Kas, 8. revize): 22px üst köşe, hero'ya 22px biner, üst gölge; renkli çizgi/hilal yok */
 .sg-secki-hero { padding-bottom: calc(22px + var(--sg-s7)); }

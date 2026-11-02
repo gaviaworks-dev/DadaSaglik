@@ -1,5 +1,9 @@
 /* Mod sayfası tarif kataloğu: arama · süre · kategori · "yalnız ikamesiz" · sıralama · sayfalama (12'şer) ·
    genel alerjen süzgeci (DadaSaglik.uygunMu) · boş durum · mobil filtre alt sayfası.
+   İşaretleme = Gastro tarif listesi (H18): .lst-side süzgeç, .lst-bar (.lst-sum · .btn-filter/.fb-count · .sort-dd), .lst-empty.
+   Gastro'nun sunucuya giden davranışları (form gönderimi, sıralama bağlantıları) burada istemci tarafında; aç/kapa kalıpları
+   Gastro tarif-liste.js (sayfa + perde, Escape, sıralama menüsü) ve p1/filtre-paneli.js (masaüstü panel boyu = liste boyu) ile aynı.
+   .fct-head aç/kapa, .fct-more ve Kafes/Liste düğmesi Gastro app.js'te (sayfada yüklü) kalır.
    Izgara kuralı (Kids): yarım satır yok — son sayfada eksik yuvalar tek yönlendirme kartıyla (Dolap) tamamlanır. */
 (function () {
   'use strict';
@@ -7,8 +11,9 @@
   var $$ = function (s, k) { return Array.prototype.slice.call((k || document).querySelectorAll(s)); };
   var ADIM = 12;
   function kur(kok) {
-    var S = window.DadaSaglik, iz = $('[data-sg-izgara]', kok), form = $('[data-sg-filtre]', kok), sirala = $('[data-sg-sirala]', kok);
+    var S = window.DadaSaglik, iz = $('[data-sg-izgara]', kok), form = $('[data-sg-filtre]', kok), siralama = 'onerilen';
     var sayac = $('[data-sg-sonuc]', kok), bos = $('[data-sg-bos]', kok), pagi = $('[data-sg-sayfala]', kok), mod = kok.getAttribute('data-mod');
+    var side = $('.lst-side', kok), main = $('.lst-main', kok), fbSay = $('.fb-count', kok);
     var qs = new URLSearchParams(location.search), boy = Math.min(999, Math.max(1, +qs.get('adet') || ADIM)), sayfa = Math.max(1, +qs.get('sayfa') || 1);
     var kartlar = $$('.sg-tarif', iz), ilk = kartlar.slice();
     var dolgu = document.createElement('a');
@@ -45,7 +50,8 @@
     function adres() { try { var p = new URLSearchParams(location.search); if (sayfa > 1) p.set('sayfa', sayfa); else p.delete('sayfa'); history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : '') + location.hash); } catch (e) {} }
     function ciz(sifirla) {
       if (sifirla) sayfa = 1;
-      var x = d(), s = ilk.slice(), m = sirala.value;
+      var x = d(), s = ilk.slice(), m = siralama;
+      if (m === 'puan') s.sort(function (a, b) { return b.dataset.puan - a.dataset.puan; });
       if (m === 'hizli') s.sort(function (a, b) { return a.dataset.sure - b.dataset.sure; });
       if (m === 'az') s.sort(function (a, b) { return a.dataset.ad.localeCompare(b.dataset.ad, 'tr'); });
       var uygun = s.filter(function (k) { return uyar(k, x); });
@@ -54,8 +60,9 @@
       s.forEach(function (k) { k.hidden = true; iz.appendChild(k); });
       var dilim = uygun.slice((sayfa - 1) * boy, sayfa * boy);
       dilim.forEach(function (k) { k.hidden = false; k.classList.add('sg-gorundu'); iz.appendChild(k); });
-      sayac.textContent = n + ' tarif';
-      bos.hidden = n > 0;
+      sayac.textContent = n.toLocaleString('tr') + ' tarif';
+      bos.classList.toggle('show', !n);
+      etkinler(x);
       // yarım satır: son sayfadaki boş yuvaları tek dolgu kartıyla tamamla
       if (dolgu.parentNode) dolgu.parentNode.removeChild(dolgu);
       var c = sutun(), kalan = dilim.length % c;
@@ -69,22 +76,65 @@
       try { scrollTo({ top: ust, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); } catch (er) { scrollTo(0, ust); }
       var a = $('.sg-tarif:not([hidden]) a', iz); if (a) a.focus({ preventScroll: true });
     });
+    // Gastro .fct-dot / .has-active (grup başına seçili sayısı) ve .btn-filter .fb-count (toplam) — Gastro bunları sunucuda basar
+    function etkinler(x) {
+      var top = 0;
+      $$('.fct', form).forEach(function (g) {
+        var n = $$('input', g).filter(function (i) { return i.type === 'search' ? !!i.value.trim() : i.checked && i.value !== ''; }).length;
+        var dot = $('.fct-dot', g); if (dot) dot.textContent = n;
+        g.classList.toggle('has-active', n > 0); top += n;
+      });
+      if (fbSay) { fbSay.textContent = top; fbSay.hidden = !top; }
+    }
     form.addEventListener('input', function () { ciz(true); });
     form.addEventListener('change', function () { ciz(true); });
     form.addEventListener('reset', function () { setTimeout(function () { ciz(true); }, 0); });
     form.addEventListener('submit', function (e) { e.preventDefault(); });
-    sirala.addEventListener('change', function () { ciz(true); });
+    // Temizle / Tümünü Temizle: Gastro'da sayfa adresine bağlantı (süzgeçsiz sayfa); burada aynı bağlantı, JS ile yerinde sıfırlar
+    $$('[data-sg-temizle]', kok).forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); form.reset(); }); });
+    // Sıralama menüsü (Gastro tarif-liste.js: .sort-dd.open, dışarı tıklayınca kapanır)
+    var dd = $('.sort-dd', kok), ddBtn = dd && $('.sort-btn', dd), ddCur = dd && $('#sortCur', dd);
+    if (dd && ddBtn) {
+      var ddKapat = function () { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); };
+      ddBtn.addEventListener('click', function (e) { e.stopPropagation(); var a = dd.classList.toggle('open'); ddBtn.setAttribute('aria-expanded', a ? 'true' : 'false'); });
+      document.addEventListener('click', function (e) { if (!e.target.closest('.sort-dd')) ddKapat(); });
+      $$('[data-sg-sirala]', dd).forEach(function (b) {
+        b.addEventListener('click', function () {
+          siralama = b.getAttribute('data-sg-sirala');
+          $$('[data-sg-sirala]', dd).forEach(function (o) { o.classList.toggle('active', o === b); });
+          if (ddCur) ddCur.textContent = b.textContent.trim();
+          ddKapat(); ddBtn.focus(); ciz(true);
+        });
+      });
+    }
     S.dinle(function () { ciz(true); });
     var r; addEventListener('resize', function () { clearTimeout(r); r = setTimeout(function () { ciz(false); }, 120); });
-    // mobil filtre alt sayfası
-    var ac = $('.sg-filtre-ac', kok), panel = ac && document.getElementById(ac.getAttribute('aria-controls'));
-    if (ac && panel) {
-      var perde = document.createElement('div'); perde.className = 'sg-perde'; document.body.appendChild(perde);
-      var acF = function () { panel.classList.add('sg-acik'); perde.classList.add('sg-acik'); ac.setAttribute('aria-expanded', 'true'); var i = $('input', panel); if (i) i.focus(); };
-      var kapat = function () { panel.classList.remove('sg-acik'); perde.classList.remove('sg-acik'); ac.setAttribute('aria-expanded', 'false'); };
+    // Kafes/Liste (Gastro app.js geçişi yapar) → dolgu kartı sütun sayısına göre yeniden
+    $$('[data-view]', kok).forEach(function (b) { b.addEventListener('click', function () { setTimeout(function () { ciz(false); }, 0); }); });
+    // Mobil süzgeç sayfası (Gastro tarif-liste.js birebir: .lst-side.open + .sheet-overlay.open, gövde kilidi, alt çubuk gizlenir).
+    // Perdeye ayrıca Gastro token CSS'inin açık sınıfı .is-open: tokens .sheet-overlay{display:none} yalnız .is-open'da açılır, tarif-liste.js
+    // ise .open verir → yerel Gastro donöründe perde hiç görünmüyor/tıklanmıyor (ölçüldü: 0×0). İki sınıf birlikte = perde karartır ve kapatır.
+    var ac = $('.btn-filter', kok), perde = $('.sheet-overlay', kok), kapa = $('.sheet-close', kok);
+    if (ac && side && perde) {
+      var acik = false;
+      var altlar = function (gizle) { var bn = document.querySelector('.bottom-nav'), mp = document.getElementById('mentorPanel'); if (bn) bn.classList.toggle('bn-hidden', gizle); if (mp) mp.classList.toggle('foot-hide', gizle); };
+      var acF = function () { acik = true; side.classList.add('open'); perde.classList.add('open', 'is-open'); document.body.style.overflow = 'hidden'; document.body.classList.add('bn-lock'); altlar(true); ac.setAttribute('aria-expanded', 'true'); if (kapa) kapa.focus({ preventScroll: true }); };
+      var kapat = function () { if (!acik) return; acik = false; side.classList.remove('open'); perde.classList.remove('open', 'is-open'); document.body.style.overflow = ''; document.body.classList.remove('bn-lock'); altlar(false); ac.setAttribute('aria-expanded', 'false'); ac.focus({ preventScroll: true }); };
       ac.addEventListener('click', acF); perde.addEventListener('click', kapat);
-      $$('.sg-filtre__kapat', panel).forEach(function (b) { b.addEventListener('click', kapat); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') kapat(); });
+      if (kapa) kapa.addEventListener('click', kapat);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { kapat(); if (dd) { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); } } });
+    }
+    // Masaüstü panel boyu = liste sütunu boyu (Gastro p1/filtre-paneli.js; satır içi stil yazılmaz, CSSOM kuralı)
+    if (side && main && side.id) {
+      var st = document.createElement('style'); document.head.appendChild(st);
+      st.sheet.insertRule('@media (min-width:1025px) { #' + side.id + ' { max-height:none; overflow-y:auto; } }');
+      var kural = st.sheet.cssRules[0].cssRules[0];
+      var olc = function () { var h = main.getBoundingClientRect().height; if (h > 0) kural.style.maxHeight = h + 'px'; };
+      if (window.ResizeObserver) new ResizeObserver(olc).observe(main);
+      addEventListener('resize', olc); olc();
+      // aria-expanded eşlemesi (Gastro filtre-paneli.js states(); aç/kapa Gastro app.js'te)
+      var durum = function () { $$('.fct', side).forEach(function (g) { var h = $('.fct-head', g), m = $('.fct-more', g); if (h) h.setAttribute('aria-expanded', String(g.classList.contains('open'))); if (m) m.setAttribute('aria-expanded', String(g.classList.contains('more-open'))); }); };
+      new MutationObserver(durum).observe(side, { subtree: true, attributes: true, attributeFilter: ['class'] }); durum();
     }
     ciz(false);
   }

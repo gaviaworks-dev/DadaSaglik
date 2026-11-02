@@ -8,7 +8,7 @@ for (const w of [1440, 390]) {
   const h = 260; const dir = `${O}/_${AD}-${w}`;
   const ctx = await b.newContext({ viewport: { width: w, height: h }, recordVideo: { dir, size: { width: w, height: h } } });
   const p = await ctx.newPage(); await p.goto(TABAN + 'saglik-colyak.html', { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
-  for (const t of ['Kan Şekeri', 'Alerjen', 'Sütsüz', 'Düşük FODMAP', 'Kalp Dostu', 'Glutensiz']) { await p.locator('.sg-ust .dt', { hasText: t }).first().click(); await p.waitForLoadState('networkidle'); await p.waitForTimeout(700); }
+  for (const t of ['Kan Şekeri', 'Alerjen', 'Sütsüz', 'Düşük FODMAP', 'Kalp Dostu', 'Glutensiz']) { await p.locator('.sg-ust__menu > a', { hasText: t }).first().click(); await p.waitForLoadState('networkidle'); await p.waitForTimeout(700); }
   await ctx.close();
   const f = (await readdir(dir)).find((x) => x.endsWith('.webm')); await rename(`${dir}/${f}`, `${O}/${AD}-${w}.webm`);
 }

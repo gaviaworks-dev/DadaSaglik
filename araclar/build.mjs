@@ -9,7 +9,9 @@ import { readFile, writeFile, readdir, access, mkdir, copyFile } from 'node:fs/p
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
-import * as ortak from '../src/saglik/ortak.mjs';
+import * as ortak0 from '../src/saglik/ortak.mjs';
+import * as kart from '../src/saglik/kart.mjs';
+const ortak = { ...ortak0, ...kart };
 import { kabukTemizle, tokenTaramasi } from './temizle.mjs';
 
 const KOK = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
@@ -132,7 +134,7 @@ async function saglikSayfasi({ dosya, baslik, aciklama, main, css = [], js = [],
   // Titreme önleme: Gilroy dosyaları <head> başında preload (Gastro tokens CSS'teki aynı URL'ler; ilk boyamada font hazır)
   html = zorunlu(html, '<head>', `<head>\n${['Gilroy-Medium', 'Gilroy-ExtraBold'].map((f) => `<link rel="preload" href="varlik/gastro/varliklar/fonts/gilroy/${f}.woff2" as="font" type="font/woff2" crossorigin>`).join('\n')}\n<link rel="preload" href="varlik/gastro/varliklar/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>`, 'font preload');
   if (!detay) html = zorunlu(html, '</head>', '<link rel="stylesheet" href="varlik/gastro/varliklar/reference/tarif-liste/tarif-liste.css">\n</head>', 'tarif-liste css');
-  return yorum('https://dadagastro.com (kabuk: tarif detayı)', 'Health sayfası') + await kabukEkle(html, { css: ['yazi', ...css], js });
+  return yorum('https://dadagastro.com (kabuk: tarif detayı)', 'Health sayfası') + await kabukEkle(html, { css: ['yazi', ...css, 'rol'], js });
 }
 
 /* ---------- index.html — Gastro ana sayfa + Sağlık bandı (kapı A) ---------- */

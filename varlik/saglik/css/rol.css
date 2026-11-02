@@ -1,0 +1,58 @@
+/* =====================================================================
+   ROL TİPOGRAFİSİ = GASTRO (Beyar 2 Kas H13) — Health sayfalarının en son yüklenen katmanı.
+   Aynı roldeki Gastro öğesinin hesaplanan değerleri (font-family · weight · size · line-height · letter-spacing · dönüşüm):
+   ölçüm ve kaynak: araclar/font-rol-olc.mjs → rapor/tmp/font-rol/rapor.md. Mobil kırılım Gastro'nunki: max-width 640px.
+   Kaynaklar: H1 tarif-liste.css .lst-hero h1 · H2 portal .sec-head h2 · üst yazı portal .eyebrow · bölüm/hero girişi .sec-head .lead /
+   .lst-hero .lead · gövde mutfaga-giris/hub.css .seo-prose p · kart mutfaga-giris/ogrenme.css .topic-card h3/p/.topic-go ·
+   "tümünü gör" portal .see-all · düğme portal .btn · istatistik tarif-liste.css .lst-stats .st.
+   Ağırlık 700 Gastro'daki gibi "Gilroy 700" ister; css/yazi.css bunu Gastro'nun ExtraBold dosyasına bağlar (sahte kalın yok, kanon §5).
+   Tarif detayı (Gastro detay şablonu, .pg-tarif-detay) yalnız menü kuralını alır; içerikte Gastro'nun kendi kuralları geçerli.
+   Menü (.sg-ust__menu) Kids alt menüsünün birebir kopyası (H12) — boyutu Kids'ten gelir; yalnız aile/satır Gastro'ya eşitlenir.
+   ===================================================================== */
+body:not(.pg-tarif-detay) .sg-sayfa :is(h1, h2, h3, h4):not(.r-card *, .lst-side *, .lst-empty *) { font-family: Gilroy, system-ui, sans-serif; font-weight: 700; }
+
+/* H1 · sayfa başlığı */
+body:not(.pg-tarif-detay) .sg-sayfa h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.03em; }
+/* H2 · bölüm başlığı */
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-bas h2, .sg-dolap__bas h2, .sg-ok-bas h2, .sg-alerjen-sec__bas h2) { font-size: 34px; line-height: 1.12; letter-spacing: -.02em; }
+/* H2 · düzyazı içi (yazı detayı) */
+body:not(.pg-tarif-detay) .sg-sayfa .sg-ok-kolon h2 { font-size: 26px; line-height: 1.12; letter-spacing: -.02em; }
+/* H3 · kart başlığı */
+body:not(.pg-tarif-detay) .sg-sayfa :is(h3, .sg-ok-kart__baslik):not(.r-card *, .lst-side *, .lst-empty *) { font-size: 17px !important; line-height: 1.12 !important; letter-spacing: -.02em; }
+
+/* Üst yazı (hero ve bölüm) */
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-eyebrow, .sg-ust-yazi, .sg-ok-ust, .sg-ok-hero__kat) { font-family: Gilroy, system-ui, sans-serif; font-weight: 700; font-size: 12px; line-height: 1.55; letter-spacing: .16em; text-transform: uppercase; }
+
+/* Hero ve bölüm giriş paragrafı */
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-lead, .sg-ok-kolon > .sg-ok-giris, .sg-bas p, .sg-ok-bas p) { font-family: Gilroy, system-ui, sans-serif; font-weight: 500; font-size: 15.5px; line-height: 1.55; letter-spacing: 0; }
+
+/* Hero istatistikleri */
+body:not(.pg-tarif-detay) .sg-sayfa .sg-st b { font-family: GilroyBd, Gilroy, system-ui, sans-serif; font-weight: 700; font-size: 29px; line-height: 1.1; letter-spacing: -.02em; }
+body:not(.pg-tarif-detay) .sg-sayfa .sg-st span { font-family: Gilroy, system-ui, sans-serif; font-weight: 500; font-size: 12.5px; line-height: 1.55; }
+
+/* Gövde (düzyazı) */
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-ok-kolon > p:not(.sg-ok-giris), .sg-ok-kolon li > span, .sg-ok-liste li, .sg-adim > p, .sg-kural li, .sg-yazi__govde > p) { font-family: Gilroy, system-ui, sans-serif; font-weight: 500; font-size: 15px; line-height: 1.7; letter-spacing: 0; }
+
+/* Kart metni ve kart eylemi */
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-kart__govde > p, .sg-partner__govde p, .sg-ok-kart__ozet, .sg-konu-kart p, .sg-mkart p) { font-family: Gilroy, system-ui, sans-serif; font-weight: 500; font-size: 13px; line-height: 1.55; letter-spacing: 0; }
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-kart__alt, .sg-partner__site, .sg-ok-kart__git, .sg-konu-kart__git) { font-family: Gilroy, system-ui, sans-serif; font-weight: 700; font-size: 13px; line-height: 1.55; letter-spacing: 0; }
+
+/* "Tümünü gör" */
+body:not(.pg-tarif-detay) .sg-sayfa .sg-bag { font-family: Gilroy, system-ui, sans-serif; font-weight: 700; font-size: 13.5px; line-height: 1.55; letter-spacing: 0; }
+
+/* Düğme / CTA */
+body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-btn, .sg-dolap-bant__git) { font-family: Gilroy, system-ui, sans-serif; font-weight: 700; font-size: 14.5px; line-height: 1.55; letter-spacing: 0; }
+
+/* Kırıntı */
+body:not(.pg-tarif-detay) .sg-sayfa .sg-kirinti a { font-family: Gilroy, system-ui, sans-serif; font-weight: 500; font-size: 13px; line-height: 1.55; }
+body:not(.pg-tarif-detay) .sg-sayfa .sg-kirinti b { font-family: GilroyBd, Gilroy, system-ui, sans-serif; font-weight: 700; font-size: 13px; line-height: 1.55; }
+
+/* Menü (Kids boyutu korunur; aile ve satır Gastro) */
+.sg-ust__menu > a { font-family: Gilroy, system-ui, sans-serif; line-height: 1.55; }
+
+@media (max-width: 640px) {
+  body:not(.pg-tarif-detay) .sg-sayfa h1 { font-size: 29px; }
+  body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-bas h2, .sg-dolap__bas h2, .sg-ok-bas h2, .sg-alerjen-sec__bas h2) { font-size: 24px; }
+  body:not(.pg-tarif-detay) .sg-sayfa :is(.sg-lead, .sg-ok-kolon > .sg-ok-giris, .sg-bas p, .sg-ok-bas p) { font-size: 14.5px; }
+  body:not(.pg-tarif-detay) .sg-sayfa .sg-st b { font-size: 20px; }
+}

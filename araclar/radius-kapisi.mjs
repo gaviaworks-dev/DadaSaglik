@@ -19,7 +19,7 @@ const t = await chromium.launch();
 let R = null, R2 = null, R3 = null, kirmizi = 0, toplam = 0;
 // Etiket köşesi (Beyar 2 Kas): Gastro --radius-sm (.r-chip/.chip/.cbx) yalnız etiket/rozet/chip/onay kutusu sınıflarında
 const PANEL = '.sg-secki-hero + section';   // Gastro .lst-sec hero altı paneli: 22px üst köşe
-const KART = '.sg-kart, .sg-mod-kart__medya > img, .r-card, .sg-secki-kutu, .sg-filtre, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge';
+const KART = '.sg-kart, .sg-mod-kart__medya > img, .r-card, .sg-secki-kutu, .lst-side, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge';
 const ETIKET = '.r-chip, .sg-r-ikame, .sg-sekmeler__n, .sg-uyum, .sg-al, .sg-chip, .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden, .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx';
 { // ölçüm: Gastro "Giriş Yap"
   const p = await t.newPage({ viewport: { width: 1440, height: 900 } });

@@ -1,11 +1,12 @@
 // Hızlı duman: her sayfa 200 · JS hatası 0 · başarısız istek 0 · 1440/390 ekran görüntüsü (göz kontrolü).
 // Kullanım: node araclar/duman.mjs [taban-url] [çıktı-klasörü]
 import { chromium } from 'playwright';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readdir } from 'node:fs/promises';
 const TABAN = process.argv[2] || 'http://localhost:8790/DadaSaglik/';
 const CIKTI = process.argv[3] || 'rapor/tmp/duman';
 await mkdir(CIKTI, { recursive: true });
-const SAYFALAR = ['index.html', 'tarifler.html', 'saglik.html', ...['colyak', 'diyabet', 'alerji', 'laktoz', 'ibs', 'kalp'].flatMap((k) => [`saglik-${k}.html`, `saglik-${k}-bilgi.html`]), 'saglik-dolap.html', 'saglik-bilgi.html', 'saglik-tarif.html?t=__ILK__&mod=colyak'];
+const SAYFALAR = ['index.html', 'tarifler.html', 'saglik.html', ...['colyak', 'diyabet', 'alerji', 'laktoz', 'ibs', 'kalp'].flatMap((k) => [`saglik-${k}.html`, `saglik-${k}-bilgi.html`]), 'saglik-dolap.html', 'saglik-bilgi.html', 'saglik-tarif.html?t=__ILK__&mod=colyak', 'saglik-bilgi.html?mod=colyak',
+  ...(await readdir('.')).filter((f) => /^saglik-yazi-.+\.html$/.test(f)).sort()];
 const b = await chromium.launch();
 let kirmizi = 0, ilk = null;
 for (const w of [1440, 390]) {

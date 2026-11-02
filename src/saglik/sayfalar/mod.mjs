@@ -1,5 +1,12 @@
 // Altı mod × iki sekme (Beyar 2 Kas): Tarifler (saglik-<kod>.html) · Bilgilendirme (saglik-<kod>-bilgi.html).
 // Kids alt sekmesi × Gastro reklam seçki sayfası hibriti (tasks/saglik-plan.md §4). Hero iki sekmede aynı; sekme çubuğu hero'nun hilal girişinde.
+import { readFile } from 'node:fs/promises';
+
+// Gastro kategori süzgecinin küçük görselleri (.cat-fct .cn-thumb) — Gastro tarif listesi donöründen, kategori slug'ı → görsel (H18)
+const KAT_THUMB = await readFile(new URL('../../donor/tarifler.html', import.meta.url), 'utf8')
+  .then((h) => Object.fromEntries([...h.matchAll(/name="kategori\[\]" value="([^"]+)">\s*<span class="cbx"><\/span>\s*<span class="cn-thumb" style="background-image:url\('([^']+)'\)"/g)].map((m) => [m[1], m[2]])))
+  .catch(() => ({}));
+
 export default async function (o) {
   const { esc, ui, MODLAR, ESLESME, SAHNE, icerik } = o;
   return MODLAR.flatMap((M) => {
@@ -62,26 +69,56 @@ export default async function (o) {
 
     const dolapBant = `<aside class="sg-dolap-bant" data-renk="${M.renk}"><div class="wrap"><a href="saglik-dolap.html?mod=${M.kod}">${ui('dolap', 22)}<span>Elindeki malzemelerle <b>${esc(o.SEKME[M.kod])}</b> modunda ne yapabilirsin?</span><span class="sg-dolap-bant__git">Dolabı aç ${ui('ok', 18)}</span></a></div></aside>`;
 
-    const filtre = `<aside class="sg-filtre" id="sgFiltre-${M.kod}" aria-label="Tarif filtreleri">
-  <div class="sg-filtre__ust"><h2>${ui('filtre', 20)} Filtrele</h2><button type="button" class="sg-filtre__kapat sg-btn sg-btn--hafif sg-btn--kucuk">Kapat</button></div>
-  <form data-sg-filtre>
-   <label class="sg-ara"><span class="sg-gizli">Tariflerde ara</span>${ui('ara', 18)}<input type="search" name="q" placeholder="Tariflerde ara" autocomplete="off"></label>
-   <fieldset><legend>Süre</legend><div class="sg-satirlar">${[['', 'Tümü'], ['30', '30 dk ve altı'], ['60', '60 dk ve altı']].map(([v, a], i) => o.satir({ tur: 'radio', ad: 'sure', deger: v, etiket: a, secili: i === 0 })).join('')}</div></fieldset>
-   ${M.kod !== 'alerji' ? `<fieldset><legend>İkame</legend><div class="sg-satirlar">${o.satir({ tur: 'checkbox', ad: 'ikamesiz', deger: '1', etiket: 'Yalnız ikame gerektirmeyenler' })}</div></fieldset>` : ''}
-   <fieldset><legend>Kategori</legend><div class="sg-satirlar">${kategoriler.map(([k, n]) => o.satir({ tur: 'checkbox', ad: 'kat', deger: k, etiket: o.katAd(k), sayi: n })).join('')}</div></fieldset>
-   <button type="reset" class="sg-btn sg-btn--hafif sg-btn--kucuk sg-filtre__temizle">Filtreleri temizle</button>
+    // Süzgeç = Gastro tarif listesi sol paneli BİREBİR (H18): .lst-side > .sheet-head · form > .sheet-body (.fil-top · .fct …) · .sheet-foot;
+    // ≤1024 alttan açılan sayfa (.lst-side.open + .sheet-overlay.open). Stil tamamen Gastro tarif-liste.css (+ p1/tarifler.css, p4-f);
+    // davranış katalog.js (sunucusuz). data-bound="1": Gastro app.js'in "onay kutusu değişince formu gönder" bağını kurmaması için.
+    const sureN = (dk) => liste.filter((x) => { const s = (x.t.hazirlik_dk || 0) + (x.t.pisirme_dk || 0); return s && s <= dk; }).length;
+    const fct = ({ grup, ad, ikon = '', govde, sinif = '' }) => `<div class="fct${sinif ? ' ' + sinif : ''} open" data-group="${grup}">
+    <button class="fct-head" type="button" aria-expanded="true">${ikon ? `<i class="fa-solid fa-${ikon} fct-head-ico" aria-hidden="true"></i>` : ''} ${ad} <span class="fct-dot">0</span><i class="fa-solid fa-chevron-down fct-car" aria-hidden="true"></i></button>
+    <div class="fct-body">${govde}</div>
+   </div>`;
+    const GORUNEN = 8; // Gastro: grup başına 8 satır, kalanı "N seçenek daha"
+    const katGovde = kategoriler.map(([k, n], i) => o.satir({ tur: 'checkbox', ad: 'kat', deger: k, etiket: o.katAd(k), sayi: n, thumb: KAT_THUMB[k] || '', xtra: i >= GORUNEN })).join('')
+      + (kategoriler.length > GORUNEN ? `<button class="fct-more" type="button" data-more="${kategoriler.length - GORUNEN} seçenek daha" data-less="Daha az göster">${kategoriler.length - GORUNEN} seçenek daha <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>` : '');
+    const temizle = (ek = '') => `<a class="fil-clear" href="${M.dosya}" data-sg-temizle${ek}>`;
+    const filtre = `<aside class="lst-side" id="lstSide" aria-label="Tarif filtreleri">
+  <div class="sheet-head">
+   <h3><i class="fa-solid fa-sliders" aria-hidden="true"></i> Filtrele</h3>
+   <div class="sh-right">${temizle()}Temizle</a><button class="sheet-close" id="sheetClose" type="button" aria-label="Filtre panelini kapat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+  </div>
+  <form method="GET" action="${M.dosya}" data-facet-form data-bound="1" data-sg-filtre>
+   <div class="sheet-body">
+   <div class="fil-top"><h3><i class="fa-solid fa-sliders" aria-hidden="true"></i> Filtreler</h3></div>
+   ${fct({ grup: 'ara', ad: 'Ara', ikon: 'magnifying-glass', sinif: 'sg-fct-ara', govde: `<label class="sg-fct-ara__alan"><span class="sg-gizli">Tariflerde ara</span><input type="search" name="q" placeholder="Tarif adı ya da malzeme" autocomplete="off"></label>` })}
+   ${fct({ grup: 'kategori', ad: 'Kategori', sinif: 'cat-fct', govde: katGovde })}
+   ${fct({ grup: 'sure', ad: 'Süre', ikon: 'clock', govde: [['', 'Tümü', liste.length], ['30', '30 dk ve altı', sureN(30)], ['60', '60 dk ve altı', sureN(60)]].map(([v, a, n], i) => o.satir({ tur: 'radio', ad: 'sure', deger: v, etiket: a, sayi: n, secili: i === 0 })).join('') })}
+   ${M.kod !== 'alerji' ? fct({ grup: 'ikame', ad: 'Akıllı İkame', ikon: 'right-left', govde: o.satir({ tur: 'checkbox', ad: 'ikamesiz', deger: '1', etiket: 'Yalnız ikame gerektirmeyenler', sayi: liste.length - ikameli }) }) : ''}
+   </div>
+   <div class="sheet-foot">${temizle(' data-f-ayak')}Tümünü Temizle</a></div>
   </form>
- </aside>`;
+ </aside>
+ <div class="sheet-overlay" id="sheetOverlay"></div>`;
 
+    const SIRA = [['onerilen', 'Önerilen', 'wand-magic-sparkles'], ['puan', 'En Çok Puanlanan', 'star'], ['hizli', 'En Hızlı', 'bolt'], ['az', 'A–Z', 'arrow-down-a-z']];
     const izgara = `<section class="sg-liste-sec" data-renk="${M.renk}" aria-labelledby="tf-${M.kod}">
  <div class="wrap">
   ${o.bolumBasi({ ust: 'Tarifler', baslik: `${esc(o.SEKME[M.kod])} moduna uygun tarifler`, alt: 'Dada Gastro tariflerinden bu modun kuralına uyanlar. Karttaki rozetler mod uyumunu ve uygulanan akıllı ikameyi gösterir.', id: `tf-${M.kod}` })}
-  <div class="sg-liste" data-sg-katalog data-mod="${M.kod}">
+  <div class="lst-layout" data-sg-katalog data-mod="${M.kod}">
    ${filtre}
-   <div class="sg-liste__ana">
-    <div class="sg-sonuc-bar"><b data-sg-sonuc>${liste.length} tarif</b><div><button type="button" class="sg-filtre-ac sg-btn sg-btn--hafif sg-btn--kucuk" aria-controls="sgFiltre-${M.kod}" aria-expanded="false">${ui('filtre', 18)} Filtrele</button><label><span class="sg-gizli">Sırala</span><select class="sg-sec" data-sg-sirala><option value="onerilen">Önerilen</option><option value="hizli">En hızlı</option><option value="az">A–Z</option></select></label></div></div>
-    <div class="lst-grid" data-sg-izgara>${liste.map((x, i) => o.tarifKart(x.t, x.r, M, { sira: i })).join('')}</div>
-    <div class="sg-bos" data-sg-bos hidden><h3>Bu süzgeçle tarif kalmadı</h3><p>Filtreleri gevşetin ya da alerjen seçiminizi gözden geçirin.</p></div>
+   <div class="lst-main">
+    <div class="lst-bar">
+     <p class="lst-sum" id="lstSum" role="status" aria-live="polite"><b data-sg-sonuc>${liste.length} tarif</b> bulundu</p>
+     <div class="lst-tools">
+      <button class="btn-filter" id="btnFilter" type="button" aria-controls="lstSide" aria-expanded="false"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Filtrele <span class="fb-count" id="filCount" hidden>0</span></button>
+      <div class="vw-seg" id="vwSeg" data-view-seg role="group" aria-label="Görünüm"><button class="vs-btn is-on" type="button" data-view="grid" data-view-target="lstGrid" aria-label="Kafes görünümü" aria-pressed="true"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button><button class="vs-btn" type="button" data-view="list" data-view-target="lstGrid" aria-label="Liste görünümü" aria-pressed="false"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div>
+      <div class="sort-dd" id="sortDd">
+       <button class="sort-btn" id="sortBtn" type="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i><span class="sb-lbl">Sıralama:</span> <span id="sortCur">${SIRA[0][1]}</span> <i class="fa-solid fa-chevron-down sb-car" aria-hidden="true"></i></button>
+       <div class="sort-menu" role="menu">${SIRA.map(([v, a, ik], i) => `<button type="button"${i ? '' : ' class="active"'} role="menuitem" data-sg-sirala="${v}"><i class="fa-solid fa-${ik}" aria-hidden="true"></i> ${a}</button>`).join('')}</div>
+      </div>
+     </div>
+    </div>
+    <div class="lst-grid" id="lstGrid" data-sg-izgara>${liste.map((x, i) => o.tarifKart(x.t, x.r, M, { sira: i })).join('')}</div>
+    <div class="lst-empty" data-sg-bos><h3>Bu süzgeçle tarif kalmadı</h3><p>Filtreleri gevşetin ya da alerjen seçiminizi gözden geçirin.</p>${temizle()}Filtreleri temizle</a></div>
     <nav class="pagi sg-pagi" data-sg-sayfala aria-label="Sayfalama"></nav>
    </div>
   </div>
@@ -92,10 +129,10 @@ export default async function (o) {
     const gorselHavuzu = liste.filter((x) => x.t.slug !== sahne?.slug).slice(3, 30);
     const bilgi = makaleler.length ? `<section class="sg-bolum sg-bolum--beyaz" aria-labelledby="bl-${M.kod}">
  <div class="wrap">
-  ${o.bolumBasi({ ust: 'Bilgi', baslik: 'Okumaya değer', alt: 'Mutfakta işe yarayan kısa notlar.', id: `bl-${M.kod}`, sag: `<a class="sg-bag" href="saglik-bilgi.html#${M.kod}">Tüm yazılar</a>` })}
+  ${o.bolumBasi({ ust: 'Bilgi', baslik: 'Okumaya değer', alt: 'Mutfakta işe yarayan kısa notlar.', id: `bl-${M.kod}`, sag: `<a class="sg-bag" href="saglik-bilgi.html?mod=${M.kod}">Tüm yazılar</a>` })}
   <div class="sg-izgara sg-izgara--3s sg-esit">${makaleler.map((a, i) => {
     const g = gorselHavuzu[i * 7] || gorselHavuzu[0];
-    return `<a class="sg-kart sg-makale" href="saglik-bilgi.html#${esc(a.slug)}" data-renk="${M.renk}">
+    return `<a class="sg-kart sg-makale" href="saglik-yazi-${esc(a.slug)}.html" data-renk="${M.renk}">
      <div class="sg-makale__medya">${g ? o.foto(o.tarifGorsel(g.t), '') : ''}<span class="sg-makale__sure">${esc(a.okuma_dk || 3)} dk okuma</span></div>
      <div class="sg-kart__govde"><h3>${esc(a.baslik)}</h3><p>${esc(a.ozet)}</p><span class="sg-kart__alt">Oku ${ui('ok', 18)}</span></div>
     </a>`; }).join('')}</div>

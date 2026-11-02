@@ -30,16 +30,40 @@ for r in c.execute('''select tm.tarif_id, tm.grup_basligi, tm.sira, tm.miktar, c
         'ad': (r['mad'] or r['serbest_ad'] or '').strip(), 'aciklama': (r['aciklama'] or '').strip()})
 
 adim = {}
-for r in c.execute('select tarif_id, sira, baslik, metin from tarif_adimlari where coalesce(pasif_mi,0)=0 order by tarif_id, sira'):
-    adim.setdefault(r['tarif_id'], []).append({'baslik': r['baslik'] or '', 'metin': r['metin'] or ''})
+for r in c.execute('select tarif_id, sira, baslik, metin, sure_dk from tarif_adimlari where coalesce(pasif_mi,0)=0 order by tarif_id, sira'):
+    adim.setdefault(r['tarif_id'], []).append({'baslik': r['baslik'] or '', 'metin': r['metin'] or '', 'sure_dk': r['sure_dk'] or None})
+
+# H20 detay paritesi (Gastro TarifDetayServisi kuralları; yalnız SAYIM — kişi/hesap kimliği dışarı çıkmaz):
+# etiketler (tarif_etiketleri → taksonomi_terimleri, sira), gerçek puan/değerlendirme (`degerlendirmeler` satırlarından —
+# tarifler.ortalama_puan/degerlendirme_sayisi/yorum_sayisi Gastro'da "SAHTE SAYAÇ" diye işaretli donmuş tohum sütunları),
+# yayındaki üst yorum sayısı, "Ben de Yaptım" (uye_denemeleri) ve "Eline Sağlık" (tarif_begenileri) sayaçları, şef sayaçları.
+etiket = {}
+for r in c.execute('''select te.tarif_id, tt.terim from tarif_etiketleri te join taksonomi_terimleri tt on tt.id = te.terim_id
+                      where coalesce(trim(tt.terim), '') != '' order by te.tarif_id, te.sira'''):
+    etiket.setdefault(r['tarif_id'], []).append(r['terim'])
+yorumcu = {}  # tarif → yayındaki yorumu olan hesaplar (yalnız yorumsuz-puan sayımı için; çıktıya girmez)
+yorum_say = {}
+for r in c.execute("select hedef_id, hesap_id, ust_yorum_id from yorumlar where hedef_tur = 'tarif' and durum = 'yayin'"):
+    yorumcu.setdefault(r['hedef_id'], set()).add(r['hesap_id'])
+    if r['ust_yorum_id'] is None: yorum_say[r['hedef_id']] = yorum_say.get(r['hedef_id'], 0) + 1
+puan = {}
+for r in c.execute('select tarif_id, hesap_id, puan from degerlendirmeler'):
+    p = puan.setdefault(r['tarif_id'], {'n': 0, 'top': 0, 'dagilim': {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}, 'yorumsuz': 0})
+    p['n'] += 1; p['top'] += r['puan'] or 0
+    if r['puan'] in p['dagilim']: p['dagilim'][r['puan']] += 1
+    if r['hesap_id'] not in yorumcu.get(r['tarif_id'], set()): p['yorumsuz'] += 1
+deneme = {r[0]: r[1] for r in c.execute('select tarif_id, count(*) from uye_denemeleri group by tarif_id')}
+alkis = {r[0]: r[1] for r in c.execute('select tarif_id, count(*) from tarif_begenileri group by tarif_id')}
+sef_tarif = {r[0]: r[1] for r in c.execute("select sef_id, count(*) from tarifler where durum = 'yayinda' and deleted_at is null group by sef_id")}
+takipci = {r[0]: r[1] for r in c.execute('select takip_edilen_id, count(*) from takipler group by takip_edilen_id')}
 
 besin = {}
 for r in c.execute('select * from tarif_besin_degerleri'):
     besin[r['tarif_id']] = {k: r[k] for k in ['kalori', 'protein_g', 'karbonhidrat_g', 'yag_g', 'lif_g', 'seker_g', 'sodyum_mg', 'doymus_yag_g', 'hesaplanabildi']}
 
 # Gastro kart/detay paritesi (Beyar 2 Kas): şef görünen adı + unvanı, görüntülenme, bütçe, hatırlatma, tarihler (e-posta vb. ALINMAZ)
-sef = {r['id']: {'ad': ' '.join(x for x in [r['ad'], r['soyad']] if x).strip(), 'unvan': r['unvan'], 'kadi': r['kullanici_adi'], 'uye': r['uye_oldu_at']}
-       for r in c.execute('select u.id, u.kullanici_adi, u.unvan, u.uye_oldu_at, k.ad, k.soyad from uye_profilleri u left join kimlik_hesaplar k on k.id = u.hesap_id')}
+sef = {r['id']: {'ad': ' '.join(x for x in [r['ad'], r['soyad']] if x).strip(), 'unvan': r['unvan'], 'kadi': r['kullanici_adi'], 'uye': r['uye_oldu_at'], 'hesap': r['hesap_id']}
+       for r in c.execute('select u.id, u.hesap_id, u.kullanici_adi, u.unvan, u.uye_oldu_at, k.ad, k.soyad from uye_profilleri u left join kimlik_hesaplar k on k.id = u.hesap_id')}
 BUTCE = {'Ekonomik': 1, 'Orta Bütçe': 2, 'Premium': 3}
 cikti = []
 for t in c.execute("select * from tarifler where durum = 'yayinda' and deleted_at is null and kapak_url is not null order by id"):
@@ -56,6 +80,14 @@ for t in c.execute("select * from tarifler where durum = 'yayinda' and deleted_a
         'sef_ad': (sef.get(t['sef_id']) or {}).get('ad') or t['sef_kullanici_adi'], 'sef_unvan': (sef.get(t['sef_id']) or {}).get('unvan'),
         'goruntulenme': t['goruntulenme'], 'butce': BUTCE.get(ad_.get(t['butce_id'])), 'butce_ad': ad_.get(t['butce_id']),
         'hatirlatma': t['hatirlatma'], 'yayin': t['yayinlandi_at'], 'guncelleme': t['guncellendi_at'], 'yorum': t['yorum_sayisi'],
+        'etiketler': etiket.get(t['id'], []), 'pisirme_derecesi': t['pisirme_derecesi'],
+        'gercek': {'degerlendirme': (puan.get(t['id']) or {}).get('n', 0),
+                   'ortalama': round(puan[t['id']]['top'] / puan[t['id']]['n'], 1) if t['id'] in puan else 0.0,
+                   'dagilim': [(puan.get(t['id']) or {'dagilim': {}})['dagilim'].get(k, 0) for k in (5, 4, 3, 2, 1)],
+                   'yorumsuz': (puan.get(t['id']) or {}).get('yorumsuz', 0), 'yorum': yorum_say.get(t['id'], 0),
+                   'deneme': deneme.get(t['id'], 0), 'alkis': alkis.get(t['id'], 0)},
+        'sef_sayac': {'tarif': sef_tarif.get(t['sef_id'], 0), 'takipci': takipci.get((sef.get(t['sef_id']) or {}).get('hesap'), 0),
+                      'yil': str((sef.get(t['sef_id']) or {}).get('uye') or '')[:4] or None} if t['sef_id'] in sef else None,
     })
 
 os.makedirs(os.path.join(KOK, 'veri'), exist_ok=True)

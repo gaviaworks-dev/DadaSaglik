@@ -1,6 +1,7 @@
 /* =====================================================================
    DADA GASTRO SAĞLIK — ortak davranış (Kids kids.js'in Sağlık karşılığı; bağımlılıksız)
    · html.sg-js · .sg-gir görünür alana girince .sg-gorundu
+   · Tek satır kaydırıcı [data-sg-kaydirici] (H16/H17): oklar + yatay kaydırma + scroll-snap
    · Yapışkan tek katman (Kids R3): aşağı kayınca yalnız Gastro header.header gizlenir (siyah üst bant + Sağlık barı kalır),
      mini kilit görünür; yukarıda geri gelir. --sg-ust-bosluk / --sg-gastro-alt; sayfa barları top: var(--sg-bar-alt)
    · SSS tek-açık akordeon (Kids sssKur birebir; #hash açar)
@@ -50,7 +51,7 @@
   function e_(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function gastroKart(V, slug, modKod, ek) {
     ek = ek || {}; var t = V.tarifler[slug]; if (!t) return '';
-    var M = modKod && V.modlar[modKod], ik = M ? (M.t[slug] || []) : [], b = t.b.split('|')[0].trim(), rozet = '';
+    var M = modKod && V.modlar[modKod], ik = M ? (M.t[slug] || []) : [], b = t.b.trim(), rozet = '', rf = function (u, k) { return k ? '<span class="rf-uzun">' + e_(u) + '</span><span class="rf-kisa" aria-hidden="true">' + e_(k) + '</span>' : e_(u); };
     if (M) { var r = RD_MOD[modKod] || ['', 'circle-check'], ad = M.uyum + ' uyumlu'; rozet += '<span class="rd-b' + (r[0] ? ' ' + r[0] : '') + '" title="' + e_(ad) + '" aria-label="' + e_(ad) + '"><i class="fa-solid fa-' + r[1] + '" aria-hidden="true"></i></span>'; }
     if (ik.length) { var ia = 'Akıllı ikame: ' + ik.map(function (x) { return x[0] + ' yerine ' + x[1]; }).join(', '); rozet += '<span class="rd-b" title="' + e_(ia) + '" aria-label="' + e_(ia) + '"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span>'; }
     if (ek.rozet) rozet += ek.rozet;
@@ -58,8 +59,8 @@
     return '<article class="r-card sg-tarif"' + (M ? ' data-renk="' + M.renk + '"' : '') + ' data-slug="' + e_(slug) + '" data-alerjen="' + e_((t.al || []).join(' ')) + '" data-paketli="' + (t.pk || 0) + '" data-ikameler="' + e_(ik.map(function (x) { return x[0] + '→' + x[1]; }).join('|')) + '">'
       + ' <div class="r-media-wrap"> <div class="r-media " role="img" aria-label="' + e_(b) + '" style="background-image:url(\'' + e_(t.k) + '\')"> <span class="r-chip">' + e_(t.ka || '') + '</span> ' + (rozet ? '<div class="r-diet">' + rozet + '</div>' : '') + ' <div class="m-types"> </div> </div> </div>'
       + ' <div class="r-body"> <h4><a class="sg-tarif__bag" href="saglik-tarif.html?t=' + encodeURIComponent(slug) + (modKod ? '&mod=' + modKod : '') + '">' + e_(b) + '</a></h4>'
-      + ' <div class="r-facts">' + (t.sure ? ' <span><i class="fa-solid fa-clock" aria-hidden="true"></i> <span class="rf-txt">' + t.sure + ' dk</span></span>' : '') + (t.z ? ' <span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> <span class="rf-txt">' + e_(t.z) + '</span></span>' : '')
-      + (t.p ? ' <span class="f-serv"><i class="fa-solid fa-utensils" aria-hidden="true"></i> <span class="rf-txt"><span class="rf-uzun">' + t.p + ' ' + e_(t.pb || 'kişilik') + '</span><span class="rf-kisa" aria-hidden="true">' + t.p + ' kişi</span></span></span>' : '')
+      + ' <div class="r-facts">' + (t.sure ? ' <span><i class="fa-solid fa-clock" aria-hidden="true"></i> <span class="rf-txt">' + t.sure + ' dk</span></span>' : '') + (t.z ? ' <span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> <span class="rf-txt">' + rf(t.z, t.z === 'Ustalık Gerektirir' ? 'Ustalık' : '') + '</span></span>' : '')
+      + (t.p ? ' <span class="f-serv"><i class="fa-solid fa-utensils" aria-hidden="true"></i> <span class="rf-txt">' + rf(t.p + ' ' + (t.pb || 'kişilik'), (t.pb || 'kişilik') === 'kişilik' ? t.p + ' kişi' : '') + '</span></span>' : '')
       + (t.bt ? ' <span class="r-cost" title="' + e_(t.bta || '') + '"> ' + [1, 2, 3].map(function (n) { return '<b class="' + (n <= t.bt ? 'rc-on' : 'rc-off') + '">₺</b>'; }).join(' ') + ' </span>' : '') + ' </div>'
       + ' <div class="r-foot"> ' + (sef ? '<a class="r-author" href="https://dadagastro.com/sefler/' + e_(t.sk || '') + '" title="' + e_(sef) + ' profilini gör"> <div class="av"><span aria-hidden="true">' + e_(sef.trim().charAt(0).toLocaleUpperCase('tr')) + '</span></div> <span><b>' + e_(sef) + '</b></span> </a>' : '')
       + ' <div class="r-stats"> ' + (t.pu ? '<span class="r-rate"><i class="fa-solid fa-star" aria-hidden="true"></i> ' + (Number(t.pu) / 10).toFixed(1) + '</span>' : '') + ' <span class="r-views"><i class="fa-solid fa-eye" aria-hidden="true"></i> ' + Number(t.g || 0).toLocaleString('tr') + '</span> </div> </div>'
@@ -114,13 +115,51 @@
   function menuAktifKur() {
     var m = $('.sg-ust__menu'); if (!m) return;
     function tasma() { m.classList.toggle('sg-tasma-sag', m.scrollLeft + m.clientWidth < m.scrollWidth - 2); m.classList.toggle('sg-tasma-sol', m.scrollLeft > 2); }
-    m.addEventListener('scroll', tasma, { passive: true }); addEventListener('resize', tasma); tasma();
+    m.addEventListener('scroll', tasma, { passive: true }); addEventListener('resize', tasma);
+    var lg = $('.sg-ust__logo'); if (lg) lg.addEventListener('transitionend', tasma);   // Kids: mini kilit açılınca şerit daralır
+    if ('MutationObserver' in window) new MutationObserver(tasma).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    tasma();
     // sekme şeridi konumu sayfalar arası korunur (satır içi betik ilk boyamadan önce geri yükler → titreme yok)
     function sakla() { try { sessionStorage.setItem('dadagastrohealth.sekme.x', String(Math.round(m.scrollLeft))); } catch (e) {} }
     m.addEventListener('scroll', sakla, { passive: true }); m.addEventListener('click', sakla); addEventListener('pagehide', sakla);
     var a = $('[aria-current="page"]:not(.sg-ust__ev)', m); if (!a) return;
     function goster() { var mr = m.getBoundingClientRect(), ar = a.getBoundingClientRect(); if (ar.left < mr.left + 8 || ar.right > mr.right - 8) m.scrollLeft += (ar.left + ar.width / 2) - (mr.left + mr.width / 2); }
     goster(); addEventListener('resize', goster);
+  }
+
+  /* ---------- Tek satır kaydırıcı (H16/H17; Gastro .row-track/.row-nav kalıbı) ----------
+     [data-sg-kaydirici] > .sg-kaydirici__iz + [data-sg-yon] okları. Taşma varsa [data-tasar] (oklar görünür), uçta ok disabled;
+     ok bir "sayfa" (görünen tam öğe sayısı) kaydırır; reduced-motion'da animasyonsuz. Odaklı ok devre dışı kalırsa odak karşı oka geçer. */
+  function kaydiriciKur() {
+    $$('[data-sg-kaydirici]').forEach(function (k) {
+      var iz = $('.sg-kaydirici__iz', k); if (!iz) return;
+      var oklar = $$('[data-sg-yon]', k), bekliyor = false;
+      function durum() {
+        bekliyor = false;
+        var max = iz.scrollWidth - iz.clientWidth, x = Math.abs(iz.scrollLeft), tasar = max > 2;
+        if (tasar) k.setAttribute('data-tasar', ''); else k.removeAttribute('data-tasar');
+        oklar.forEach(function (b) {
+          var kapali = !tasar || (b.getAttribute('data-sg-yon') === '-1' ? x <= 2 : x >= max - 2);
+          if (kapali && b === document.activeElement) { var o = oklar.filter(function (c) { return c !== b; })[0]; if (o && tasar) { o.disabled = false; o.focus(); } }
+          b.disabled = kapali;
+        });
+      }
+      function adim() {
+        var c = iz.firstElementChild; if (!c) return iz.clientWidth;
+        var g = parseFloat(getComputedStyle(iz).columnGap) || 0, w = c.getBoundingClientRect().width + g;
+        return Math.max(w, Math.floor((iz.clientWidth + g) / w) * w);
+      }
+      oklar.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var azalt = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          iz.scrollBy({ left: (+b.getAttribute('data-sg-yon')) * adim(), behavior: azalt ? 'auto' : 'smooth' });
+        });
+      });
+      iz.addEventListener('scroll', function () { if (!bekliyor) { bekliyor = true; requestAnimationFrame(durum); } }, { passive: true });
+      addEventListener('resize', durum);
+      if ('ResizeObserver' in window) new ResizeObserver(durum).observe(iz);
+      durum();
+    });
   }
 
   /* ---------- SSS ---------- */
@@ -194,6 +233,6 @@
     }); });
     addEventListener('popstate', function () { goster(/-bilgi\.html$/.test(location.pathname) ? 'bilgi' : 'tarif', false); });
   }
-  function basla() { sekmeKur(); megaDonguKur(); modHafiza(); sssKur(); uygula(); alerjenSeciciKur(); girisKur(); yapiskanKur(); menuAktifKur(); }
+  function basla() { sekmeKur(); megaDonguKur(); modHafiza(); sssKur(); uygula(); alerjenSeciciKur(); girisKur(); yapiskanKur(); menuAktifKur(); kaydiriciKur(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();

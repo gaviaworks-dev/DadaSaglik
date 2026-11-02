@@ -1,11 +1,10 @@
-// Hub: saglik.html — 6 modun kartları, "Modunu seç" girişi, nasıl çalışır, öne çıkan tarifler, bilgi kartları.
+// Hub: saglik.html — "Modunu seç" girişi, 6 mod kaydırıcısı, nasıl çalışır, Dolap bandı, kısa okumalar (dama tahtası).
 export default async function (o) {
   const { esc, ui, MODLAR, ESLESME, SAHNE, icerik } = o;
   const hub = icerik.hub || {};
   const toplam = o.KULLANILAN.size;
   const ikameToplam = new Set(MODLAR.flatMap((M) => ESLESME[M.kod].filter((x) => x.r.ikameler.length).map((x) => x.t.slug))).size;
   const hubSahne = o.HUB_SAHNE;
-  const sahneSlug = new Set(o.SAHNE_SLUGLARI);
 
   const sec = `<aside class="sg-secki-kutu sg-mod-sec" aria-labelledby="msec">
    <h2 id="msec">Modunu seç</h2>
@@ -20,17 +19,18 @@ export default async function (o) {
     istatistik: [['6', 'yaşam modu'], [String(toplam), 'uyumlu tarif'], [String(ikameToplam), 'akıllı ikameli']], not: o.UYARI, sag: o.kurumKutusu(MODLAR.map((M) => o.partnerListe(M.kod).find((p) => o.partnerLogo(p))).filter(Boolean)),
   });
 
+  // H16: 6 mod tek satır kaydırıcı (Gastro .row-track/.row-nav kalıbı; ok + yatay kaydırma + scroll-snap). Kompakt kart: görsel, kurum ikonu, ad, kısa slogan, sayılar.
   const modKart = (M) => {
     const t = SAHNE[M.kod];
-    return `<a class="sg-kart sg-mod-kart sg-gir" href="${M.dosya}" data-renk="${M.renk}">
-   <div class="sg-mod-kart__medya">${t ? o.foto(o.tarifGorsel(t), `${t.baslik.split('|')[0].trim()} — ${M.ad} moduna uygun`) : ''}<span class="sg-mod-kart__ikon">${o.modIkon(M, 36)}</span></div>
-   <div class="sg-kart__govde"><h3>${esc(M.ad)}</h3><p>${esc(M.slogan)}</p><p class="sg-mod-kart__sayi"><b>${ESLESME[M.kod].length}</b> uyumlu tarif · <b>${M.ikameKart.length}</b> akıllı ikame</p><span class="sg-kart__alt">Moda git ${ui('ok', 18)}</span></div>
-  </a>`;
+    return `<li><a class="sg-mkart" href="${M.dosya}" data-renk="${M.renk}" data-sg-mod-sec="${M.kod}">
+    <span class="sg-mkart__medya">${t ? o.foto(o.tarifGorsel(t), `${t.baslik.split('|')[0].trim()} — ${M.ad} moduna uygun`, { gen: 480, yuk: 300 }) : ''}<span class="sg-mkart__ikon">${o.modIkon(M, 26)}</span></span>
+    <span class="sg-mkart__govde"><span class="sg-mkart__ad">${esc(M.ad)}</span><span class="sg-mkart__slogan">${esc(M.slogan)}</span><span class="sg-mkart__sayi"><b>${ESLESME[M.kod].length}</b> tarif · <b>${M.ikameKart.length}</b> ikame</span></span>
+   </a></li>`;
   };
-  const modlar = `<section class="sg-bolum" id="modlar" aria-labelledby="mh">
- <div class="wrap">
-  ${o.bolumBasi({ ust: 'Altı mod', baslik: 'Hangi mod senin için?', alt: 'Her mod kendi kuralıyla çalışır: neyin gizleneceğini, neyin önerileceğini ve hangi malzemenin neyle değiştirileceğini bilir.', id: 'mh' })}
-  <div class="sg-izgara sg-izgara--3 sg-esit">${MODLAR.map(modKart).join('')}</div>
+  const modlar = `<section class="sg-bolum sg-modlar" id="modlar" aria-labelledby="mh">
+ <div class="wrap sg-kaydirici" data-sg-kaydirici>
+  ${o.bolumBasi({ ust: 'Altı mod', baslik: 'Hangi mod senin için?', alt: 'Her mod kendi kuralıyla çalışır: neyin gizleneceğini, neyin önerileceğini ve hangi malzemenin neyle değiştirileceğini bilir.', id: 'mh', sag: o.kaydirOklari('sg-mod-iz', 'modlar') })}
+  <ul class="sg-kaydirici__iz sg-mkart-iz" id="sg-mod-iz">${MODLAR.map(modKart).join('')}</ul>
  </div>
 </section>`;
 
@@ -46,21 +46,18 @@ export default async function (o) {
  </div>
 </section>`;
 
-  // öne çıkan: modlardan sırayla, tekrarsız 8 tarif
-  const one = []; const al = new Set(); let i = 0;
-  while (one.length < 8 && i < 40) { for (const M of MODLAR) { const x = ESLESME[M.kod].filter((y) => !al.has(y.t.slug) && !sahneSlug.has(y.t.slug))[Math.floor(i / 1)]; if (x && one.length < 8 && !al.has(x.t.slug)) { al.add(x.t.slug); one.push([x, M]); } } i++; }
-  const oneCikan = `<section class="sg-bolum" aria-labelledby="oc">
- <div class="wrap">
-  ${o.bolumBasi({ ust: 'Öne çıkanlar', baslik: 'Modlardan seçilmiş tarifler', alt: 'Her kart hangi moda uyduğunu ve uygulanan ikameyi gösterir.', id: 'oc' })}
-  <div class="sg-izgara sg-izgara--4">${one.map(([x, M], n) => o.tarifKart(x.t, x.r, M, { sira: n })).join('')}</div>
- </div>
-</section>`;
-
   const bilgiKart = MODLAR.map((M) => [M, ((icerik.modlar || {})[M.kod] || {}).makaleler?.[0]]).filter(([, a]) => a);
-  const bilgi = bilgiKart.length ? `<section class="sg-bolum sg-bolum--beyaz" aria-labelledby="bk">
+  // H15: Gastro mutfağa giriş "konu" ızgarası (.topic-grid/.topic-card) — dama tahtası: dolu kart kendi modunun kurum renginin açık tonu (--r-a), diğeri beyaz.
+  const bilgi = bilgiKart.length ? `<section class="sg-bolum sg-okumalar" aria-labelledby="bk">
  <div class="wrap">
   ${o.bolumBasi({ ust: 'Bilgi kartları', baslik: 'Her mod için kısa okumalar', id: 'bk', sag: '<a class="sg-bag" href="saglik-bilgi.html">Tüm yazılar</a>' })}
-  <div class="sg-izgara sg-izgara--3 sg-esit">${bilgiKart.map(([M, a]) => `<a class="sg-kart sg-bilgi-kart" href="saglik-bilgi.html#${esc(a.slug)}" data-renk="${M.renk}"><span class="sg-bilgi-kart__mod">${ui(M.ikon, 22)}${esc(o.SEKME[M.kod])}</span><h3>${esc(a.baslik)}</h3><p>${esc(a.ozet)}</p><span class="sg-kart__alt">${esc(a.okuma_dk || 3)} dk okuma ${ui('ok', 18)}</span></a>`).join('')}</div>
+  <div class="sg-konu-izgara">${bilgiKart.map(([M, a]) => `<a class="sg-konu-kart" href="saglik-yazi-${esc(a.slug)}.html" data-renk="${M.renk}">
+    <span class="sg-konu-kart__mod">${ui(M.ikon, 16)}${esc(o.SEKME[M.kod])}</span>
+    <h3>${esc(a.baslik)}</h3>
+    <p>${esc(a.ozet)}</p>
+    <div class="disc-meta"><span><i class="fa-solid fa-clock" aria-hidden="true"></i> ${esc(a.okuma_dk || 3)} dk okuma</span></div>
+    <span class="sg-konu-kart__git">Yazıyı oku <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+   </a>`).join('')}</div>
  </div>
 </section>` : '';
 
@@ -69,7 +66,7 @@ export default async function (o) {
   return [{
     dosya: 'saglik.html', baslik: 'Dada Gastro Health — yaşam modlarına göre tarifler (prototip)',
     aciklama: 'Glutensiz, kan şekeri dostu, alerjene göre, sütsüz, düşük FODMAP ve kalp dostu Dada Gastro tarifleri; akıllı ikamelerle.',
-    main: o.sayfa([hero, modlar, nasil, oneCikan, dolapBant, bilgi].join('\n'), 'hub'),
-    css: ['mod'], js: [], gorsel: hubSahne ? o.tarifSahne(hubSahne) : '',
+    main: o.sayfa([hero, modlar, nasil, dolapBant, bilgi].join('\n'), 'hub'),
+    css: ['mod', 'ana'], js: [], gorsel: hubSahne ? o.tarifSahne(hubSahne) : '',
   }];
 }

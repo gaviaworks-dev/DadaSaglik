@@ -1,0 +1,58 @@
+/* =====================================================================
+   DADA GASTRO HEALTH — ana sayfa (saglik.html) bölümleri (Beyar 2 Kas: H15, H16)
+   Kaydırıcı iskeleti (iz, oklar, scroll-snap) saglik.css "Tek satır kaydırıcı"da; burada yalnız kart görünümü.
+   GÖLGE YOK · hover'da kalkma/büyüme yok (yalnız çerçeve rengi) · köşe: kart 16 (--radius-lg, Gastro .topic-card) · yazı Gilroy.
+   ===================================================================== */
+
+/* Açık ton (--r-a) üstünde küçük metin ≥ 4.5:1: bugday/lila --r-k (#9E6A00 4.26 · #9E6813 4.26) yerine aynı tonun koyusu (4.67 · 4.63) */
+:is(.sg-konu-kart, .sg-mkart)[data-renk="bugday"] { --r-k: #966400; }
+:is(.sg-konu-kart, .sg-mkart)[data-renk="lila"] { --r-k: #966312; }
+
+/* H16 · "Hangi mod senin için?" — 6 mod TEK SATIR kaydırıcı (Gastro .row-track: öğe sabit genişlik, snap start).
+   Kompakt kart: görsel 16:10 · kurum ikonu · ad · kısa slogan (2 satır) · sayılar. */
+.sg-modlar .sg-bas { margin-bottom: var(--sg-s5); }
+.sg-kaydirici .sg-mkart-iz { gap: var(--sg-s4); padding: 2px 2px 4px; scroll-padding-inline: 2px; }
+.sg-kaydirici .sg-mkart-iz > li { flex: 0 0 232px; display: flex; }
+.sg-mkart { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--paper, #fff); border: 1px solid var(--line, #ECECEC); border-radius: var(--radius-lg, 16px); overflow: hidden; color: var(--sg-murekkep); text-decoration: none; transition: border-color .2s ease; }
+.sg-mkart:hover { border-color: var(--r-k); }
+.sg-mkart:focus-visible { outline: 3px solid var(--r-k); outline-offset: 2px; }
+.sg-mkart__medya { position: relative; display: block; aspect-ratio: 16 / 10; background: var(--r-a); }
+.sg-mkart__medya > img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+.sg-mkart__ikon { position: absolute; left: var(--sg-s3); bottom: -18px; display: grid; place-items: center; width: 36px; height: 36px; box-sizing: border-box; border-radius: var(--sg-r-daire); background: #fff; border: 1px solid var(--line, #ECECEC); }
+.sg-mkart__ikon .sg-mod-ikon { width: 22px; height: 22px; }
+.sg-mkart__govde { flex: 1; display: flex; flex-direction: column; gap: var(--sg-s1); padding: 26px 14px 14px; }
+.sg-mkart__ad { font-family: var(--sg-font-kalin); font-weight: 700; font-size: 16px; line-height: 1.2; letter-spacing: var(--ls-head, -.01em); }
+.sg-mkart__slogan { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--muted, #6F6F6F); font-size: 13px; line-height: 1.45; }
+.sg-mkart__sayi { margin-top: auto; padding-top: var(--sg-s2); color: var(--sg-murekkep); font-size: 12.5px; line-height: 1.3; }
+.sg-mkart__sayi b { font-family: var(--sg-font-ekstra); font-weight: 800; color: var(--r-k); }
+@media (max-width: 640px) { .sg-kaydirici .sg-mkart-iz { gap: var(--sg-s3); } .sg-kaydirici .sg-mkart-iz > li { flex-basis: calc((100% - var(--sg-s3)) / 1.6); } }
+
+/* H15 · "Her mod için kısa okumalar" — Gastro mutfağa giriş konu ızgarası (ogrenme.css §8.4 .topic-grid/.topic-card) BİREBİR ölçü:
+   gap 20 · padding 22 · 1px --line · --radius-lg · h3 17/6 · p 13px muted 1.55 · .disc-meta çizgisiz · bağ 13px/700, margin-top 14.
+   Dama tahtası (Gastro A3 kuralı, (satır+sütun)%2): dolu kart = KENDİ modunun kurum renginin açık tonu (--r-a), diğeri beyaz.
+   3 sütun → tek sıralar dolu (Glutensiz · Alerjen / Düşük FODMAP) · 2 sütun → 4n+1, 4n · 1 sütun → tek sıralar. */
+.sg-konu-izgara { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.sg-konu-kart { display: flex; flex-direction: column; min-width: 0; background: var(--paper, #fff); border: 1px solid var(--line, #ECECEC); border-radius: var(--radius-lg, 16px); padding: 22px; color: var(--sg-murekkep); text-decoration: none; transition: border-color .2s ease; }
+.sg-konu-kart:nth-child(odd) { background: var(--r-a); }
+.sg-konu-kart:hover { border-color: var(--r-k); }
+.sg-konu-kart:focus-visible { outline: 3px solid var(--r-k); outline-offset: 2px; }
+.sg-konu-kart__mod { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; color: var(--r-k); font-family: var(--sg-font-ekstra); font-weight: 800; font-size: 12px; letter-spacing: .05em; line-height: 1.2; text-transform: uppercase; }
+.sg-konu-kart__mod .sg-fa { font-size: 13px !important; }
+.sg-okumalar .sg-konu-kart h3 { font-size: 17px; line-height: 1.3; margin-bottom: 6px; }
+.sg-okumalar .sg-konu-kart p { flex: 1; margin: 0 0 10px; color: var(--sg-ikincil); font-size: 13px; font-weight: 500; line-height: 1.55; }
+.sg-konu-kart .disc-meta { border-top: none; padding-top: 0; margin-top: 0; flex-wrap: wrap; }
+/* Gastro --muted (#6F6F6F) mod tonlarında 4.5:1'in altına iner → ikincil metin Health --sg-ikincil (#5E5852; beyaz ve tüm --r-a üstünde ≥ 4.5) */
+.sg-konu-kart .disc-meta { color: var(--sg-ikincil); }
+.sg-konu-kart__git { display: inline-flex; align-items: center; gap: 7px; margin-top: 14px; color: var(--r-k); font-family: var(--sg-font-kalin); font-size: 13px; font-weight: 700; }
+.sg-konu-kart__git i { font-size: 11px; }
+@media (max-width: 1024px) {
+  .sg-konu-izgara { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sg-konu-kart:nth-child(odd) { background: var(--paper, #fff); }
+  .sg-konu-kart:nth-child(4n+1), .sg-konu-kart:nth-child(4n) { background: var(--r-a); }
+}
+@media (max-width: 640px) {
+  .sg-konu-izgara { grid-template-columns: 1fr; }
+  .sg-konu-kart:nth-child(4n+1), .sg-konu-kart:nth-child(4n) { background: var(--paper, #fff); }
+  .sg-konu-kart:nth-child(odd) { background: var(--r-a); }
+}
+@media (prefers-reduced-motion: reduce) { .sg-mkart, .sg-konu-kart { transition: none; } }

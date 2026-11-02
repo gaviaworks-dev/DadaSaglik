@@ -1,5 +1,7 @@
 // Tarif detayı: saglik-tarif.html?t=<slug>&mod=<kod> — Gastro tarif detayının BİREBİR şablonu (src/donor/tarif-balkabagi.html <main>:
-// section.rd-top → section.rd-body → section.sec.simrec), istemci tarafında varlik/saglik/veri/tarifler.json + detay-ek.json'dan çizilir.
+// section.rd-top → section.rd-body → section.sec.simrec; donör kopyasında eksik kalan Gastro blokları — Pişirme Moduna Geç + #cookmode,
+// adım süreleri, etiketler, puan dağılımı + puan formu + boş durum, Listeye ekle / Tümünü Listeye Ekle, şef takip/sayaçları, #rdActbar,
+// #rdSharePop, #lightbox — Gastro'nun kendi blade parçalarından), istemci tarafında varlik/saglik/veri/tarifler.json + detay-ek.json'dan çizilir.
 // Tek fark: başlık bölgesinde (.rd-badges) Gastro'nun kendi .tbadge.t-diyet rozetiyle mod etiketi ("Glutensiz uygun").
 // Akıllı ikame Gastro malzeme satırının içinde (.ing-row .in: eski üstü çizili + yeni, <small>Akıllı ikame</small>).
 // Uyarı cümlesi sayfada bir kez: Gastro .remind-box "Hatırlatma" içinde.
@@ -25,7 +27,22 @@ async function gastroSozluk() {
 export default async function (o) {
   const { bes, bayrak } = await gastroSozluk();
   // Detay sözlüğü (Gastro tarif listesi süzgeçlerinden): beslenme etiketi + ikonu, mutfak bayrağı. Tarif başı alanlar tarifler.json'da (ortak.istemciVerisi).
-  const ek = { bes, bayrak };
+  // H20: Gastro detayının kalan blokları için tarif başı ek veri (araclar/veri-hazirla.py → veri/gastro-tarifler.json, yalnız modlarda kullanılan tarifler):
+  //   e = etiketler (#), s = adım süreleri (dk, tarifler.json `a` ile aynı sıra), pd = pişirme derecesi,
+  //   r = [değerlendirme, ortalama, 5★…1★ dağılımı (5), yorumsuz puan, yayındaki üst yorum, Ben de Yaptım, Eline Sağlık] — `degerlendirmeler`
+  //       satırlarından (Gastro TarifDetayServisi: tarifler.ortalama_puan/degerlendirme_sayisi donmuş "sahte sayaç"),
+  //   c = şef profili varsa [yayındaki tarif, takipçi, üyelik yılı]; yoksa 0 (Gastro: şefsiz tarifte bağ/şef kutusu basılmaz).
+  const t = {};
+  for (const x of o.TARIFLER) {
+    if (!o.KULLANILAN.has(x.slug)) continue;
+    const g = x.gercek || {}, c = x.sef_sayac;
+    t[x.slug] = {
+      e: x.etiketler || [], s: (x.adimlar || []).map((a) => a.sure_dk || 0), pd: x.pisirme_derecesi || '',
+      r: [g.degerlendirme || 0, g.ortalama || 0, ...(g.dagilim || [0, 0, 0, 0, 0]), g.yorumsuz || 0, g.yorum || 0, g.deneme || 0, g.alkis || 0],
+      c: c ? [c.tarif || 0, c.takipci || 0, c.yil || ''] : 0,
+    };
+  }
+  const ek = { bes, bayrak, t };
   await writeFile(path.join(KOK, 'varlik/saglik/veri/detay-ek.json'), JSON.stringify(ek));
 
   // Sağlık alt menüsü main'in doğrudan çocuğu: yapışkanlık tüm sayfa boyunca sürer; .sg-sayfa sarmalı yok (Gastro detay stilleri değişmesin).
