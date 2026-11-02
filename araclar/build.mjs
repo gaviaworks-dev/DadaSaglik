@@ -66,8 +66,18 @@ async function gorseller() {
 }
 
 /* ---------- Kabuk eklemeleri ---------- */
-const MEGA_SERIT = `<div class="sg-mega-serit" role="group" aria-label="Dada Gastro Sağlık">
-${ortak.saglikLogoSvg({ sinif: 'sg-mega-serit__logo' })}<span class="sg-mega-serit__metin">Yaşam modlarına göre tarifler</span><span class="sg-mega-serit__chipler">${ortak.MODLAR.map((M) => `<a class="sg-mega-serit__chip" data-renk="${M.renk}" href="${M.dosya}">${esc(ortak.SEKME[M.kod])}</a>`).join('')}</span><a class="sg-mega-serit__kesfet" href="saglik.html" aria-label="Dada Gastro Sağlık'ı keşfet">Keşfet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+// Mega menü yuvası: Dada Gastro Sağlık ↔ Dada Gastro Kids şeritleri sırayla (Beyar 2 Kas). Davranış: saglik.js megaDonguKur
+// (6 sn'de bir yumuşak geçiş; fare/odakta durur; reduced-motion'da otomatik geçiş yok, nokta düğmeleriyle elle). Kids prototipi ayrı repo.
+const KIDS_URL = 'https://gaviaworks-dev.github.io/DadaKids/v2/';
+const KIDS_CHIP = [['6–8 Ay', 6, '#FFC4A3'], ['9–12 Ay', 9, '#A6E3CB'], ['1–3 Yaş', 12, '#FFDF7E']];
+const MEGA_SERIT = `<div class="sg-mega-yuva" data-sg-dongu>
+<div class="sg-mega-serit" role="group" aria-label="Dada Gastro Sağlık" data-sg-dongu-oge="saglik">
+${ortak.saglikLogoSvg({ sinif: 'sg-mega-serit__logo' })}<span class="sg-mega-serit__chipler">${ortak.MODLAR.map((M) => `<a class="sg-mega-serit__chip" data-renk="${M.renk}" href="${M.dosya}">${ortak.modIkon(M, 16)}${esc(ortak.SEKME[M.kod])}</a>`).join('')}</span><a class="sg-mega-serit__kesfet" href="saglik.html" aria-label="Dada Gastro Sağlık'ı keşfet">Keşfet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+</div>
+<div class="sg-mega-serit sg-mega-serit--kids" role="group" aria-label="Dada Gastro Kids" data-sg-dongu-oge="kids">
+${ortak.saglikLogoSvg({ sinif: 'sg-mega-serit__logo', etiket: 'Dada Gastro Kids', rozet: 'kids' })}<span class="sg-mega-serit__metin">Yaşa göre bebek ve çocuk tarifleri</span><span class="sg-mega-serit__chipler">${KIDS_CHIP.map(([a, y, r]) => `<a class="sg-mega-serit__chip" style="--r-a:${r}" href="${KIDS_URL}kids-tarifler.html?yas=${y}">${a}</a>`).join('')}</span><a class="sg-mega-serit__kesfet" href="${KIDS_URL}kids.html" aria-label="Dada Gastro Kids'i keşfet">Keşfet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+</div>
+<span class="sg-mega-nokta" role="group" aria-label="Şerit seç"><button type="button" data-sg-dongu-git="saglik" aria-label="Dada Gastro Sağlık şeridi"></button><button type="button" data-sg-dongu-git="kids" aria-label="Dada Gastro Kids şeridi"></button></span>
 </div>`;
 const CEKMECE_BAG = `<a href="saglik.html"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> <span>Dada Gastro Sağlık · Yaşam modları</span></a>`;
 
@@ -123,7 +133,7 @@ async function saglikSayfasi({ dosya, baslik, aciklama, main, css = [], js = [],
 
 /* ---------- index.html — Gastro ana sayfa + Sağlık bandı (kapı A) ---------- */
 function saglikBandi() {
-  const chip = ortak.MODLAR.map((M) => `<a class="sg-chip" data-renk="${M.renk}" href="${M.dosya}">${ortak.ui(M.ikon, 18)}${esc(ortak.SEKME[M.kod])}</a>`).join('');
+  const chip = ortak.MODLAR.map((M) => `<a class="sg-chip" data-renk="${M.renk}" href="${M.dosya}">${ortak.modIkon(M, 20)}${esc(ortak.SEKME[M.kod])}</a>`).join('');
   const g = ortak.BANT_GORSEL;
   return `<section class="sg-bant-sec" aria-label="Dada Gastro Sağlık">
  <div class="wrap">
@@ -146,8 +156,20 @@ async function indexSayfasi() {
   html = basliklar(html, 'Dada Gastro ana sayfası + Dada Gastro Sağlık bandı (prototip)', 'Dada Gastro ana sayfasının prototip kopyası; Dada Gastro Sağlık giriş bandı eklenmiştir.', { dosya: 'index.html', site: 'Dada Gastro (prototip)' });
   return yorum('https://dadagastro.com/', 'yalnız Sağlık bandı eklendi (kapı A)') + await kabukEkle(html);
 }
+const BESLENME_MOD = { glutensiz: 'colyak', 'diyabete-uygun': 'diyabet', laktozsuz: 'laktoz', 'sut-icermez': 'laktoz', 'kalp-dostu': 'kalp' };
+/** tarifler.html Beslenme süzgeci: Glutensiz / Diyabete Uygun / Laktozsuz / Süt İçermez / Kalp Dostu satırı ilgili Sağlık moduna bağ (onay kutusu yerine ok). */
+function beslenmeSaglik(html) {
+  let n = 0;
+  for (const [v, kod] of Object.entries(BESLENME_MOD)) {
+    const M = ortak.MOD[kod];
+    html = html.replace(new RegExp(`<label class="fct-row([^"]*)">\\s*<input type="checkbox" name="beslenme\\[\\]" value="${v}">\\s*<span class="cbx"></span>([\\s\\S]*?)</label>`), (t, ek, ic) => { n++;
+      return `<a class="fct-row ${ek.trim()} sg-fct-saglik" href="${M.dosya}" data-renk="${M.renk}" aria-label="${esc(ic.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim())}: Dada Gastro Sağlık ${esc(M.ad)} moduna git">${ic.trim()}<span class="sg-fct-saglik__etiket">Sağlık</span><i class="fa-solid fa-arrow-right sg-fct-saglik__ok" aria-hidden="true"></i></a>`; });
+  }
+  if (n !== Object.keys(BESLENME_MOD).length) throw new Error('Beslenme süzgeci satırları bulunamadı: ' + n);
+  return html;
+}
 async function tariflerSayfasi() {
-  let html = kabukTemizle(await oku('src/donor/tarifler.html'));
+  let html = beslenmeSaglik(kabukTemizle(await oku('src/donor/tarifler.html')));
   html = zorunlu(html, /(<span class="lbl">Popüler:<\/span>)/, `$1\n <a class="chip sg-chip-gastro" href="saglik.html"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Sağlık modları</a>`, 'lh-chips');
   html = basliklar(html, 'Tarifler — Dada Gastro (prototip, Dada Gastro Sağlık girişli)', 'Dada Gastro tarif listesinin prototip kopyası; Sağlık modları chip\'i eklenmiştir.', { dosya: 'tarifler.html', site: 'Dada Gastro (prototip)' });
   return yorum('https://dadagastro.com/tarifler', 'yalnız Sağlık modları chip\'i eklendi (kapı B)') + await kabukEkle(html);

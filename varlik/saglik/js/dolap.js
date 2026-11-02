@@ -56,7 +56,7 @@
   }
   function kart(slug, ik, eksik) {
     var t = V.tarifler[slug], M = durum.mod && V.modlar[durum.mod];
-    var ikH = M ? (ik.length ? '<p class="sg-tarif__ikame"><span class="sg-tarif__ikame-bas">Akıllı ikame</span> ' + ik.slice(0, 2).map(function (x) { return '<span>' + esc(x[0]) + ' → <b>' + esc(x[1]) + '</b></span>'; }).join(' · ') + '</p>' : '<p class="sg-tarif__ikame sg-tarif__ikame--yok">' + svg(TIK) + '<span>İkame gerekmez</span></p>') : '';
+    var ikH = M ? (ik.length ? '<p class="sg-tarif__ikame"><span class="sg-tarif__ikame-bas">Akıllı ikame</span> ' + ik.slice(0, 2).map(function (x) { return '<span class="sg-tarif__ikame-oge">' + esc(x[0]) + ' → <b>' + esc(x[1]) + '</b></span>'; }).join('') + '</p>' : '<p class="sg-tarif__ikame sg-tarif__ikame--yok">' + svg(TIK) + '<span>İkame gerekmez</span></p>') : '';
     return '<article class="sg-kart sg-tarif"' + (M ? ' data-renk="' + M.renk + '"' : '') + ' data-alerjen="' + esc(t.al.join(' ')) + '" data-paketli="' + t.pk + '">'
       + '<div class="sg-tarif__medya"><img src="' + esc(t.k) + '" alt="' + esc(t.b) + ' — Dada Gastro tarif fotoğrafı" width="640" height="429" loading="lazy" decoding="async">' + (M ? '<span class="sg-uyum">' + svg(TIK, 14) + esc(M.uyum) + '</span>' : '') + '<span class="sg-eslesme">' + (eksik ? 'Eksik: ' + esc((V.dk[eksik] || {}).ad || eksik) : '✓ Hepsi dolapta') + '</span></div>'
       + '<div class="sg-kart__govde"><h3><a class="sg-tarif__bag" href="saglik-tarif.html?t=' + encodeURIComponent(slug) + (durum.mod ? '&mod=' + durum.mod : '') + '">' + esc(t.b.split('|')[0].trim()) + '</a></h3>' + ikH
