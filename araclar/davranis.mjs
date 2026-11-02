@@ -9,6 +9,7 @@ const ok = (k, ad) => { console.log(`${k ? '✓' : '✗'} ${ad}`); if (!k) hata+
 const UYARI = 'Bu bilgiler genel bilgilendirme amaçlıdır; tanı ve tedavi için hekiminize danışın.';
 const MODSAY = ['saglik-colyak.html', 'saglik-diyabet.html', 'saglik-alerji.html', 'saglik-laktoz.html', 'saglik-ibs.html', 'saglik-kalp.html'];
 const saglik = readdirSync('.').filter((f) => /^saglik(-.+)?\.html$/.test(f));
+const BILGI = MODSAY.map((f) => f.replace('.html', '-bilgi.html'));
 
 /* ---------- Statik ---------- */
 {
@@ -18,10 +19,10 @@ const saglik = readdirSync('.').filter((f) => /^saglik(-.+)?\.html$/.test(f));
   const metin = (f) => readFileSync(f, 'utf8').replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ');
   const iddia = saglik.flatMap((f) => [...metin(f).matchAll(/[^.]{0,40}(tedavi eder|tedavi etmek|iyileştir|şifa|detoks|hastalığı önler|geçirir)[^.]{0,20}/gi)].map((m) => f + ': ' + m[0].trim()));
   ok(!iddia.length, 'tıbbi iddia yok (tedavi eder / iyileştirir / şifa / detoks)' + (iddia.length ? ' → ' + iddia.slice(0, 3).join(' | ') : ''));
-  for (const f of [...MODSAY, 'saglik-tarif.html']) { const n = metin(f).split(UYARI).length - 1; ok(n === 1, `${f}: uyarı satırı tam 1 kez (${n})`); }
+  for (const f of [...MODSAY, ...BILGI, 'saglik-tarif.html']) { const n = metin(f).split(UYARI).length - 1; ok(n === 1, `${f}: uyarı satırı tam 1 kez (${n})`); }
   const onay = saglik.flatMap((f) => [...metin(f).replace(/Kurumların bu sayfayı onayladığı ya da desteklediği anlamına gelmez\./g, '').matchAll(/[^.]{0,30}(onayladı|onaylı|destekliyor|desteğiyle|resmî partner|resmi partner|iş ortağımız)[^.]{0,20}/gi)].map((m) => f + ': ' + m[0].trim()));
   ok(!onay.length, 'partner: onay/destek ifadesi yok' + (onay.length ? ' → ' + onay.slice(0, 3).join(' | ') : ''));
-  for (const f of MODSAY) {
+  for (const f of BILGI) {
     const h = readFileSync(f, 'utf8'); const b = h.match(/<section class="sg-bolum sg-partnerler"[^>]*>[\s\S]*?<\/section>/);
     if (!b) { ok(false, `${f}: iş birliği bölümü yok`); continue; }
     const kart = (b[0].match(/class="sg-kart sg-partner"/g) || []).length, logo = (b[0].match(/class="sg-partner__logo"><img/g) || []).length;
@@ -65,6 +66,10 @@ ok(st.gizli && st.hb <= st.tb + 1 && Math.abs(st.u - st.tb) <= 1 && st.logo === 
 await p.mouse.wheel(0, -400); await p.waitForTimeout(500);
 ok(!(await p.evaluate(() => document.documentElement.classList.contains('sg-ust-gizli'))), 'sticky yukarı: Gastro header geri geldi');
 
+// Sekmeler: Tarifler ↔ Bilgilendirme
+ok(await p.locator('.sg-sekmeler a[aria-current="page"]').textContent().then((x) => /Tarifler/.test(x)) && await p.locator('.sg-sekmeler a[href="saglik-colyak-bilgi.html"]').count() === 1, 'mod sekmeleri: Tarifler (aktif) · Bilgilendirme');
+await p.click('.sg-sekmeler a[href="saglik-colyak-bilgi.html"]'); await p.waitForLoadState('networkidle');
+ok(/colyak-bilgi/.test(p.url()) && await p.locator('.sg-kural').count() === 2 && await p.locator('[data-sg-katalog]').count() === 0, 'Bilgilendirme sekmesi: kurallar var, tarif listesi yok');
 // SSS tek-açık
 const d = p.locator('.sg-sss__dugme');
 await d.nth(0).click(); await d.nth(1).click(); await p.waitForTimeout(100);
@@ -72,6 +77,7 @@ const acik = await p.$$eval('.sg-sss__dugme', (l) => l.map((b) => b.getAttribute
 ok(acik.filter((x) => x === 'true').length === 1 && acik[1] === 'true', `SSS tek-açık (${acik.join(',')})`);
 
 // Katalog: ikamesiz filtresi, sayfalama
+await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
 const say = () => p.$$eval('[data-sg-izgara] .sg-tarif', (l) => l.filter((k) => !k.hidden).length);
 const once = await say();
 await p.click('[data-sg-daha]'); await p.waitForTimeout(100);
