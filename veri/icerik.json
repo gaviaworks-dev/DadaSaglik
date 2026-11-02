@@ -1,0 +1,629 @@
+{
+  "hub": {
+    "baslik": "Yaşam modları",
+    "giris": "Çölyaktan tansiyona, altı farklı beslenme ihtiyacı için Dada Gastro tariflerini malzeme malzeme kontrol ettik. Size uygun modu seçin; uygun olmayan tarifler listeden kalksın.",
+    "nasil": [
+      {
+        "baslik": "Modunuzu seçin",
+        "metin": "Glutensiz, kan şekeri dostu, alerjene göre, sütsüz, düşük FODMAP ya da az tuzlu: ihtiyacınıza en yakın modu seçin. Alerji modunda ayrıca kaçındığınız alerjeni belirlersiniz."
+      },
+      {
+        "baslik": "Uygun tarifleri görün",
+        "metin": "Her tarifin malzemeleri modun kurallarına göre tek tek kontrol edilir. Emin olunamayan tarif listede yer almaz; böylece karşınıza yalnız uygun tarifler gelir."
+      },
+      {
+        "baslik": "İkameyle uyarlanmış malzemeleri kullanın",
+        "metin": "Bazı tariflerde bir malzeme akıllı ikameyle değiştirilmiştir; örneğin tereyağı yerine zeytinyağı. Değişiklik tarif kartında yazar. Paketli ürünlerde etiketi her zaman kontrol edin."
+      }
+    ]
+  },
+  "modlar": {
+    "colyak": {
+      "giris": "Buğday, arpa ve çavdar içermeyen tarifler; çapraz bulaşmaya karşı dikkatli bir mutfak düzeni ve etiket okuma ipuçlarıyla birlikte.",
+      "makaleler": [
+        {
+          "slug": "colyak-capraz-bulasma",
+          "baslik": "Çapraz bulaşma ve glutensiz mutfak düzeni",
+          "ozet": "Glutensiz tarif kadar mutfağın düzeni de önemlidir. Tost makinesinden un serpilen tezgâha, en sık atlanan noktalar.",
+          "okuma_dk": 2,
+          "govde": [
+            "Glutensiz mutfakta en sık atlanan konu çapraz bulaşmadır. Malzemelerin tamamı glutensiz olsa bile, buğday ununun dokunduğu bir tahta, aynı yağda kızartılmış bir börek ya da ortak kullanılan bir tost makinesi tabağa gluten taşıyabilir.",
+            "Evde hem glutenli hem glutensiz yemek pişiyorsa en pratik yol bazı araçları ayırmaktır. Tahta kaşık, ahşap kesme tahtası, elek ve tost makinesi gibi temizlemesi zor ya da çizik yüzeyli eşyalar kırıntıyı kolay tutar. Paslanmaz çelik tencere ve cam kaplar ise iyi yıkandığında ortak kullanılabilir.",
+            "Un havada uçuşur ve tezgâha yayılır. Aynı gün hem glutenli hamur hem glutensiz yemek yapılacaksa, glutensiz olanı önce hazırlamak ve kapağını kapatmak işi kolaylaştırır. Kızartma yağı, makarna suyu ve tereyağı kabı da ortak kullanılmamalıdır; tereyağına dokunan bir ekmek bıçağı bile kırıntı bırakabilir.",
+            "Dolapta glutensiz ürünleri üst rafa koymak, etiketli kaplarda saklamak ve ailedeki herkesin bu düzeni bilmesi günlük hayatı rahatlatır."
+          ],
+          "maddeler": [
+            "Glutensiz ürünleri üst rafta, kapalı ve etiketli kaplarda saklayın.",
+            "Ahşap kaşık, kesme tahtası, elek ve tost makinesini ayırın.",
+            "Aynı gün iki tür yemek pişecekse glutensiz olanı önce hazırlayın.",
+            "Kızartma yağını ve makarna suyunu ortak kullanmayın.",
+            "Reçel, tereyağı ve ezmeler için ayrı, işaretli kavanoz kullanın."
+          ],
+          "kaynaklar": [
+            "AOECS (Association of European Coeliac Societies) — https://www.aoecs.org",
+            "Coeliac UK",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        },
+        {
+          "slug": "colyak-gizli-gluten",
+          "baslik": "Etiket okuma ve gizli gluten",
+          "ozet": "Bulyondan baharat karışımına, glutenin beklenmedik yerlerde çıkabildiği ürünler ve etikette bakılacak satırlar.",
+          "okuma_dk": 2,
+          "govde": [
+            "Ekmek, makarna ve bulgurda gluten olduğu herkesçe bilinir. Asıl dikkat isteyen, glutenin katkı ya da kıvam verici olarak girdiği paketli ürünlerdir: hazır çorbalar, bulyon, soslar, baharat karışımları, şarküteri ürünleri, bazı çikolata ve şekerlemeler.",
+            "Etikette ilk bakılacak yer içindekiler listesidir. Buğday, arpa, çavdar ve bunların türevleri alerjen olarak belirtilir ve çoğu zaman kalın ya da farklı yazıyla vurgulanır. İrmik, malt, malt aroması, malt sirkesi ve glutensiz olarak işaretlenmemiş buğday nişastası gibi adlar da gözden kaçmamalıdır.",
+            "İçindekiler listesinden sonra uyarı satırlarına bakılır. “Gluten içerebilir” ya da “aynı tesiste üretilmiştir” ifadeleri, ürünün üretim sırasında glutenle temas etmiş olabileceğini anlatır. Bu tür ürünler yerine “glutensiz” ibaresi taşıyanları seçmek daha güvenli bir tercihtir.",
+            "Ürün içerikleri zamanla değişebilir. Her zaman alınan bir ürün bile yeni ambalajla geldiğinde etiketini bir kez daha okumak iyi bir alışkanlıktır."
+          ],
+          "maddeler": [
+            "Önce içindekiler listesine, sonra uyarı satırlarına bakın.",
+            "Malt, malt aroması ve buğday nişastasını gluten kaynağı olarak not edin.",
+            "Bulyon, hazır sos ve baharat karışımlarında “glutensiz” ibaresi arayın.",
+            "Soya sosu yerine etiketinde glutensiz yazan tamari tercih edin.",
+            "Ambalaj değiştiğinde etiketi yeniden okuyun."
+          ],
+          "kaynaklar": [
+            "T.C. Tarım ve Orman Bakanlığı, Türk Gıda Kodeksi Gıda Etiketleme ve Tüketicileri Bilgilendirme Yönetmeliği",
+            "AOECS (Association of European Coeliac Societies) — https://www.aoecs.org",
+            "Coeliac UK"
+          ]
+        },
+        {
+          "slug": "colyak-glutensiz-unlar",
+          "baslik": "Glutensiz unlarla pişirme",
+          "ozet": "Pirinç, mısır, karabuğday ve nohut unu farklı davranır. Karışım, bağlayıcı ve dinlendirmeyle daha iyi sonuç almak mümkün.",
+          "okuma_dk": 2,
+          "govde": [
+            "Gluten, hamura esneklik ve yapı veren proteindir. Glutensiz unlarla çalışırken bu yapıyı başka yollarla kurmak gerekir; bu yüzden tek bir un yerine birkaç unu karıştırmak çoğu zaman daha iyi sonuç verir.",
+            "Pirinç unu nötr bir tat ve hafif bir doku verir; kurabiye ve kaplamalarda iyi çalışır. Karabuğday unu daha belirgin, topraksı bir tattadır; krep ve ekmekte güzel durur. Nohut ve badem unu nem katar, tuzlu keklerde ve köftelerde bağlayıcılığı artırır. Mısır ve patates nişastası ise karışıma hafiflik verir.",
+            "Glutensiz hamurlar genellikle daha fazla sıvı ister ve dinlendirildiğinde daha kolay şekil alır. Ksantan gam ya da psyllium kabuğu gibi bağlayıcılar az miktarda eklendiğinde hamur dağılmadan toplanır.",
+            "Sos ve çorbalarda kıvam için buğday unu yerine az miktarda pirinç unu ya da mısır nişastası kullanmak en kolay ikamedir. Bu modda bazı tariflerde bu değişiklik akıllı ikame olarak uygulanmıştır ve kartta yazar."
+          ],
+          "maddeler": [
+            "Tek un yerine bir tahıl ununu bir nişastayla karıştırın.",
+            "Hamura biraz daha sıvı ekleyip dinlendirin.",
+            "Bağlayıcı olarak az miktarda ksantan gam ya da psyllium kullanın.",
+            "Sos ve çorba kıvamı için pirinç unu ya da mısır nişastası yeterlidir.",
+            "Un ve nişastaları sertifikalı glutensiz olanlardan seçin."
+          ],
+          "kaynaklar": [
+            "AOECS (Association of European Coeliac Societies) — https://www.aoecs.org",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        }
+      ],
+      "sss": [
+        {
+          "id": "colyak-sss-1",
+          "s": "Bu moddaki tarifler nasıl seçiliyor?",
+          "c": "Tarifin her malzemesi glutensiz modun kurallarına göre tek tek kontrol edilir. Bir malzemenin uygun olup olmadığından emin olunamıyorsa tarif listelenmez. Bazı tariflerde un ya da soya sosu gibi bir malzeme akıllı ikameyle değiştirilmiştir ve bu, tarif kartında yazar. Paketli ürün kullanırken etiketi her zaman kontrol etmek gerekir."
+        },
+        {
+          "id": "colyak-sss-2",
+          "s": "Yulaf glutensiz midir?",
+          "c": "Yulaf çoğu zaman buğdayla aynı tarlada ya da tesiste işlendiği için bulaşma riski taşır. Bu yüzden bu modda yalnız sertifikalı glutensiz yulaf öneriliyor. Yulafın kişiye uygun olup olmadığı ayrıca hekimle konuşulabilecek bir konudur."
+        },
+        {
+          "id": "colyak-sss-3",
+          "s": "Karabuğday bir buğday türü müdür?",
+          "c": "Adına rağmen karabuğday buğdayla akraba değildir ve gluten içermez. Pilavda, salatada ve un olarak krep ya da ekmekte kullanılabilir. Paketli karabuğdayda yine de “glutensiz” ibaresine bakmak, işleme sırasında olabilecek bulaşmaya karşı iyi bir alışkanlıktır."
+        },
+        {
+          "id": "colyak-sss-4",
+          "s": "Glutensiz bir tarifi herkesin olduğu sofrada sunabilir miyim?",
+          "c": "Elbette. Pirinçli, sebzeli ve et ağırlıklı pek çok tarif zaten glutensizdir ve sofrada fark edilmez. Ortak sofrada glutensiz yemeği ayrı kaşıkla servis etmek ve ekmek sepetini biraz uzağa koymak yeterli bir düzendir."
+        },
+        {
+          "id": "colyak-sss-5",
+          "s": "Bulgur yerine ne kullanabilirim?",
+          "c": "Karabuğday ve kinoa, bulgurun yerini pilavda, kısırda ve dolma içinde rahatça alır. Pirinç de çoğu tarifte iyi bir seçenektir. Pişirme süresi ve su miktarı değişebileceği için paket üzerindeki öneriye bakmak işe yarar."
+        }
+      ]
+    },
+    "diyabet": {
+      "giris": "Düşük glisemik indeksli malzemeler, dengeli karbonhidrat ve lif ile proteinle eşleşen tabaklar. Eklenmiş şeker yerine baharat ve az miktarda tatlandırıcı.",
+      "makaleler": [
+        {
+          "slug": "diyabet-glisemik-indeks",
+          "baslik": "Glisemik indeks nedir, tabak nasıl dengelenir?",
+          "ozet": "Glisemik indeks, bir besinin kan şekerini ne hızla yükselttiğini anlatır. Sebze, protein ve tam tahılla tabakta denge kurmak mümkün.",
+          "okuma_dk": 2,
+          "govde": [
+            "Glisemik indeks, karbonhidrat içeren bir besinin kan şekerini ne kadar hızlı yükselttiğini anlatan bir ölçüdür. Beyaz ekmek, beyaz pirinç ve patates gibi hızlı sindirilen nişastalar yüksek; bakliyat, tam tahıl ve çoğu sebze daha düşük glisemik indekse sahiptir.",
+            "Tek bir besinin indeksi kadar tabağın bütünü de önemlidir. Aynı pilav, yanında bol salata, yoğurt ve bir parça et ya da bakliyatla yendiğinde tek başına yenmesinden farklı davranır. Lif, protein ve yağ sindirimi yavaşlatır.",
+            "Pratik bir tabak düzeni için genel beslenme rehberleri tabağın yarısını sebzeyle, bir bölümünü protein kaynağıyla, kalan bölümünü tam tahıl ya da bakliyatla doldurmayı önerir. Bu düzen her öğünde tartı gerektirmeden uygulanabilir.",
+            "Pişirme biçimi de fark yaratır. Makarnayı dişe gelir kıvamda pişirmek, patatesi ezmek yerine bütün haşlamak ve pirinci bulgur ya da karabuğdayla değiştirmek mutfakta kolayca uygulanabilecek adımlardır. Kişiye uygun karbonhidrat miktarı ise hekim ve diyetisyenle belirlenir."
+          ],
+          "maddeler": [
+            "Tabağın yarısını sebzeyle doldurun.",
+            "Beyaz pirinç yerine bulgur, karabuğday ya da esmer pirinç deneyin.",
+            "Makarnayı dişe gelir kıvamda pişirin.",
+            "Meyve suyu yerine bütün meyveyi tercih edin.",
+            "Karbonhidratlı yiyeceği yoğurt, bakliyat ya da etle aynı tabakta sunun."
+          ],
+          "kaynaklar": [
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf",
+            "T.C. Sağlık Bakanlığı, Türkiye Diyabet Programı",
+            "International Diabetes Federation (IDF) — https://idf.org"
+          ]
+        },
+        {
+          "slug": "diyabet-tatlandiricilar",
+          "baslik": "Tatlandırıcılarla pişirme: stevia ve eritritol",
+          "ozet": "Stevia ve eritritol şekerden farklı davranır. Tatlılık oranı, hacim ve karamelleşme konusunda bilinmesi gerekenler.",
+          "okuma_dk": 2,
+          "govde": [
+            "Şeker tarifte yalnız tat vermez; hacim, nem, renk ve gevreklik de sağlar. Bu yüzden şekeri tatlandırıcıyla değiştirirken yalnız tatlılığı değil, bu görevleri de düşünmek gerekir.",
+            "Stevia çok tatlıdır ve çok azı yeterlidir. Bu nedenle şekerin hacmini karşılamaz; keklerde yapı zayıflayabilir. Fazla kullanıldığında hafif acımsı bir ard tat bırakabilir. Sos, marinasyon, içecek ve sütlü tatlılarda daha kolay kullanılır.",
+            "Eritritol şekere yakın bir hacimle kullanılabilir ve şekerden biraz daha az tatlıdır. Ağızda hafif bir serinlik hissi bırakabilir ve şeker gibi karamelleşmez; üstü kızaran ya da karamel isteyen tariflerde beklenen rengi vermez. Bazı kişilerde fazla miktarda tüketildiğinde sindirim rahatsızlığı yapabilir.",
+            "En iyi sonuç çoğu zaman tatlandırıcıyı azaltıp tarçın, vanilya, kakule ya da limon kabuğu gibi aromalarla tatlılık hissini artırmaktan gelir. Bu modda bazı tuzlu tariflerde az miktardaki şeker akıllı ikameyle stevia ya da eritritole çevrilmiştir ve kartta yazar."
+          ],
+          "maddeler": [
+            "Stevia için paket üzerindeki şeker karşılığı oranına bakın.",
+            "Hacim isteyen keklerde eritritolü tercih edin.",
+            "Tarçın, vanilya ve limon kabuğuyla tatlılık hissini destekleyin.",
+            "Tatlandırıcıyı az başlayıp tadarak artırın.",
+            "Karamel ve kızarma isteyen tariflerde rengin farklı olacağını bekleyin."
+          ],
+          "kaynaklar": [
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf",
+            "WHO, Healthy diet — https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+          ]
+        },
+        {
+          "slug": "diyabet-lif-protein",
+          "baslik": "Karbonhidratı lif ve proteinle eşleştirmek",
+          "ozet": "Ekmeği peynirle, meyveyi yoğurtla, pilavı bakliyatla buluşturmak. Gündelik öğünler için kolay eşleştirme fikirleri.",
+          "okuma_dk": 2,
+          "govde": [
+            "Karbonhidrat sofradan tamamen kalkması gereken bir besin değildir; önemli olan miktarı ve neyle birlikte yendiğidir. Lif ve protein, karbonhidratın sindirimini yavaşlatan iki doğal yardımcıdır.",
+            "Türk mutfağı bu eşleştirmeye çok uygundur. Mercimekli bulgur pilavı, nohutlu sebze yemeği, yoğurtlu ıspanak ya da zeytinyağlı fasulye zaten lif ve proteini aynı tabakta buluşturur. Kahvaltıda beyaz ekmek yerine tam tahıllı ekmek, yanında yumurta, peynir ve bol yeşillik iyi bir başlangıçtır.",
+            "Ara öğünlerde de aynı mantık işler. Tek başına meyve yerine yoğurtla ya da bir avuç kuruyemişle birlikte bir porsiyon meyve; tek başına kraker yerine humus ve sebze çubukları daha dengeli bir seçimdir.",
+            "Lifli yiyecekleri artırırken yeterli su içmek de unutulmamalıdır. Kabuğu yenebilen sebze ve meyveleri kabuğuyla tüketmek, ek bir çaba gerektirmeden lifi artırmanın en kolay yoludur."
+          ],
+          "maddeler": [
+            "Pilavı mercimek, nohut ya da sebzeyle zenginleştirin.",
+            "Meyveyi yoğurt ya da bir avuç kuruyemişle birlikte yiyin.",
+            "Kahvaltıda tam tahıllı ekmeği yumurta ve yeşillikle eşleştirin.",
+            "Kraker yerine humus ve sebze çubukları deneyin.",
+            "Kabuğu yenebilen sebze ve meyveleri kabuğuyla tüketin."
+          ],
+          "kaynaklar": [
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf",
+            "International Diabetes Federation (IDF) — https://idf.org"
+          ]
+        }
+      ],
+      "sss": [
+        {
+          "id": "diyabet-sss-1",
+          "s": "Bu moddaki tarifler nasıl seçiliyor?",
+          "c": "Tarifin her malzemesi bu modun kurallarına göre kontrol edilir; eklenmiş şeker ve hızlı yükselen nişastalar ayrıca değerlendirilir, besin değeri hesaplanabilen tariflerde porsiyon başına karbonhidrat ve şeker de dikkate alınır. Emin olunamayan tarif listelenmez. Bazı tariflerde akıllı ikame uygulanmıştır ve kartta yazar. Paketli ürünlerde etiketi her zaman kontrol edin."
+        },
+        {
+          "id": "diyabet-sss-2",
+          "s": "Bal ve pekmez şekerden daha mı uygun?",
+          "c": "Bal, pekmez ve hurma özü doğal kaynaklı olsa da şeker içerir; kan şekerine etkileri açısından şekerden belirgin biçimde farklı değildir. Bu yüzden bu modda eklenmiş şekerle aynı grupta değerlendirilir. Tatlandırmada az miktarda tatlandırıcı ve tarçın gibi baharatlar daha sık kullanılan bir yoldur."
+        },
+        {
+          "id": "diyabet-sss-3",
+          "s": "Meyve bu modda yer alıyor mu?",
+          "c": "Bütün meyve lifiyle birlikte geldiği için tariflerde yer alabilir. Meyve suyu ve kuru meyvenin şekeri daha yoğun olduğundan bunları içeren tarifler bu modda gizlenir. Kişiye uygun meyve miktarı hekim ya da diyetisyenle belirlenir."
+        },
+        {
+          "id": "diyabet-sss-4",
+          "s": "Tam buğday unu beyaz unun yerini tutar mı?",
+          "c": "Çoğu tarifte unun bir kısmını tam buğday unuyla değiştirmek iyi sonuç verir. Tamamen değiştirildiğinde hamur daha sıkı olabilir; biraz daha sıvı eklemek ve dinlendirmek işe yarar. Badem unu ise kurabiye ve keklerde lezzetli bir seçenektir."
+        },
+        {
+          "id": "diyabet-sss-5",
+          "s": "Bu modda tatlı tarifleri var mı?",
+          "c": "Tatlı kategorisindeki tarifler yalnız Dada Gastro'da “diyabete uygun” etiketi taşıyorsa bu modda görünür. Diğer tatlılarda şeker yapının bir parçası olduğu için tatlandırıcıyla uyarlama yapılmaz ve bu tarifler listelenmez."
+        }
+      ]
+    },
+    "alerji": {
+      "giris": "Alerjeninizi seçin; onu içeren ya da aynı bantta üretilmiş olabilecek ürün kullanan tarifler listeden kalksın. Bu modda ikame yapılmaz.",
+      "makaleler": [
+        {
+          "slug": "alerji-eser-miktar",
+          "baslik": "“Eser miktarda içerebilir” ne anlatır?",
+          "ozet": "Etiketteki ihtiyat uyarıları, “aynı bant” ifadesi ve içindekiler listesinde alerjenin nasıl vurgulandığı.",
+          "okuma_dk": 2,
+          "govde": [
+            "Paketli gıdalarda alerjenler iki yerde karşımıza çıkar. Birincisi içindekiler listesidir: ürünün tarifinde bilerek bulunan alerjenler burada yazılır ve çoğu zaman kalın ya da farklı yazıyla vurgulanır. İkincisi ise “eser miktarda içerebilir” ya da “aynı bantta üretilmiştir” gibi uyarı satırlarıdır.",
+            "Uyarı satırları, alerjenin tarifte olmadığını ama aynı makine, bant ya da tesis nedeniyle üretim sırasında ürüne karışmış olabileceğini anlatır. Bu bulaşmanın miktarı partiden partiye değişebilir. Bu yüzden uyarı taşıyan bir ürünün bir kez sorunsuz yenmiş olması, bir sonraki paketin de aynı olacağı anlamına gelmez.",
+            "Uyarının olmaması da tek başına bir garanti değildir. En güvenli yol, alerjenin ne içindekiler listesinde ne de uyarı satırlarında geçtiği ürünleri seçmek; emin olunamadığında üreticinin tüketici hattına sormaktır.",
+            "Bu modda paketli, hazır ve aynı bant uyarısı taşıyabilecek ürünler içeren tarifler bu nedenle listelenmez. Listede kalan tariflerin çoğu taze ve tek bileşenli malzemelerle hazırlanabilen yemeklerdir."
+          ],
+          "maddeler": [
+            "Önce içindekiler listesine, sonra uyarı satırlarına bakın.",
+            "Her yeni pakette etiketi yeniden okuyun; içerik değişebilir.",
+            "“Aynı tesiste üretilmiştir” ifadesini de dikkate alın.",
+            "Emin olamadığınız ürün için üreticiye sorun.",
+            "Açık satılan, etiketi olmayan ürünlerde temkinli olun."
+          ],
+          "kaynaklar": [
+            "T.C. Tarım ve Orman Bakanlığı, Türk Gıda Kodeksi Gıda Etiketleme ve Tüketicileri Bilgilendirme Yönetmeliği",
+            "EAACI (European Academy of Allergy and Clinical Immunology) — https://eaaci.org"
+          ]
+        },
+        {
+          "slug": "alerji-misafir-sofrasi",
+          "baslik": "Misafir sofrasında alerjen güvenliği",
+          "ozet": "Alerjisi olan bir misafiri ağırlarken menü, hazırlık sırası, servis ve etiket konusunda pratik bir yol haritası.",
+          "okuma_dk": 2,
+          "govde": [
+            "Alerjisi olan bir misafiri ağırlamak dikkat ister ama zor olmak zorunda değildir. İlk adım, misafire hangi besinlerden uzak durması gerektiğini ve bunun eser miktarı da kapsayıp kapsamadığını önceden sormaktır.",
+            "Menüyü sade tutmak işi kolaylaştırır. Az sayıda malzemeyle yapılan, içeriği bilinen yemekler seçmek; hazır sos, bulyon ve baharat karışımı yerine taze ot ve tek bileşenli baharatlarla çalışmak kontrolü artırır. Tüm sofrayı o alerjen olmadan kurmak mümkünse karışıklık en aza iner.",
+            "Hazırlıkta sıra önemlidir. Alerjen içermeyen yemek önce, temiz tezgâhta ve temiz araçlarla hazırlanıp kapağı kapatılır. Serviste her yemeğin kendi kaşığı olur; kuruyemişli bir salatanın kaşığı başka bir tabağa girmez.",
+            "Paketli bir ürün kullanıldıysa ambalajını atmamak iyi bir alışkanlıktır; misafir merak ettiğinde etiketi birlikte okumak güven verir. Misafirden, bir şey ters giderse ne yapılması gerektiğini önceden anlatmasını istemek de ev sahibini rahatlatır."
+          ],
+          "maddeler": [
+            "Misafire alerjenini ve eser miktara duyarlılığını önceden sorun.",
+            "Az malzemeli, içeriği bilinen yemekler seçin.",
+            "Alerjensiz yemeği önce hazırlayıp kapağını kapatın.",
+            "Her yemeğe ayrı servis kaşığı koyun.",
+            "Paketli ürünlerin ambalajını yemekten sonraya kadar saklayın."
+          ],
+          "kaynaklar": [
+            "EAACI (European Academy of Allergy and Clinical Immunology) — https://eaaci.org",
+            "T.C. Sağlık Bakanlığı Halk Sağlığı Genel Müdürlüğü — https://hsgm.saglik.gov.tr"
+          ]
+        },
+        {
+          "slug": "alerji-ikameler",
+          "baslik": "Alerjen dostu ikameler: yumurta, süt, kuruyemiş",
+          "ozet": "Kendi mutfağınızda yumurta, süt ve kuruyemiş yerine kullanılabilecek seçenekler ve ikame seçerken dikkat edilecek noktalar.",
+          "okuma_dk": 2,
+          "govde": [
+            "Bu modda tarifler ikameyle uyarlanmaz; seçilen alerjeni içeren tarif listeden tümüyle kalkar. Yine de kendi mutfağında bir tarifi uyarlamak isteyenler için bazı yaygın ikameler işe yarar. Burada tek ama önemli kural, ikamenin başka bir alerjen getirmemesidir.",
+            "Yumurta, kek ve köftede bağlayıcı olarak çalışır. Öğütülmüş keten tohumu suyla karıştırılıp birkaç dakika bekletildiğinde jöle kıvamına gelir ve bu görevi büyük ölçüde üstlenir. Ezilmiş muz ya da elma püresi tatlı keklerde nem ve bağlayıcılık sağlar. Kabarma için biraz sirkeyle karbonatı birlikte kullanmak da bilinen bir yöntemdir.",
+            "Süt yerine pirinç ya da yulaf sütü, tereyağı yerine zeytinyağı çoğu tarifte sorunsuz çalışır. Ancak badem sütü sert kabuklu yemiş alerjisinde, soya sütü soya alerjisinde, sertifikasız yulaf sütü ise gluten hassasiyetinde uygun olmayabilir; seçim kişinin tüm alerjenlerine göre yapılır.",
+            "Kuruyemiş ve tahin yerine kavrulmuş ayçiçeği ya da kabak çekirdeği, ezmelerde ve kurabiye üstünde benzer bir doku verir. Çekirdek ezmeleri de etiket kontrolü ister; aynı tesiste kuruyemiş işlenmiş olabilir."
+          ],
+          "maddeler": [
+            "1 yumurta yerine 1 yemek kaşığı öğütülmüş keten tohumu ve 3 yemek kaşığı su deneyin.",
+            "Süt yerine pirinç ya da yulaf sütü, tereyağı yerine zeytinyağı kullanın.",
+            "Fıstık ezmesi yerine kabak çekirdeği ezmesi deneyin.",
+            "İkamenin başka bir alerjen içermediğini etiketten kontrol edin."
+          ],
+          "kaynaklar": [
+            "EAACI (European Academy of Allergy and Clinical Immunology) — https://eaaci.org",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        }
+      ],
+      "sss": [
+        {
+          "id": "alerji-sss-1",
+          "s": "Bu moddaki tarifler nasıl seçiliyor?",
+          "c": "Tarifin her malzemesi seçtiğiniz alerjene göre kontrol edilir; alerjeni ya da türevini içeren tarif gizlenir. Paketli, hazır ve aynı bant uyarısı taşıyabilecek ürün içeren tarifler ile malzemesi tam tanımlanamayan tarifler de listelenmez. Bu modda akıllı ikame uygulanmaz. Kendi aldığınız ürünlerde etiketi her zaman kontrol edin."
+        },
+        {
+          "id": "alerji-sss-2",
+          "s": "Seçtiğim alerjen nerede saklanıyor?",
+          "c": "Seçiminiz yalnız bu cihazın tarayıcısında saklanır. Bir hesaba ya da sunucuya gönderilmez. İstediğiniz an seçimi değiştirebilir ya da temizleyebilirsiniz."
+        },
+        {
+          "id": "alerji-sss-3",
+          "s": "Neden bazı sade görünen tarifler listede yok?",
+          "c": "Tarifte hazır sos, bulyon, baharat karışımı ya da şarküteri ürünü gibi paketli bir malzeme varsa, aynı bant riski nedeniyle tarif gizlenir. Malzemesi tam tanımlanamayan tarifler de aynı şekilde listelenmez. Amaç, emin olunamayan hiçbir tarifi göstermemektir."
+        },
+        {
+          "id": "alerji-sss-4",
+          "s": "Alerjenli ve alerjensiz yemek aynı mutfakta pişebilir mi?",
+          "c": "Pişebilir; ama sıra ve temizlik önem kazanır. Alerjensiz yemeği önce hazırlamak, ayrı kesme tahtası ve kaşık kullanmak, kızartma yağını ortak kullanmamak temel adımlardır. Yüzeyleri sıcak su ve deterjanla silmek, yalnız kuru bezle silmekten çok daha iyi sonuç verir."
+        },
+        {
+          "id": "alerji-sss-5",
+          "s": "Açıkta satılan ürünleri kullanabilir miyim?",
+          "c": "Açıkta satılan ürünlerde içerik ve üretim koşulları her zaman bilinemez. Kuruyemiş, baharat ve unlu mamullerde aynı kepçe ya da tezgâhın kullanılması bulaşma ihtimalini artırır. Emin olunamadığında etiketli, kapalı ambalajlı ürünleri tercih etmek daha güvenlidir."
+        }
+      ]
+    },
+    "laktoz": {
+      "giris": "Hayvansal süt ürünleri içermeyen tarifler; tereyağı yerine zeytinyağı, süt yerine bitkisel süt. Hem laktoz intoleransı hem İSPA düşünülerek hazırlanır.",
+      "makaleler": [
+        {
+          "slug": "laktoz-ispa-farki",
+          "baslik": "Laktoz intoleransı ile İSPA arasındaki fark",
+          "ozet": "Biri süt şekerinin sindirimiyle, diğeri süt proteinine verilen bağışıklık tepkisiyle ilgilidir. Mutfakta neden farklı dikkat isterler?",
+          "okuma_dk": 2,
+          "govde": [
+            "Laktoz intoleransı ve inek sütü proteini alerjisi (İSPA) sık karıştırılır, ama farklı konulardır. Laktoz intoleransı, süt şekeri olan laktozun sindiriminde yaşanan bir güçlüktür. İSPA ise vücudun süt proteinine bağışıklık sistemi üzerinden tepki vermesidir ve daha çok bebeklerde ve küçük çocuklarda görülür.",
+            "Bu fark mutfakta önemlidir. Laktoz intoleransında laktozsuz süt ve yoğurt bir seçenek olabilir. İSPA'da ise sorun proteinde olduğu için laktozsuz inek sütü uygun değildir; keçi ve koyun sütü de benzer proteinler taşıdığından genellikle uygun kabul edilmez. Süt tozu, peynir altı suyu ve kazein gibi süt kaynaklı katkılar da dikkat ister.",
+            "Belirtiler bazen birbirine benzeyebilir. Hangisinin söz konusu olduğunu anlamak ve beslenmeyi buna göre düzenlemek için hekime başvurmak gerekir; bu yazı yalnız mutfaktaki farkı anlatır.",
+            "Bu mod iki durumu da düşünerek hazırlanır: hayvansal süt ürünleri ve süt proteini taşıyabilecek paketli ürünler içeren tarifler listelenmez. Böylece aynı tarif, hem laktozdan hem süt proteininden uzak durması gereken biri için uygun olur."
+          ],
+          "maddeler": [
+            "Laktozsuz süt, laktoz intoleransında seçenek olabilir; İSPA'da uygun değildir.",
+            "Etikette süt tozu, peynir altı suyu, kazein ve laktoz kelimelerine bakın.",
+            "Hazır hamur, şarküteri ve çikolatada gizli süt ürünü olabileceğini unutmayın.",
+            "Keçi ve koyun sütünü inek sütünün yerine düşünmeyin."
+          ],
+          "kaynaklar": [
+            "NIDDK (NIH), Lactose Intolerance — https://www.niddk.nih.gov/health-information/digestive-diseases/lactose-intolerance",
+            "EAACI (European Academy of Allergy and Clinical Immunology) — https://eaaci.org"
+          ]
+        },
+        {
+          "slug": "laktoz-sutsuz-pisirme",
+          "baslik": "Tereyağsız ve sütsüz pişirme",
+          "ozet": "Kavurma, hamur, sos ve tatlıda tereyağı ile sütün yerini neyin alabileceğine dair pratik notlar.",
+          "okuma_dk": 2,
+          "govde": [
+            "Türk mutfağının büyük bölümü zaten sütsüzdür. Zeytinyağlılar, etli sebze yemekleri, bakliyat ve pilavların çoğu tereyağı yerine zeytinyağıyla da lezzetli pişer. Değişiklik en çok hamur işi, sos ve tatlıda hissedilir.",
+            "Kavurma ve sotede tereyağının yerini zeytinyağı rahatça alır. Hamurda ve kurabiyede katı bir yağ gerektiğinde hindistan cevizi yağı daha iyi sonuç verir; soğukken katı olduğu için tereyağı gibi ufalanabilir. Pilavda tereyağı aroması aranıyorsa, pirinci zeytinyağında biraz daha uzun kavurmak tadı derinleştirir.",
+            "Beşamel ve kremalı soslarda süt yerine yulaf ya da pirinç sütü, krema yerine hindistan cevizi kreması kullanılabilir. Şekersiz ve aromasız bitkisel süt seçmek, tuzlu yemekte beklenmedik tatların önüne geçer.",
+            "Peynirin tuzlu ve umami tadını yakalamak için besin mayası, kavrulmuş kaju kreması ya da biraz zeytin ezmesi kullanılabilir. Bu modda bazı tariflerde tereyağı, süt ya da krema akıllı ikameyle değiştirilmiştir ve kartta yazar."
+          ],
+          "maddeler": [
+            "Kavurmada tereyağı yerine zeytinyağı kullanın.",
+            "Hamur ve kurabiyede hindistan cevizi yağını soğuk ve katı haliyle işleyin.",
+            "Tuzlu yemekte şekersiz, aromasız bitkisel süt seçin.",
+            "Peynir tadı için besin mayası deneyin.",
+            "Hazır hamur ve bisküvide süt tozu olup olmadığına bakın."
+          ],
+          "kaynaklar": [
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf",
+            "NIDDK (NIH), Lactose Intolerance — https://www.niddk.nih.gov/health-information/digestive-diseases/lactose-intolerance"
+          ]
+        },
+        {
+          "slug": "laktoz-bitkisel-sutler",
+          "baslik": "Bitkisel sütler: hangisi nerede?",
+          "ozet": "Yulaf, pirinç, badem, soya ve hindistan cevizi sütünün tadı ve kıvamı farklıdır. Hangi tarifte hangisinin iyi çalıştığına bakalım.",
+          "okuma_dk": 2,
+          "govde": [
+            "Bitkisel sütler birbirinin aynısı değildir; tatları, kıvamları ve ısıya dayanımları farklıdır. Tarife göre doğru olanı seçmek sonucu belirgin biçimde değiştirir.",
+            "Yulaf sütü kremamsı ve hafif tatlıdır; sütlaç, muhallebi, kahve ve beşamelde inek sütüne en yakın sonucu verir. Pirinç sütü daha sulu ve tatlıdır; sütlü tatlılarda ve kek hamurunda iyi çalışır ama sos kıvamı için biraz daha nişasta ister. Badem sütü hafif ve kuruyemişsi bir tattadır; kurabiye ve kahvaltılık tariflerde güzel durur.",
+            "Soya sütü proteini en yüksek bitkisel süttür ve pişirmede yapıyı iyi taşır; kek ve krep hamurunda başarılıdır. Hindistan cevizi sütü yoğun ve yağlıdır; çorba, köri ve kremalı soslarda, kremanın yerine de kullanılabilir.",
+            "Bitkisel sütlerin besin içeriği inek sütünden farklıdır ve bebeklerle küçük çocuklar için süt ya da mama yerine geçmez. İSPA olan çocuklarda hangi ürünün kullanılacağına hekim karar verir. Badem ve soya sütünün kendi alerjen riski de unutulmamalıdır."
+          ],
+          "maddeler": [
+            "Sütlaç ve beşamel için yulaf sütü deneyin.",
+            "Köri ve kremalı çorbada hindistan cevizi sütü kullanın.",
+            "Kek ve krepte soya sütü yapıyı iyi taşır.",
+            "Tuzlu yemeklerde şekersiz ve aromasız olanı seçin.",
+            "Bitkisel sütü kaynatmadan, orta ateşte ısıtın."
+          ],
+          "kaynaklar": [
+            "EAACI (European Academy of Allergy and Clinical Immunology) — https://eaaci.org",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        }
+      ],
+      "sss": [
+        {
+          "id": "laktoz-sss-1",
+          "s": "Bu moddaki tarifler nasıl seçiliyor?",
+          "c": "Tarifin her malzemesi sütsüz modun kurallarına göre kontrol edilir; hayvansal süt ürünleri ve süt proteini taşıyabilecek paketli ürünler dışarıda kalır. Emin olunamayan tarif listelenmez. Bazı tariflerde tereyağı, süt ya da krema akıllı ikameyle değiştirilmiştir ve kartta yazar. Paketli ürünlerde etiketi her zaman kontrol edin."
+        },
+        {
+          "id": "laktoz-sss-2",
+          "s": "Laktozsuz süt bu modda neden önerilmiyor?",
+          "c": "Laktozsuz süt, laktozu ayrıştırılmış inek sütüdür; süt proteini hâlâ içindedir. Bu mod İSPA'yı da kapsadığı için laktozsuz inek sütü yerine bitkisel süt önerilir. Yalnız laktoz intoleransı olanlar için laktozsuz süt bir seçenek olabilir; bunu hekimle konuşmak en doğrusudur."
+        },
+        {
+          "id": "laktoz-sss-3",
+          "s": "Keçi sütü ya da keçi peyniri kullanılabilir mi?",
+          "c": "Keçi ve koyun sütü de laktoz ve inek sütüne benzer proteinler içerir. Bu yüzden bu modda hayvansal sütlerin tamamı aynı şekilde değerlendirilir ve tarif dışında kalır."
+        },
+        {
+          "id": "laktoz-sss-4",
+          "s": "Paketli ürünlerde süt nasıl gizlenebilir?",
+          "c": "Süt tozu, peynir altı suyu tozu, kazein, kazeinat ve laktoz, sütten gelen bileşenlerin etiketteki adlarıdır. Hazır hamur, bisküvi, çikolata, sucuk ve sosis gibi ürünlerde sık karşılaşılır. Alerjenler içindekiler listesinde çoğu zaman kalın ya da farklı yazıyla vurgulanır."
+        },
+        {
+          "id": "laktoz-sss-5",
+          "s": "Süt ürünleri olmadan kalsiyum nereden gelebilir?",
+          "c": "Koyu yeşil yapraklı sebzeler, susam ve tahin, kuru baklagiller, badem ve kılçığıyla yenen küçük balıklar kalsiyum içeren besinler arasındadır. Bazı bitkisel sütler kalsiyumla zenginleştirilir; bu bilgi etikette yer alır. Kişiye uygun beslenme düzeni için diyetisyenle konuşmak yol göstericidir."
+        }
+      ]
+    },
+    "ibs": {
+      "giris": "Düşük FODMAP ilkesine göre seçilmiş tarifler: soğan ve sarımsağın aroması infüze yağ ve asafetidayla, FODMAP yükü olmadan tabakta.",
+      "makaleler": [
+        {
+          "slug": "ibs-fodmap-nedir",
+          "baslik": "FODMAP nedir, düşük FODMAP dönemi nasıl işler?",
+          "ozet": "FODMAP'ler bazı kişilerde sindirim yakınmalarıyla ilişkilendirilen karbonhidratlardır. Düşük FODMAP dönemi diyetisyenle aşama aşama planlanır.",
+          "okuma_dk": 2,
+          "govde": [
+            "FODMAP, ince bağırsakta zor emilen ve kalın bağırsakta fermente olan bir grup kısa zincirli karbonhidratın İngilizce baş harflerinden oluşur: fermente olabilen oligosakkaritler, disakkaritler, monosakkaritler ve polioller. Soğan, sarımsak, buğday, bazı meyveler, baklagiller, laktozlu süt ürünleri ve bazı tatlandırıcılar bu grupta öne çıkar.",
+            "Düşük FODMAP yaklaşımı, hassas bağırsağı olan kişilerde hangi besinlerin yakınmalarla ilişkili olduğunu anlamak için kullanılan geçici bir düzendir. Genellikle üç aşamada ilerler: yüksek FODMAP'li besinlerin bir süre azaltıldığı başlangıç dönemi, besin gruplarının tek tek ve kontrollü biçimde geri eklendiği deneme dönemi ve kişinin kendi toleransına göre kurulan uzun vadeli düzen.",
+            "Bu yaklaşımın amacı ömür boyu sürecek bir yasak listesi değil, kişiye özel bir beslenme haritası çıkarmaktır. Çok sayıda besini uzun süre kısıtlamak beslenmeyi gereksiz yere daraltabileceği için süreç bir diyetisyenle planlanır.",
+            "Bu moddaki tarifler başlangıç dönemine uygun olacak şekilde seçilir. Deneme döneminde diyetisyenin yönlendirmesiyle tarifler kişinin toleransına göre genişletilebilir."
+          ],
+          "maddeler": [
+            "Düşük FODMAP geçici bir dönemdir, kalıcı bir yasak listesi değildir.",
+            "Başlangıç, deneme ve kişiselleştirme aşamalarını diyetisyenle planlayın.",
+            "Deneme döneminde besinleri tek tek ve ayrı günlerde ekleyin.",
+            "Yediklerinizi ve nasıl hissettiğinizi kısa notlarla kaydedin.",
+            "Etiketlerde soğan tozu, sarımsak tozu, bal ve fruktoz şurubuna bakın."
+          ],
+          "kaynaklar": [
+            "Monash University, Low FODMAP Diet — https://www.monashfodmap.com",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        },
+        {
+          "slug": "ibs-sogansiz-lezzet",
+          "baslik": "Soğansız, sarımsaksız lezzet: infüze yağ ve asafetida",
+          "ozet": "Soğan ve sarımsağın aromasını yağa aktarmak; taze soğanın yeşil kısmı ve bir tutam asafetidayla yemeğe derinlik katmak.",
+          "okuma_dk": 2,
+          "govde": [
+            "Soğan ve sarımsak Türk mutfağının temelidir; düşük FODMAP döneminde en çok özlenen tatlar da bunlardır. İyi haber şu: aromanın önemli bir kısmı farklı yollarla yemeğe taşınabilir.",
+            "Soğan ve sarımsaktaki fruktanlar suda çözünür ama yağda çözünmez. Bu yüzden sarımsak dişleri zeytinyağında kısık ateşte kavrulup yağdan tamamen çıkarıldığında aroma yağda kalır ve bu yağ yemeğin başında kullanılabilir. Evde hazırlanan sarımsaklı yağı bekletmeden kullanmak ve her seferinde az miktarda hazırlamak en güvenli yoldur.",
+            "Taze soğanın ve pırasanın yeşil kısmı düşük FODMAP kabul edilir; beyaz kısım ayrılır, yeşil yapraklar ince doğranıp kullanılır. Asafetida ise soğan ve sarımsağı andıran güçlü bir baharattır; sıcak yağa atılan bir tutamı yeterlidir. Bazı asafetida tozları buğday unuyla karıştırılarak satıldığı için glutene dikkat edenlerin etiketi okuması gerekir.",
+            "Kimyon, kişniş tohumu, zencefil, taze ot ve limon kabuğu da soğansız bir tencerede lezzeti tamamlar. Bu modda bazı tariflerde soğan, sarımsak ve pırasa bu yöntemlerle akıllı ikameye çevrilmiştir ve kartta yazar."
+          ],
+          "maddeler": [
+            "Sarımsağı yağda kısık ateşte kavurup tamamen çıkarın.",
+            "Sarımsaklı yağı az hazırlayın ve bekletmeden kullanın.",
+            "Taze soğan ve pırasanın yalnız yeşil kısmını kullanın.",
+            "Asafetidayı sıcak yağa bir tutam ekleyin; etiketinde buğday unu olup olmadığına bakın.",
+            "Hazır baharat karışımlarında soğan ve sarımsak tozu arayın."
+          ],
+          "kaynaklar": [
+            "Monash University, Low FODMAP Diet — https://www.monashfodmap.com"
+          ]
+        },
+        {
+          "slug": "ibs-porsiyon-mantigi",
+          "baslik": "Porsiyon ve “güvenli miktar” mantığı",
+          "ozet": "Bir besin küçük porsiyonda düşük, büyük porsiyonda yüksek FODMAP olabilir. Miktarın neden bu kadar önemli olduğuna bakalım.",
+          "okuma_dk": 2,
+          "govde": [
+            "FODMAP'te bir besini “uygun” ya da “uygun değil” diye ikiye ayırmak çoğu zaman eksik kalır. Pek çok besin küçük porsiyonda düşük FODMAP iken, porsiyon büyüdükçe FODMAP miktarı da artar. Bu yüzden miktar, en az besinin kendisi kadar önemlidir.",
+            "Örneğin bazı sebze ve meyveler küçük bir porsiyonda sorun çıkarmazken, aynı öğünde iki katına çıktığında FODMAP yükü artabilir. İyice süzülüp durulanmış konserve mercimek ya da nohutun küçük bir porsiyonu da, kuru halinden evde haşlanan baklagile göre daha az FODMAP içerebilir.",
+            "Aynı öğünde birden fazla sınırda besin bir araya geldiğinde etkiler toplanabilir. Bu nedenle bir öğünde tek bir sınırda besine yer verip tabağın geri kalanını düşük FODMAP malzemelerle tamamlamak pratik bir yoldur.",
+            "Besinlerin kişiye uygun miktarı bireyden bireye değişir ve deneme döneminde diyetisyenle birlikte belirlenir. Bu moddaki tarifler ise yüksek FODMAP'li malzeme içermeyecek ya da ikameyle uyarlanacak şekilde seçilir."
+          ],
+          "maddeler": [
+            "Bir besinin uygunluğunu porsiyonuyla birlikte düşünün.",
+            "Bir öğünde tek bir sınırda besine yer verin.",
+            "Konserve baklagilleri iyice süzüp durulayarak kullanın.",
+            "Meyveleri tek seferde değil, öğünlere yayarak tüketin."
+          ],
+          "kaynaklar": [
+            "Monash University, Low FODMAP Diet — https://www.monashfodmap.com",
+            "T.C. Sağlık Bakanlığı Halk Sağlığı Genel Müdürlüğü — https://hsgm.saglik.gov.tr"
+          ]
+        }
+      ],
+      "sss": [
+        {
+          "id": "ibs-sss-1",
+          "s": "Bu moddaki tarifler nasıl seçiliyor?",
+          "c": "Tarifin her malzemesi düşük FODMAP kurallarına göre kontrol edilir; emin olunamayan tarif listelenmez. Bazı tariflerde sarımsak, soğan, süt ya da bal gibi malzemeler akıllı ikameyle değiştirilmiştir ve bu, tarif kartında yazar. Paketli ürünlerde etiketi her zaman kontrol edin."
+        },
+        {
+          "id": "ibs-sss-2",
+          "s": "Neden baklagiller bu modda yok?",
+          "c": "Nohut, fasulye ve mercimek, GOS adı verilen ve FODMAP grubunda yer alan karbonhidratlar bakımından zengindir. Bu nedenle başlangıç dönemine göre seçilen bu modda baklagilli tarifler listelenmez. Az miktarda süzülmüş konserve baklagilin uygun olup olmadığı diyetisyenle konuşulabilir."
+        },
+        {
+          "id": "ibs-sss-3",
+          "s": "Laktozsuz süt bu modda kullanılabilir mi?",
+          "c": "Evet. FODMAP açısından konu süt proteini değil laktozdur; bu yüzden bu modda bazı tariflerde süt ve yoğurt laktozsuz karşılıklarıyla değiştirilmiştir. Süt proteini alerjisi ya da İSPA söz konusuysa Sütsüz modu daha uygun bir başlangıçtır."
+        },
+        {
+          "id": "ibs-sss-4",
+          "s": "Bu mod SIBO için de geçerli mi?",
+          "c": "Bu moddaki tarifler genel düşük FODMAP ilkelerine göre seçilir. SIBO sürecinde beslenme kişiye göre farklı planlanabildiği için hangi tariflerin uygun olduğu hekim ve diyetisyenle birlikte değerlendirilmelidir."
+        },
+        {
+          "id": "ibs-sss-5",
+          "s": "Soğansız yemeğe hangi baharatlar lezzet katar?",
+          "c": "Kimyon, kişniş, zerdeçal, zencefil, pul biber, kekik, nane, defne yaprağı ve taze otlar düşük FODMAP mutfağında sık kullanılır. Asafetida soğan ve sarımsak tadını andırır; çok azı yeter. Hazır baharat karışımlarında soğan ve sarımsak tozu olabileceği için tek bileşenli baharatları seçmek işi kolaylaştırır."
+        }
+      ]
+    },
+    "kalp": {
+      "giris": "Az tuzlu, doymuş yağı düşük, sebze ve bakliyat ağırlıklı tarifler. Tuzun yerini taze ot, baharat ve narenciye, tereyağının yerini zeytinyağı alır.",
+      "makaleler": [
+        {
+          "slug": "kalp-dash-tabak",
+          "baslik": "DASH tarzı tabak nasıl kurulur?",
+          "ozet": "Sebze, meyve, tam tahıl, bakliyat ve balık ağırlıklı; tuz, doymuş yağ ve şekerde ölçülü bir tabak düzeni.",
+          "okuma_dk": 2,
+          "govde": [
+            "DASH, yüksek tansiyon üzerine yapılan beslenme çalışmalarından doğmuş bir beslenme düzenidir. Tek bir besine değil, tabağın bütününe odaklanır: sebze, meyve, tam tahıl, bakliyat, kuruyemiş, balık, tavuk ve az yağlı süt ürünleri öne çıkar; tuz, doymuş yağ ve eklenmiş şeker sınırlı tutulur.",
+            "Türk mutfağı DASH tarzına sanıldığından daha yakındır. Zeytinyağlı sebze yemekleri, kuru fasulye ve mercimek, bulgur pilavı, cacık ve ızgara balık bu düzenin doğal parçalarıdır. Fark çoğu zaman tuz miktarında ve yanında gelen turşu, salamura peynir ya da şarküteri ürünlerindedir.",
+            "Pratik bir başlangıç için tabağın yarısını sebzeye ayırmak, ekmeği tam tahıllı seçmek, kırmızı et yerine daha sık balık ya da bakliyat pişirmek ve yemeği tatlı yerine meyveyle bitirmek yeterlidir.",
+            "Genel öneriler sodyumu azaltmanın ve sebze ile meyveyi artırmanın önemini vurgular. Kişiye özel tuz ve yağ hedefleri ise hekim ve diyetisyenle belirlenir."
+          ],
+          "maddeler": [
+            "Tabağın yarısını sebzeyle doldurun.",
+            "Kırmızı et yerine balık, derisiz tavuk ya da bakliyatı daha sık seçin.",
+            "Beyaz ekmek yerine tam tahıllı ekmek tercih edin.",
+            "Turşu, salamura peynir ve şarküteriyi seyrek tüketin.",
+            "Yemeği tatlı yerine mevsim meyvesiyle bitirin."
+          ],
+          "kaynaklar": [
+            "NHLBI (NIH), DASH Eating Plan — https://www.nhlbi.nih.gov/health/dash-eating-plan",
+            "WHO, Healthy diet — https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        },
+        {
+          "slug": "kalp-tuzsuz-lezzet",
+          "baslik": "Tuzsuz lezzet: ot, baharat ve narenciye",
+          "ozet": "Tuz azaldığında yemeğin sönük kalmaması için ekşi, aromatik, acı ve kavrulmuş tatları kullanmanın yolları.",
+          "okuma_dk": 2,
+          "govde": [
+            "Tuzu azaltırken en sık duyulan endişe, yemeğin tatsız kalmasıdır. Oysa damak tadı zamanla daha az tuza alışır ve tuzun boşluğunu başka tatlar doldurabilir. Anahtar, ekşi, aromatik, acı ve kavrulmuş tatları dengeli kullanmaktır.",
+            "Ekşilik tuzun en iyi yardımcısıdır. Pişirmenin sonunda eklenen limon suyu ve rendelenmiş limon kabuğu, sumak, nar ekşisi ya da biraz sirke yemeğin tadını belirginleştirir.",
+            "Kuru baharatlar kullanılmadan önce kuru tavada birkaç saniye kavrulduğunda aromaları açılır. Kimyon, kişniş, pul biber, karabiber ve tarçın et ve bakliyatla; kekik, nane ve dereotu sebze ve yoğurtla iyi gider. Pul biber, isot ve nar ekşisinin bazı türleri tuzla hazırlandığı için etiketlerine bakmak iyi olur. Taze maydanoz, fesleğen ve kişniş ise servisten hemen önce eklendiğinde tazelik katar.",
+            "Sebzeyi fırında kızartmak, soğanı yavaşça karamelize etmek ve domatesi közlemek de tuz ihtiyacını azaltan derin tatlar oluşturur. Bu modda bazı tariflerde tuz, akıllı ikameyle taze baharat ve narenciyeye çevrilmiştir ve kartta yazar."
+          ],
+          "maddeler": [
+            "Limon suyunu ve kabuğunu pişirmenin sonunda ekleyin.",
+            "Kuru baharatları kullanmadan önce kuru tavada kısaca kavurun.",
+            "Pul biber, isot ve nar ekşisinin etiketinde tuz olup olmadığına bakın.",
+            "Tuzluğu masadan kaldırıp yerine sumak ve kekik koyun.",
+            "Taze otları servisten hemen önce ekleyin."
+          ],
+          "kaynaklar": [
+            "WHO, Hypertension — https://www.who.int/news-room/fact-sheets/detail/hypertension",
+            "NHLBI (NIH), DASH Eating Plan — https://www.nhlbi.nih.gov/health/dash-eating-plan"
+          ]
+        },
+        {
+          "slug": "kalp-gizli-sodyum",
+          "baslik": "Etiketlerde gizli sodyum ve doymuş yağ",
+          "ozet": "Ekmekten bulyona, tuzun çoğu zaman tuzluktan değil paketli ürünlerden geldiği yerler ve etikette bakılacak satırlar.",
+          "okuma_dk": 2,
+          "govde": [
+            "Günlük tuzun önemli bir kısmı tuzluktan değil; ekmek, peynir, zeytin, turşu, şarküteri ürünleri, hazır çorba, bulyon ve soslardan gelir. Bu yüzden etiket okumak, tuzu azaltmanın en önemli yollarından biridir.",
+            "Besin değeri tablosunda tuz ya da sodyum miktarı 100 gram ya da 100 mililitre başına verilir. Aynı türden iki ürünü bu satırla karşılaştırmak, daha az tuzlu olanı seçmenin en kolay yoludur. Etikette yalnız sodyum yazıyorsa, tuz miktarı sodyumun yaklaşık 2,5 katıdır.",
+            "Doymuş yağ için de aynı tablo kullanılır. Tereyağı, kuyruk yağı, kaymak, krema, yağlı peynir, sucuk ve sosis doymuş yağı yüksek ürünlerdir. İçindekiler listesinde “kısmen hidrojenize yağ” ifadesi görülürse ürün trans yağ içeriyor olabilir.",
+            "Salça, konserve sebze, bakliyat ve peynirin tuzsuz ya da az tuzlu seçenekleri çoğu markette bulunur. Konserve baklagilleri süzüp durulamak da tuzun bir kısmını uzaklaştırır."
+          ],
+          "maddeler": [
+            "Aynı türden ürünleri 100 gramdaki tuz miktarıyla karşılaştırın.",
+            "Yalnız sodyum yazıyorsa, tuz için sodyumu yaklaşık 2,5 ile çarpın.",
+            "Bulyon yerine tuzsuz ev yapımı sebze suyu kullanın.",
+            "“Kısmen hidrojenize yağ” ifadesine dikkat edin.",
+            "Konserve baklagilleri süzüp durulayın."
+          ],
+          "kaynaklar": [
+            "T.C. Tarım ve Orman Bakanlığı, Türk Gıda Kodeksi Gıda Etiketleme ve Tüketicileri Bilgilendirme Yönetmeliği",
+            "WHO, Healthy diet — https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+            "T.C. Sağlık Bakanlığı, Türkiye Beslenme Rehberi (TÜBER) 2022 — https://hsgm.saglik.gov.tr/media/attachments/2025/05/12/turkiye-beslenme-rehberi-2022.pdf"
+          ]
+        }
+      ],
+      "sss": [
+        {
+          "id": "kalp-sss-1",
+          "s": "Bu moddaki tarifler nasıl seçiliyor?",
+          "c": "Tarifin her malzemesi sodyum, doymuş yağ ve şeker açısından bu modun kurallarına göre kontrol edilir; besin değeri hesaplanabilen tariflerde porsiyon başına doymuş yağ da dikkate alınır. Emin olunamayan tarif listelenmez. Bazı tariflerde tuz, tereyağı ya da salça akıllı ikameyle değiştirilmiştir ve kartta yazar. Paketli ürünlerde etiketi her zaman kontrol edin."
+        },
+        {
+          "id": "kalp-sss-2",
+          "s": "Deniz tuzu ya da kaya tuzu daha mı uygun?",
+          "c": "Deniz tuzu, kaya tuzu ve sofra tuzu ağırlık olarak benzer miktarda sodyum içerir. Rengi ya da tane büyüklüğü farklı olsa da sodyum açısından belirgin bir avantaj sağlamazlar. Bu yüzden bu modda tuzun türü değil miktarı önemlidir; kaba deniz tuzu da tuzla aynı şekilde değerlendirilir."
+        },
+        {
+          "id": "kalp-sss-3",
+          "s": "Tuz yerine geçen ürünler kullanılabilir mi?",
+          "c": "Piyasadaki bazı tuz yerine geçen ürünler sodyum yerine potasyum içerir. Bazı sağlık durumlarında potasyum ayrıca dikkat gerektirebildiği için bu ürünler hekime danışmadan kullanılmamalıdır. Bu moddaki tarifler tuz yerine ot, baharat ve narenciyeye dayanır."
+        },
+        {
+          "id": "kalp-sss-4",
+          "s": "Zeytin ve beyaz peynir neden bu modda sınırlı?",
+          "c": "Salamura zeytin ve beyaz peynir lezzetli ama sodyumu yüksek ürünlerdir; beyaz peynir doymuş yağ da içerir. Bu nedenle bu modda tuzsuz lor peyniri gibi seçenekler öne çıkar. Zeytini birkaç saat suda bekletmek tuzunun bir kısmını almanın pratik bir yoludur."
+        },
+        {
+          "id": "kalp-sss-5",
+          "s": "Kızartma yerine hangi pişirme yöntemleri öne çıkıyor?",
+          "c": "Fırında pişirme, ızgara, buğulama, haşlama ve az yağda sote, kızartmaya göre çok daha az yağ gerektirir. Sebzeyi fırında kızartmak ve eti marine edip ızgarada pişirmek, tuz azaldığında da lezzeti yüksek tutar. Bu modda zeytinyağı tereyağının yerini alır."
+        }
+      ]
+    }
+  }
+}
