@@ -30,7 +30,7 @@
   function renkAyarla() {
     var M = durum.mod && V && V.modlar[durum.mod];
     if (M) document.querySelector('.sg-sayfa').setAttribute('data-renk', M.renk); else document.querySelector('.sg-sayfa').removeAttribute('data-renk');
-    $$('[data-sg-mod-bar] .sg-mod-bar__oge').forEach(function (b) { b.setAttribute('aria-checked', String(b.getAttribute('data-mod') === (durum.mod || ''))); b.tabIndex = b.getAttribute('data-mod') === (durum.mod || '') ? 0 : -1; });
+    $$('[data-sg-mod-bar] .sg-mod-bar__oge').forEach(function (b) { var on = b.getAttribute('data-mod') === (durum.mod || ''); b.setAttribute('aria-checked', String(on)); b.classList.toggle('active', on); b.tabIndex = b.getAttribute('data-mod') === (durum.mod || '') ? 0 : -1; });
     $('[data-sg-mod-suzgec-metin]').textContent = M ? M.kisa + ' süzgeci · bu modda riskli malzemeleri dışlar' : (S.alerjenler().length ? 'Alerjen süzgeci · seçtiğin alerjenleri dışlar' : 'Mod süzgeci · önce bir mod seç');
   }
   function kartCiz() {
@@ -55,13 +55,9 @@
     }).join('');
   }
   function kart(slug, ik, eksik) {
-    var t = V.tarifler[slug], M = durum.mod && V.modlar[durum.mod], b = t.b.split('|')[0].trim();
-    var ikH = M ? (ik.length ? '<div class="sg-r-ikame"><span class="sg-r-ikame__bas"><i class="fa-solid fa-right-left" aria-hidden="true"></i> Akıllı ikame</span>' + ik.slice(0, 2).map(function (x) { return '<span class="sg-tarif__ikame-oge">' + esc(x[0]) + ' → <b>' + esc(x[1]) + '</b></span>'; }).join('') + '</div>' : '<div class="sg-r-ikame sg-r-ikame--yok"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> İkame gerekmez</div>') : '';
-    return '<article class="r-card sg-tarif"' + (M ? ' data-renk="' + M.renk + '"' : '') + ' data-alerjen="' + esc(t.al.join(' ')) + '" data-paketli="' + t.pk + '">'
-      + '<div class="r-media-wrap"><div class="r-media" role="img" aria-label="' + esc(b) + ' — Dada Gastro tarif fotoğrafı" style="background-image:url(\'' + esc(t.k) + '\')"><span class="r-chip">' + (eksik ? 'Eksik: ' + esc((V.dk[eksik] || {}).ad || eksik) : '✓ Hepsi dolapta') + '</span></div></div>'
-      + '<div class="r-body"><h4><a class="sg-tarif__bag" href="saglik-tarif.html?t=' + encodeURIComponent(slug) + (durum.mod ? '&mod=' + durum.mod : '') + '">' + esc(b) + '</a></h4>'
-      + '<div class="r-facts">' + (t.sure ? '<span><i class="fa-solid fa-clock" aria-hidden="true"></i> <span class="rf-txt">' + t.sure + ' dk</span></span>' : '') + (t.z ? '<span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> <span class="rf-txt">' + esc(t.z) + '</span></span>' : '') + (t.p ? '<span class="f-serv"><i class="fa-solid fa-utensils" aria-hidden="true"></i> <span class="rf-txt">' + t.p + ' ' + esc(t.pb || 'kişilik') + '</span></span>' : '') + '</div>'
-      + ikH + (M ? '<div class="r-foot sg-r-foot"><span class="sg-r-uyum"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> ' + esc(M.uyum) + ' uyumlu</span></div>' : '') + '</div></article>';
+    // Gastro tarif kartı birebir (saglik.js gastroKart); eksik malzeme Gastro rozet öğesinde (.rd-b, title)
+    var ek = eksik ? { rozet: '<span class="rd-b" title="Eksik: ' + esc((V.dk[eksik] || {}).ad || eksik) + '" aria-label="Eksik malzeme: ' + esc((V.dk[eksik] || {}).ad || eksik) + '"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i></span>' } : {};
+    return window.DadaSaglik.gastroKart(V, slug, durum.mod, ek);
   }
   function grup(baslik, liste, eksikli) {
     if (!liste.length) return '';

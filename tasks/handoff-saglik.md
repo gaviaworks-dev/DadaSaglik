@@ -1,4 +1,4 @@
-# Dada Gastro Sağlık — prototip (handoff)
+# Dada Gastro Health (eski adı: Dada Gastro Sağlık) — prototip (handoff)
 
 > Compact/clear sonrası İLK İŞ: "▶ ŞU AN" bölümünü oku, oradan devam et. Bitmiş (☑) işi tekrarlama.
 > Görev: Beyar 2 Kas "YENİ PROTOTİP: Dada Gastro Sağlık" (6 yaşam modu). Kaynak özet görev metninde; Kids prototipinin (~/Developer/Projects/dadakids-prototip) kabuk/kapı/karar mirası.
@@ -13,13 +13,15 @@
 - Ajanlar commit atmaz; iki ajan aynı dosyaya yazmaz.
 
 ## ▶ ŞU AN
-- ☑ 1 Araştırma (Kids repo, seçki kalıbı, yerel sqlite verisi) · ◐ partner ajanı `partner-arastirma` (tasks/saglik-kaynaklar.md + logolar varlik/saglik/partner/ham/) · ☑ içerik ajanı `icerik` (veri/icerik.json)
-- ☑ 2 Plan tasks/saglik-plan.md
-- ☑ 3 Kur: build.mjs, src/saglik/{malzeme,modlar,ortak}.mjs, sayfalar {hub,mod,dolap,tarif,bilgi}, saglik.css + css/mod.css, saglik.js + js/{katalog,dolap,detay}.js · sunucu 8790
-- ☑ 4 Kapılar YEREL YEŞİL: mod 14/14 · davranış · varlık 48/48 · radius 28/28 · boşluk 40/40 · denge 44/44 · partner logoları (17 webp/svg) · eksik şeffaf ikon 3 (soya sosu, krema, ayran → mod ikonu yer tutucu; kredi harcanmadı, taban 560)
-- ☑ 5 9 commit (db1bfca…b66def9) · repo gaviaworks-dev/DadaSaglik (public) push · Pages açıldı (main /) · Pages derlendi (b66def9)
-- ☑ 6 CANLI kapılar yeşil: mod 14/14 · davranış · varlık 48/48 · radius 28/28 · denge 44/44 · boşluk 40/40 · görüntüler rapor/tmp/teslim/ (pafta-1440.png, pafta-390.png) · ☐ 7 rapor (6 mod 1440+390 görüntü, partner tablosu, mod başına tarif sayısı) → DUR
+- ☑ 1–7 İlk teslim + revizeler canlıda (a797ee4: sekme sayfa içi, sayfalama, Gastro paneli, köşe üçlüsü).
+- ◐ TUR "Health" (Beyar 2 Kas): ☑ marka adı "Dada Gastro Health" (logo rozeti "health", kırıntı, menü, title/meta; dosya adları aynı) · ☑ mod sekmeleri + Tarifler/Bilgilendirme = Gastro `.disc-tabs/.dt/.dt.active` (kopya stil yok) · ☑ kart = Gastro `.r-card` birebir + `tarif-liste.css` + `.lst-grid` (şef/puan/görüntülenme/bütçe veriden; mod uyumu ve ikame Gastro `.rd-b` rozeti; hover yok) · ☑ font: tüm metin Gilroy, sahte kalın 0 (css/yazi.css: Gastro ExtraBold dosyası Gilroy 600–900'e bağlı; kanon §5) · ☑ başlık "Bizimle iş birliği yapan kurumlar" · ◐ tarif detayı Gastro detay şablonu birebir (ajan `detay`: src/saglik/sayfalar/tarif.mjs, js/detay.js) · ☐ duman → push → Pages → canlı linkler + Gastro yan yana 3 görüntü · ☐ kapılar push sonrası arka planda (yeni: araclar/font-kapisi.mjs, araclar/parite-kapisi.mjs)
+
+## ▶ SIRADAKİ
+- Kapı sonuçlarına göre düzeltme (davranış/radius/varlık kapıları eski kart işaretlemesine — .sg-r-ikame, .sg-gir — bakıyorsa güncelle).
+- Kan Şekeri "hata"sı Beyar'dan netleşmedi; ekran görüntüsündeki yer sorulacak.
+- Gastro kendi bileşenlerinde (.dt, .r-chip, h1–h4) Gilroy 700 ister ama yalnız 500 dosyası tanımlı → Gastro'nun kendi sayfalarında sahte kalın var; Health'te yazi.css ile giderildi. Gastro'ya taşınırken aynı bağlama gastro-mysql resources/css/gilroy-font-faces.css'e eklenebilir (karar Beyar'da).
 
 ## ⚠ Canlı öncesi: kurum izinleri
 - Kurum logoları (banner şeritleri, iş birliği kartları) ve mod ikonu olarak kullanılan kurum site ikonları **yalnız prototipte** kalabilir. Canlıya taşımadan önce her kurumdan yazılı kullanım izni alınmalı; izin gelmeyen kurumun logosu/ikonu kaldırılır (mod ikonunda çizgisel ikon yedeği hazır: ui(M.ikon)).
 - İzin gerekenler: tasks/saglik-kaynaklar.md partner tabloları (16 kurum) + "Mod ikonları" tablosu (6 site ikonu). Hepsi data-yalniz-admin bayraklı.
+- Gastro'ya taşımadan önce her kurumla yazılı iş birliği + logo kullanım izni şart; yoksa başlık 'Bu alanda çalışan kurumlar'a döner. (Beyar 2 Kas: başlık şu an "Bizimle iş birliği yapan kurumlar" — hub kartı, mod hero şeridi, bilgilendirme iş birliği bölümü; kaynak: src/saglik/ortak.mjs logoSeridi/kurumKutusu/partnerBolumu.)

@@ -4,10 +4,10 @@
 // Davranış: varlik/saglik/js/dolap.js · veri: varlik/saglik/veri/tarifler.json (build üretir).
 export default async function (o) {
   const { esc, ui, MODLAR } = o;
-  const modBar = `<div class="sg-mod-bar" role="radiogroup" aria-label="Sağlık modu" data-sg-mod-bar>
-   <button type="button" role="radio" class="sg-mod-bar__oge" data-mod="" aria-checked="false">Modsuz</button>
-   ${MODLAR.map((M) => `<button type="button" role="radio" class="sg-mod-bar__oge" data-mod="${M.kod}" data-renk="${M.renk}" aria-checked="false">${ui(M.ikon, 18)}${esc(o.SEKME[M.kod])}</button>`).join('')}
-  </div>`;
+  const modBar = `<div class="sg-mod-bar" data-sg-mod-bar-kap><div class="disc-tabs sg-mod-bar__sekmeler" role="radiogroup" aria-label="Yaşam modu" data-sg-mod-bar>
+   <button type="button" role="radio" class="dt sg-mod-bar__oge" data-mod="" aria-checked="false">Modsuz</button>
+   ${MODLAR.map((M) => `<button type="button" role="radio" class="dt sg-mod-bar__oge" data-mod="${M.kod}" data-renk="${M.renk}" aria-checked="false">${esc(o.SEKME[M.kod])}</button>`).join('')}
+  </div></div>`;
   const kartlar = o.DOLAP_KATEGORI.map(([kat, ad], i) => {
     const l = o.DOLAP_KARTLAR.filter((x) => x.kat === kat);
     if (!l.length) return '';
@@ -18,7 +18,7 @@ export default async function (o) {
   }).join('');
   const main = o.sayfa(`<section class="sg-hero-sade">
  <div class="wrap">
-  ${o.kirinti([['Dada Gastro Sağlık', 'saglik.html'], ['Dolapta Ne Var?']])}
+  ${o.kirinti([['Dada Gastro Health', 'saglik.html'], ['Dolapta Ne Var?']])}
   <div class="sg-hero-sade__izgara"><div>
   <h1>Dolapta Ne Var?</h1>
   <p class="sg-lead">Elindeki malzemeleri seç; moduna uygun ve hemen yapabileceğin tarifleri bulalım. Mod seçiliyken o modda riskli malzemeler dışlanır.</p>
@@ -45,5 +45,5 @@ ${o.uyariSeridi()}
   <div data-sg-dolap-sonuc><p class="sg-ikincil sg-bos-satir">${ui('dolap', 24)}Malzeme seçtikçe sonuçlar burada görünür. Tuz, su, yağ ve baharatlar evde var sayılır.</p></div>
  </div>
 </section>`, 'dolap');
-  return [{ dosya: 'saglik-dolap.html', baslik: 'Dolapta Ne Var? — Dada Gastro Sağlık (prototip)', aciklama: 'Elindeki malzemelerle sağlık moduna uygun tarifler; riskli malzemeler mod süzgeciyle dışlanır.', main, css: ['mod'], js: ['dolap'] }];
+  return [{ dosya: 'saglik-dolap.html', baslik: 'Dolapta Ne Var? — Dada Gastro Health (prototip)', aciklama: 'Elindeki malzemelerle yaşam moduna uygun tarifler; riskli malzemeler mod süzgeciyle dışlanır.', main, css: ['mod'], js: ['dolap'] }];
 }

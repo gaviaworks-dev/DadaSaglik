@@ -18,6 +18,7 @@ for r in c.execute('''select ted.tarif_id, e.kod, ed.slug, ed.ad from tarif_ekse
                       join eksen_degerleri ed on ed.id = ted.eksen_degeri_id join eksenler e on e.id = ed.eksen_id'''):
     eksen.setdefault(r['tarif_id'], {}).setdefault(r['kod'], []).append(r['slug'])
 ad_ = {r['id']: r['ad'] for r in c.execute('select id, ad from eksen_degerleri')}
+kat_ad = {r['slug']: r['ad'] for r in c.execute("select ed.slug, ed.ad from eksen_degerleri ed join eksenler e on e.id = ed.eksen_id where e.kod = 'kategori'")}
 
 malz = {}
 for r in c.execute('''select tm.tarif_id, tm.grup_basligi, tm.sira, tm.miktar, coalesce(ob.kisa_ad, ob.ad, tm.olcu_birimi_slug) birim,
@@ -36,6 +37,10 @@ besin = {}
 for r in c.execute('select * from tarif_besin_degerleri'):
     besin[r['tarif_id']] = {k: r[k] for k in ['kalori', 'protein_g', 'karbonhidrat_g', 'yag_g', 'lif_g', 'seker_g', 'sodyum_mg', 'doymus_yag_g', 'hesaplanabildi']}
 
+# Gastro kart/detay paritesi (Beyar 2 Kas): şef görünen adı + unvanı, görüntülenme, bütçe, hatırlatma, tarihler (e-posta vb. ALINMAZ)
+sef = {r['id']: {'ad': ' '.join(x for x in [r['ad'], r['soyad']] if x).strip(), 'unvan': r['unvan'], 'kadi': r['kullanici_adi'], 'uye': r['uye_oldu_at']}
+       for r in c.execute('select u.id, u.kullanici_adi, u.unvan, u.uye_oldu_at, k.ad, k.soyad from uye_profilleri u left join kimlik_hesaplar k on k.id = u.hesap_id')}
+BUTCE = {'Ekonomik': 1, 'Orta Bütçe': 2, 'Premium': 3}
 cikti = []
 for t in c.execute("select * from tarifler where durum = 'yayinda' and deleted_at is null and kapak_url is not null order by id"):
     e = eksen.get(t['id'], {})
@@ -48,9 +53,12 @@ for t in c.execute("select * from tarifler where durum = 'yayinda' and deleted_a
         'kategori': e.get('kategori', []), 'beslenme': e.get('beslenme', []), 'ogun': e.get('ogun', []),
         'malzemeler': malz.get(t['id'], []), 'adimlar': adim.get(t['id'], []), 'besin': besin.get(t['id']),
         'puan': t['ortalama_puan'], 'degerlendirme': t['degerlendirme_sayisi'],
+        'sef_ad': (sef.get(t['sef_id']) or {}).get('ad') or t['sef_kullanici_adi'], 'sef_unvan': (sef.get(t['sef_id']) or {}).get('unvan'),
+        'goruntulenme': t['goruntulenme'], 'butce': BUTCE.get(ad_.get(t['butce_id'])), 'butce_ad': ad_.get(t['butce_id']),
+        'hatirlatma': t['hatirlatma'], 'yayin': t['yayinlandi_at'], 'guncelleme': t['guncellendi_at'], 'yorum': t['yorum_sayisi'],
     })
 
 os.makedirs(os.path.join(KOK, 'veri'), exist_ok=True)
 with open(os.path.join(KOK, 'veri', 'gastro-tarifler.json'), 'w', encoding='utf-8') as f:
-    json.dump({'kaynak': 'gastro-mysql/database/database.sqlite (salt okuma)', 'tarif': len(cikti), 'tarifler': cikti}, f, ensure_ascii=False, indent=1)
+    json.dump({'kaynak': 'gastro-mysql/database/database.sqlite (salt okuma)', 'tarif': len(cikti), 'kategori_adlari': kat_ad, 'tarifler': cikti}, f, ensure_ascii=False, indent=1)
 print('tarif', len(cikti), 'malzemeli', sum(1 for x in cikti if x['malzemeler']), 'besinli', sum(1 for x in cikti if x['besin'] and x['besin']['hesaplanabildi']))

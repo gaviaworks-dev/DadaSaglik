@@ -20,7 +20,7 @@ export default async function (o) {
   };
   const main = o.sayfa(`<section class="sg-hero-sade">
  <div class="wrap">
-  ${o.kirinti([['Dada Gastro Sağlık', 'saglik.html'], ['Bilgi']])}
+  ${o.kirinti([['Dada Gastro Health', 'saglik.html'], ['Bilgi']])}
   <h1>Okumaya değer</h1>
   <p class="sg-lead">Altı mod için mutfakta işe yarayan kısa yazılar: etiket okuma, ikame, düzen ve pişirme.</p>
   ${icindekiler}
@@ -33,5 +33,5 @@ ${gruplar.map(([M, l]) => `<section class="sg-bolum" id="${M.kod}" aria-labelled
   <div class="sg-yazilar">${l.map((a, i) => yazi(M, a, i)).join('')}</div>
  </div>
 </section>`).join('\n')}`, 'bilgi');
-  return [{ dosya: 'saglik-bilgi.html', baslik: 'Bilgi — Dada Gastro Sağlık (prototip)', aciklama: 'Glutensiz, kan şekeri dostu, alerjen, sütsüz, düşük FODMAP ve kalp dostu mutfak için kısa yazılar.', main, css: ['mod'], js: [] }];
+  return [{ dosya: 'saglik-bilgi.html', baslik: 'Bilgi — Dada Gastro Health (prototip)', aciklama: 'Glutensiz, kan şekeri dostu, alerjen, sütsüz, düşük FODMAP ve kalp dostu mutfak için kısa yazılar.', main, css: ['mod'], js: [] }];
 }

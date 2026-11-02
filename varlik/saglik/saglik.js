@@ -45,7 +45,27 @@
       if (sec.length) d.innerHTML = '<div class="wrap"><span>Alerjen süzgeci açık: <b>' + sec.map(function (a) { return ALERJEN_AD[a]; }).join(', ') + '</b> içeren ve aynı bantta üretilmiş olabilecek ürünlü tarifler gizleniyor.</span> <a href="saglik-alerji.html#alsec">Değiştir</a></div>';
     }
   }
-  window.DadaSaglik = { alerjenler: alerjenler, alerjenAyarla: alerjenAyarla, dinle: function (f) { dinleyiciler.push(f); }, mod: mod, modAyarla: modAyarla, uygunMu: uygunMu, normal: normal, ALERJEN_AD: ALERJEN_AD, oku: oku, yaz: yaz };
+  /* Gastro tarif kartı BİREBİR (istemci; ortak.mjs tarifKart ile aynı işaretleme). V = varlik/saglik/veri/tarifler.json */
+  var RD_MOD = { colyak: ['rd-glutensiz', 'wheat-awn-circle-exclamation'], laktoz: ['rd-laktozsuz', 'glass-water'], diyabet: ['', 'droplet'], alerji: ['', 'shield-halved'], ibs: ['', 'leaf'], kalp: ['', 'heart-pulse'] };
+  function e_(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function gastroKart(V, slug, modKod, ek) {
+    ek = ek || {}; var t = V.tarifler[slug]; if (!t) return '';
+    var M = modKod && V.modlar[modKod], ik = M ? (M.t[slug] || []) : [], b = t.b.split('|')[0].trim(), rozet = '';
+    if (M) { var r = RD_MOD[modKod] || ['', 'circle-check'], ad = M.uyum + ' uyumlu'; rozet += '<span class="rd-b' + (r[0] ? ' ' + r[0] : '') + '" title="' + e_(ad) + '" aria-label="' + e_(ad) + '"><i class="fa-solid fa-' + r[1] + '" aria-hidden="true"></i></span>'; }
+    if (ik.length) { var ia = 'Akıllı ikame: ' + ik.map(function (x) { return x[0] + ' yerine ' + x[1]; }).join(', '); rozet += '<span class="rd-b" title="' + e_(ia) + '" aria-label="' + e_(ia) + '"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span>'; }
+    if (ek.rozet) rozet += ek.rozet;
+    var sef = t.sa || t.sk || '';
+    return '<article class="r-card sg-tarif"' + (M ? ' data-renk="' + M.renk + '"' : '') + ' data-slug="' + e_(slug) + '" data-alerjen="' + e_((t.al || []).join(' ')) + '" data-paketli="' + (t.pk || 0) + '" data-ikameler="' + e_(ik.map(function (x) { return x[0] + '→' + x[1]; }).join('|')) + '">'
+      + ' <div class="r-media-wrap"> <div class="r-media " role="img" aria-label="' + e_(b) + '" style="background-image:url(\'' + e_(t.k) + '\')"> <span class="r-chip">' + e_(t.ka || '') + '</span> ' + (rozet ? '<div class="r-diet">' + rozet + '</div>' : '') + ' <div class="m-types"> </div> </div> </div>'
+      + ' <div class="r-body"> <h4><a class="sg-tarif__bag" href="saglik-tarif.html?t=' + encodeURIComponent(slug) + (modKod ? '&mod=' + modKod : '') + '">' + e_(b) + '</a></h4>'
+      + ' <div class="r-facts">' + (t.sure ? ' <span><i class="fa-solid fa-clock" aria-hidden="true"></i> <span class="rf-txt">' + t.sure + ' dk</span></span>' : '') + (t.z ? ' <span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> <span class="rf-txt">' + e_(t.z) + '</span></span>' : '')
+      + (t.p ? ' <span class="f-serv"><i class="fa-solid fa-utensils" aria-hidden="true"></i> <span class="rf-txt"><span class="rf-uzun">' + t.p + ' ' + e_(t.pb || 'kişilik') + '</span><span class="rf-kisa" aria-hidden="true">' + t.p + ' kişi</span></span></span>' : '')
+      + (t.bt ? ' <span class="r-cost" title="' + e_(t.bta || '') + '"> ' + [1, 2, 3].map(function (n) { return '<b class="' + (n <= t.bt ? 'rc-on' : 'rc-off') + '">₺</b>'; }).join(' ') + ' </span>' : '') + ' </div>'
+      + ' <div class="r-foot"> ' + (sef ? '<a class="r-author" href="https://dadagastro.com/sefler/' + e_(t.sk || '') + '" title="' + e_(sef) + ' profilini gör"> <div class="av"><span aria-hidden="true">' + e_(sef.trim().charAt(0).toLocaleUpperCase('tr')) + '</span></div> <span><b>' + e_(sef) + '</b></span> </a>' : '')
+      + ' <div class="r-stats"> ' + (t.pu ? '<span class="r-rate"><i class="fa-solid fa-star" aria-hidden="true"></i> ' + (Number(t.pu) / 10).toFixed(1) + '</span>' : '') + ' <span class="r-views"><i class="fa-solid fa-eye" aria-hidden="true"></i> ' + Number(t.g || 0).toLocaleString('tr') + '</span> </div> </div>'
+      + ' </div></article>';
+  }
+  window.DadaSaglik = { alerjenler: alerjenler, alerjenAyarla: alerjenAyarla, dinle: function (f) { dinleyiciler.push(f); }, mod: mod, modAyarla: modAyarla, uygunMu: uygunMu, normal: normal, gastroKart: gastroKart, ALERJEN_AD: ALERJEN_AD, oku: oku, yaz: yaz };
 
   /* ---------- Kart girişi ---------- */
   function girisKur() {
@@ -157,7 +177,7 @@
   function sekmeKur() {
     var bag = $$('.sg-sekmeler a[data-sg-sekme]'); if (!bag.length || !$('[data-sg-sekme-panel]')) return;
     function goster(ad, kaydir) {
-      bag.forEach(function (a) { if (a.getAttribute('data-sg-sekme') === ad) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+      bag.forEach(function (a) { var on = a.getAttribute('data-sg-sekme') === ad; a.classList.toggle('active', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
       $$('[data-sg-sekme-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-sg-sekme-panel') !== ad; if (!p.hidden) $$('.sg-gir', p).forEach(function (x) { x.classList.add('sg-gorundu'); }); });
       dispatchEvent(new Event('resize'));
       if (kaydir) { var s = $('.sg-sekme-bolum'); if (s) { var ust = s.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sg-bar-alt')) || 120); if (scrollY > ust) scrollTo(0, ust); } }

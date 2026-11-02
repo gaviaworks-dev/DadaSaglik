@@ -15,7 +15,7 @@ export default async function (o) {
 
   const hero = o.seckiHero({
     M: null, sahne: hubSahne ? o.tarifSahne(hubSahne) : '', sahneAlt: hubSahne ? `${hubSahne.baslik.split('|')[0].trim()} — altı modun beşine uyan bir Dada Gastro tarifi` : '',
-    kirinti: [['Dada Gastro Sağlık']], eyebrow: 'Dada Gastro Sağlık', baslik: esc(hub.baslik || 'Sofranı yaşam moduna göre kur'),
+    kirinti: [['Dada Gastro Health']], eyebrow: 'Dada Gastro Health', baslik: esc(hub.baslik || 'Sofranı yaşam moduna göre kur'),
     giris: esc(hub.giris || 'Çölyak, diyabet, gıda alerjisi, süt hassasiyeti, hassas bağırsak ya da kalp sağlığı: Dada Gastro tariflerini senin moduna göre süzer, gerekirse malzemeyi akıllıca değiştirir.'),
     istatistik: [['6', 'yaşam modu'], [String(toplam), 'uyumlu tarif'], [String(ikameToplam), 'akıllı ikameli']], not: o.UYARI, sag: o.kurumKutusu(MODLAR.map((M) => o.partnerListe(M.kod).find((p) => o.partnerLogo(p))).filter(Boolean)),
   });
@@ -67,7 +67,7 @@ export default async function (o) {
   const dolapBant = `<aside class="sg-dolap-bant"><div class="wrap"><a href="saglik-dolap.html">${ui('dolap', 22)}<span>Elindeki malzemelerle moduna uygun ne yapabilirsin?</span><span class="sg-dolap-bant__git">Dolabı aç ${ui('ok', 18)}</span></a></div></aside>`;
 
   return [{
-    dosya: 'saglik.html', baslik: 'Dada Gastro Sağlık — yaşam modlarına göre tarifler (prototip)',
+    dosya: 'saglik.html', baslik: 'Dada Gastro Health — yaşam modlarına göre tarifler (prototip)',
     aciklama: 'Glutensiz, kan şekeri dostu, alerjene göre, sütsüz, düşük FODMAP ve kalp dostu Dada Gastro tarifleri; akıllı ikamelerle.',
     main: o.sayfa([hero, modlar, nasil, oneCikan, dolapBant, bilgi].join('\n'), 'hub'),
     css: ['mod'], js: [], gorsel: hubSahne ? o.tarifSahne(hubSahne) : '',
