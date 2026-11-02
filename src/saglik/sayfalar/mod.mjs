@@ -19,13 +19,13 @@ export default async function (o) {
       kirinti: [['Dada Gastro Sağlık', 'saglik.html'], [M.ad]], eyebrow: 'Sağlık modu', baslik: esc(M.ad),
       giris: esc(ic.giris || M.slogan),
       istatistik: [[String(liste.length), 'uyumlu tarif'], [String(ikameli), 'akıllı ikameli'], [String(M.riskli.length), 'riskli malzeme grubu']],
-      sag: kimler, not: o.UYARI,
+      sag: kimler, not: o.UYARI, logolar: o.logoSeridi(o.partnerListe(M.kod)),
     });
 
     const alerjenSecici = M.kod === 'alerji' ? `<section class="sg-bolum sg-bolum--sikisik sg-alerjen-bolum" aria-labelledby="alsec">
  <div class="wrap"><div class="sg-alerjen-sec" data-sg-alerjen-sec>
   <div class="sg-alerjen-sec__bas"><h2 id="alsec" class="sg-ikonlu-baslik">${ui('kalkan', 28)}Alerjenini seç</h2><p>Seçtiğin alerjen ve türevlerini içeren tarifler; aynı bantta üretilmiş olabilecek paketli ürün içerenlerle birlikte <b>tüm Sağlık sayfalarındaki listelerden</b> kalkar. Seçim yalnız bu cihazda saklanır.</p></div>
-  <div class="sg-alerjen-sec__liste" role="group" aria-label="Alerjenler">${o.ALERJENLER.map(([, k, a]) => `<label class="sg-secim"><input type="checkbox" name="alerjen" value="${k}"><span>${esc(a)}</span></label>`).join('')}</div>
+  <div class="sg-alerjen-sec__liste" role="group" aria-label="Alerjenler">${o.ALERJENLER.map(([, k, a]) => o.satir({ tur: 'checkbox', ad: 'alerjen', deger: k, etiket: a })).join('')}</div>
   <div class="sg-alerjen-sec__alt"><p class="sg-alerjen-sec__ozet" data-sg-alerjen-ozet role="status" aria-live="polite">Henüz alerjen seçilmedi.</p><button type="button" class="sg-btn sg-btn--hafif sg-btn--kucuk" data-sg-alerjen-temizle>Seçimi temizle</button></div>
  </div></div>
 </section>` : '';
@@ -63,10 +63,10 @@ export default async function (o) {
   <div class="sg-filtre__ust"><h2>${ui('filtre', 20)} Filtrele</h2><button type="button" class="sg-filtre__kapat sg-btn sg-btn--hafif sg-btn--kucuk">Kapat</button></div>
   <form data-sg-filtre>
    <label class="sg-ara"><span class="sg-gizli">Tariflerde ara</span>${ui('ara', 18)}<input type="search" name="q" placeholder="Tariflerde ara" autocomplete="off"></label>
-   <fieldset><legend>Süre</legend><div class="sg-secim-grup">${[['', 'Tümü'], ['30', '30 dk ve altı'], ['60', '60 dk ve altı']].map(([v, a], i) => `<label class="sg-secim"><input type="radio" name="sure" value="${v}"${i === 0 ? ' checked' : ''}><span>${a}</span></label>`).join('')}</div></fieldset>
-   ${M.kod !== 'alerji' ? `<fieldset><legend>İkame</legend><div class="sg-secim-grup"><label class="sg-secim"><input type="checkbox" name="ikamesiz" value="1"><span>Yalnız ikame gerektirmeyenler</span></label></div></fieldset>` : ''}
-   <fieldset><legend>Kategori</legend><div class="sg-secim-grup">${kategoriler.map(([k, n]) => `<label class="sg-secim"><input type="checkbox" name="kat" value="${k}"><span>${esc(o.katAd(k))} <small>${n}</small></span></label>`).join('')}</div></fieldset>
-   <button type="reset" class="sg-btn sg-btn--hafif sg-btn--kucuk">Filtreleri temizle</button>
+   <fieldset><legend>Süre</legend><div class="sg-satirlar">${[['', 'Tümü'], ['30', '30 dk ve altı'], ['60', '60 dk ve altı']].map(([v, a], i) => o.satir({ tur: 'radio', ad: 'sure', deger: v, etiket: a, secili: i === 0 })).join('')}</div></fieldset>
+   ${M.kod !== 'alerji' ? `<fieldset><legend>İkame</legend><div class="sg-satirlar">${o.satir({ tur: 'checkbox', ad: 'ikamesiz', deger: '1', etiket: 'Yalnız ikame gerektirmeyenler' })}</div></fieldset>` : ''}
+   <fieldset><legend>Kategori</legend><div class="sg-satirlar">${kategoriler.map(([k, n]) => o.satir({ tur: 'checkbox', ad: 'kat', deger: k, etiket: o.katAd(k), sayi: n })).join('')}</div></fieldset>
+   <button type="reset" class="sg-btn sg-btn--hafif sg-btn--kucuk sg-filtre__temizle">Filtreleri temizle</button>
   </form>
  </aside>`;
 
@@ -79,7 +79,7 @@ export default async function (o) {
     <div class="sg-sonuc-bar"><b data-sg-sonuc>${liste.length} tarif</b><div><button type="button" class="sg-filtre-ac sg-btn sg-btn--hafif sg-btn--kucuk" aria-controls="sgFiltre-${M.kod}" aria-expanded="false">${ui('filtre', 18)} Filtrele</button><label><span class="sg-gizli">Sırala</span><select class="sg-sec" data-sg-sirala><option value="onerilen">Önerilen</option><option value="hizli">En hızlı</option><option value="az">A–Z</option></select></label></div></div>
     <div class="sg-izgara sg-izgara--tarif" data-sg-izgara>${liste.map((x, i) => o.tarifKart(x.t, x.r, M, { alerjenGoster: M.kod === 'alerji', sira: i })).join('')}</div>
     <div class="sg-bos" data-sg-bos hidden><h3>Bu süzgeçle tarif kalmadı</h3><p>Filtreleri gevşetin ya da alerjen seçiminizi gözden geçirin.</p></div>
-    <div class="sg-daha"><button type="button" class="sg-btn sg-btn--hafif" data-sg-daha>Daha fazla göster</button></div>
+    <div class="sg-daha"><button type="button" class="sg-btn" data-sg-daha>Daha fazla göster</button></div>
    </div>
   </div>
  </div>

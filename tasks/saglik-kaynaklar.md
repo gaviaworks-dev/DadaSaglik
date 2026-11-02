@@ -283,3 +283,14 @@ Not: Bu kaynakların tümü 2 Kasım 2026'da açıldı ve doğru kuruma ait oldu
 ```
 
 - Lead notu (2 Kas): Türkiye Diyetisyenler Derneği kartında Türkçe başlık logosu (JPG → webp, 549×92, "57. Yıl" ibaresi sitedeki hâliyle) kullanıldı; İngilizce SVG yalnız ham klasöründe.
+
+## Mod ikonları (Beyar 2 Kas, 2. EK — lead)
+Menü sekmesi, "Modunu seç" listesi, mod kartları, chip'ler ve Dolap mod barında mod adının solunda, modun öncü kurumunun **kendi sitesindeki resmî site ikonu** (değiştirilmeden; yalnız 64px webp). Ham dosyalar: `varlik/saglik/partner/ikon/ham/`. Hepsi `data-yalniz-admin` bayraklı (canlıda admin değilse çizgisel mod ikonu).
+| Mod | Kurum | Kaynak |
+|---|---|---|
+| Glutensiz | Çölyakla Yaşam Derneği | https://colyak.org.tr/wp-content/uploads/2022/02/cropped-favicon-180x180.png |
+| Kan Şekeri | Türkiye Diyabet Vakfı | https://www.turkdiab.org/images/icon.png (63×63) |
+| Alerjen | Türkiye Ulusal Alerji ve Klinik İmmünoloji Derneği (AID) | kare resmî logo (partner tablosundaki dosya, 952×952) |
+| Sütsüz | Alerji ile Yaşam Derneği | https://www.alerjidernegi.org.tr/wp-content/uploads/2023/04/cropped-Favicon-180x180.png |
+| Düşük FODMAP | Türk Gastroenteroloji Derneği | https://tgd.org.tr/wp-content/uploads/2022/05/favicon.ico (48×48; Türk Gastroenteroloji Vakfı'nın site ikonu yok) |
+| Kalp Dostu | Türk Kalp Vakfı | https://tkv.org.tr/apple-touch-icon.png |

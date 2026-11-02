@@ -10,20 +10,20 @@ export default async function (o) {
   const sec = `<aside class="sg-secki-kutu sg-mod-sec" aria-labelledby="msec">
    <h2 id="msec">Modunu seç</h2>
    <p class="sg-ikincil">Bir mod seç; tarifler, ikameler ve Dolap bu moda göre süzülsün.</p>
-   <div class="sg-mod-sec__liste">${MODLAR.map((M) => `<a class="sg-mod-sec__oge" href="${M.dosya}" data-renk="${M.renk}" data-sg-mod-sec="${M.kod}"><span class="sg-mod-sec__ikon">${ui(M.ikon, 20)}</span><span>${esc(o.SEKME[M.kod])}</span>${ui('ok', 16)}</a>`).join('')}</div>
+   <div class="sg-mod-sec__liste">${MODLAR.map((M) => `<a class="sg-mod-sec__oge" href="${M.dosya}" data-renk="${M.renk}" data-sg-mod-sec="${M.kod}"><span class="sg-mod-sec__ikon">${o.modIkon(M, 24)}</span><span>${esc(o.SEKME[M.kod])}</span>${ui('ok', 16)}</a>`).join('')}</div>
   </aside>`;
 
   const hero = o.seckiHero({
     M: null, sahne: hubSahne ? o.tarifSahne(hubSahne) : '', sahneAlt: hubSahne ? `${hubSahne.baslik.split('|')[0].trim()} — altı modun beşine uyan bir Dada Gastro tarifi` : '',
     kirinti: [['Dada Gastro Sağlık']], eyebrow: 'Dada Gastro Sağlık', baslik: esc(hub.baslik || 'Sofranı yaşam moduna göre kur'),
     giris: esc(hub.giris || 'Çölyak, diyabet, gıda alerjisi, süt hassasiyeti, hassas bağırsak ya da kalp sağlığı: Dada Gastro tariflerini senin moduna göre süzer, gerekirse malzemeyi akıllıca değiştirir.'),
-    istatistik: [['6', 'yaşam modu'], [String(toplam), 'uyumlu tarif'], [String(ikameToplam), 'akıllı ikameli']], sag: sec, not: o.UYARI,
+    istatistik: [['6', 'yaşam modu'], [String(toplam), 'uyumlu tarif'], [String(ikameToplam), 'akıllı ikameli']], sag: sec, not: o.UYARI, logolar: o.logoSeridi(MODLAR.map((M) => o.partnerListe(M.kod).find((p) => o.partnerLogo(p))).filter(Boolean)),
   });
 
   const modKart = (M) => {
     const t = SAHNE[M.kod];
     return `<a class="sg-kart sg-mod-kart sg-gir" href="${M.dosya}" data-renk="${M.renk}">
-   <div class="sg-mod-kart__medya">${t ? o.foto(o.tarifGorsel(t), `${t.baslik.split('|')[0].trim()} — ${M.ad} moduna uygun`) : ''}<span class="sg-mod-kart__ikon">${ui(M.ikon, 24)}</span></div>
+   <div class="sg-mod-kart__medya">${t ? o.foto(o.tarifGorsel(t), `${t.baslik.split('|')[0].trim()} — ${M.ad} moduna uygun`) : ''}<span class="sg-mod-kart__ikon">${o.modIkon(M, 36)}</span></div>
    <div class="sg-kart__govde"><h3>${esc(M.ad)}</h3><p>${esc(M.slogan)}</p><p class="sg-mod-kart__sayi"><b>${ESLESME[M.kod].length}</b> uyumlu tarif · <b>${M.ikameKart.length}</b> akıllı ikame</p><span class="sg-kart__alt">Moda git ${ui('ok', 18)}</span></div>
   </a>`;
   };
@@ -60,7 +60,7 @@ export default async function (o) {
   const bilgi = bilgiKart.length ? `<section class="sg-bolum sg-bolum--beyaz" aria-labelledby="bk">
  <div class="wrap">
   ${o.bolumBasi({ ust: 'Bilgi kartları', baslik: 'Her mod için kısa okumalar', id: 'bk', sag: '<a class="sg-bag" href="saglik-bilgi.html">Tüm yazılar</a>' })}
-  <div class="sg-izgara sg-izgara--3 sg-esit">${bilgiKart.map(([M, a]) => `<a class="sg-kart sg-bilgi-kart" href="saglik-bilgi.html#${esc(a.slug)}" data-renk="${M.renk}"><span class="sg-bilgi-kart__mod">${ui(M.ikon, 18)}${esc(o.SEKME[M.kod])}</span><h3>${esc(a.baslik)}</h3><p>${esc(a.ozet)}</p><span class="sg-kart__alt">${esc(a.okuma_dk || 3)} dk okuma ${ui('ok', 18)}</span></a>`).join('')}</div>
+  <div class="sg-izgara sg-izgara--3 sg-esit">${bilgiKart.map(([M, a]) => `<a class="sg-kart sg-bilgi-kart" href="saglik-bilgi.html#${esc(a.slug)}" data-renk="${M.renk}"><span class="sg-bilgi-kart__mod">${o.modIkon(M, 20)}${esc(o.SEKME[M.kod])}</span><h3>${esc(a.baslik)}</h3><p>${esc(a.ozet)}</p><span class="sg-kart__alt">${esc(a.okuma_dk || 3)} dk okuma ${ui('ok', 18)}</span></a>`).join('')}</div>
  </div>
 </section>` : '';
 

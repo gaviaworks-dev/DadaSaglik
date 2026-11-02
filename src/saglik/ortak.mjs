@@ -69,6 +69,10 @@ export const ui = (ad, boy = 24) => _s(UI[ad] || '', boy);
 
 /* ---------- Mod meta ---------- */
 // Menü sekme adları (kısa); sıra = MODLAR sırası
+// Mod ikonu = modun öncü kurumunun resmî site ikonu (Beyar 2 Kas 2. EK; kaynak tasks/saglik-kaynaklar.md "Mod ikonları").
+// Logo alanı kuralı gereği yalnız admin bayraklı: canlıda admin değilse çizgisel mod ikonu (ui(M.ikon)) gösterilecek.
+export const MOD_IKON_KURUM = { colyak: 'Çölyakla Yaşam Derneği', diyabet: 'Türkiye Diyabet Vakfı', alerji: 'Türkiye Ulusal Alerji ve Klinik İmmünoloji Derneği', laktoz: 'Alerji ile Yaşam Derneği', ibs: 'Türk Gastroenteroloji Derneği', kalp: 'Türk Kalp Vakfı' };
+export const modIkon = (M, boy = 20) => `<img class="sg-mod-ikon" src="varlik/saglik/partner/ikon/${M.kod}.webp" width="${boy}" height="${boy}" alt="" aria-hidden="true" title="${esc(MOD_IKON_KURUM[M.kod])}" data-yalniz-admin="1" loading="lazy" decoding="async">`;
 export const SEKME = { colyak: 'Glutensiz', diyabet: 'Kan Şekeri', alerji: 'Alerjen', laktoz: 'Sütsüz', ibs: 'Düşük FODMAP', kalp: 'Kalp Dostu' };
 export const modUyumAdi = (M) => ({ colyak: 'Glutensiz', diyabet: 'Kan şekeri dostu', alerji: 'Alerjene göre', laktoz: 'Sütsüz', ibs: 'Düşük FODMAP', kalp: 'Kalp dostu' })[M.kod];
 export const UYARI = 'Bu bilgiler genel bilgilendirme amaçlıdır; tanı ve tedavi için hekiminize danışın.';
@@ -83,17 +87,19 @@ const _gastroLogo = (() => {
   } catch { return ''; }
 })();
 const ROZET = { x: 2700, y: 300, g: 640 };
-export function saglikLogoSvg({ sinif = '', etiket = 'Dada Gastro Sağlık' } = {}) {
-  const vb = `921.855 214.449 ${(ROZET.x + ROZET.g + 8 - 921.855).toFixed(3)} 348.042`;
+const ROZET_RENK = { 'sağlık': [['sağlık', '#2E7D5B']], kids: [['k', '#D4557C'], ['i', '#3F82C4'], ['d', '#D9783A'], ['s', '#23906C']] };
+export function saglikLogoSvg({ sinif = '', etiket = 'Dada Gastro Sağlık', rozet = 'sağlık' } = {}) {
+  const g = rozet === "kids" ? 470 : ROZET.g;
+  const vb = `921.855 214.449 ${(ROZET.x + g + 8 - 921.855).toFixed(3)} 348.042`;
   const erisim = etiket ? `role="img" aria-label="${esc(etiket)}"` : 'aria-hidden="true" focusable="false"';
-  return `<svg class="sg-logo-svg ${sinif}" viewBox="${vb}" ${erisim} xmlns="http://www.w3.org/2000/svg">${_gastroLogo}<text class="sg-logo-rozet" aria-hidden="true" x="${ROZET.x}" y="${ROZET.y + 196}" font-family="GilroyXB, Gilroy, sans-serif" font-weight="800" font-size="250" fill="#2E7D5B" textLength="${ROZET.g}" lengthAdjust="spacingAndGlyphs">sağlık</text></svg>`;
+  return `<svg class="sg-logo-svg ${sinif}" viewBox="${vb}" ${erisim} xmlns="http://www.w3.org/2000/svg">${_gastroLogo}<text class="sg-logo-rozet" aria-hidden="true" x="${ROZET.x}" y="${ROZET.y + 196}" font-family="GilroyXB, Gilroy, sans-serif" font-weight="800" font-size="250" textLength="${rozet === 'kids' ? 470 : ROZET.g}" lengthAdjust="spacingAndGlyphs">${ROZET_RENK[rozet].map(([h, r]) => `<tspan fill="${r}">${h}</tspan>`).join('')}</text></svg>`;
 }
 
 /* ---------- Alt menü (Kids altMenu birebir davranış; ev ikonu + 6 mod) ---------- */
 const EV_SVG = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M11.3 3.27a1.1 1.1 0 0 1 1.4 0l8.4 7.06c.78.66.32 1.94-.71 1.94H19v7.63c0 .61-.49 1.1-1.1 1.1h-3.6v-5.4a.9.9 0 0 0-.9-.9h-2.8a.9.9 0 0 0-.9.9V21H6.1c-.61 0-1.1-.49-1.1-1.1v-7.63H3.61c-1.03 0-1.49-1.28-.71-1.94z"/></svg>';
 export function altMenu(aktif) {
   const ev = `<a class="sg-ust__ev" href="saglik.html" aria-label="Dada Gastro Sağlık ana sayfa"${aktif === 'hub' ? ' aria-current="page"' : ''}>${EV_SVG}</a>`;
-  const linkler = MODLAR.map((M) => `<a href="${M.dosya}" data-renk="${M.renk}"${M.kod === aktif ? ' aria-current="page"' : ''}>${esc(SEKME[M.kod])}</a>`).join('');
+  const linkler = MODLAR.map((M) => `<a href="${M.dosya}" data-renk="${M.renk}"${M.kod === aktif ? ' aria-current="page"' : ''}>${modIkon(M, 20)}${esc(SEKME[M.kod])}</a>`).join('');
   return `<nav class="sg-ust" aria-label="Dada Gastro Sağlık menüsü"><div class="wrap">`
     + `<a class="sg-ust__logo" href="saglik.html" tabindex="-1" aria-hidden="true">${saglikLogoSvg({ sinif: 'sg-ust__logo-svg', etiket: '' })}</a>`
     + `<div class="sg-ust__menu">${ev}${linkler}</div>`
@@ -126,7 +132,7 @@ export const alerjenKisa = (k) => ALERJEN_KISA[k] || k;
 export function tarifKart(t, r, M, { alerjenGoster = false, sira = 0, rozetMod = true } = {}) {
   const ik = r.ikameler || [];
   const ikHtml = ik.length
-    ? `<p class="sg-tarif__ikame"><span class="sg-tarif__ikame-bas">Akıllı ikame</span> ${ik.slice(0, 2).map((x) => `<span>${esc(x.ad)} → <b>${esc(x.yerine)}</b></span>`).join('<span aria-hidden="true"> · </span>')}${ik.length > 2 ? ` <span class="sg-ikincil">+${ik.length - 2}</span>` : ''}</p>`
+    ? `<p class="sg-tarif__ikame"><span class="sg-tarif__ikame-bas">Akıllı ikame</span> ${ik.slice(0, 2).map((x) => `<span class="sg-tarif__ikame-oge">${esc(x.ad)} → <b>${esc(x.yerine)}</b></span>`).join('')}${ik.length > 2 ? ` <span class="sg-ikincil">+${ik.length - 2}</span>` : ''}</p>`
     : `<p class="sg-tarif__ikame sg-tarif__ikame--yok">${ui('tik', 16)}<span>İkame gerekmez</span></p>`;
   const al = t._b.alerjen.filter((a) => a !== 'gluten-yulaf');
   const alHtml = alerjenGoster ? `<p class="sg-tarif__alerjen">${al.length ? `<span class="sg-ikincil">İçerir:</span> ${al.map((a) => `<span class="sg-al">${esc(alerjenKisa(a))}</span>`).join('')}` : '<span class="sg-al sg-al--yok">Ana alerjen içermez</span>'}</p>` : '';
@@ -143,12 +149,16 @@ export function tarifKart(t, r, M, { alerjenGoster = false, sira = 0, rozetMod =
 </article>`;
 }
 
+/** Süzgeç satırı — Gastro tarif listesi süzgeci (.fct-row + .cbx) kalıbı: onay kutusu + ad + sayı. */
+export const satir = ({ tur = 'checkbox', ad, deger, etiket, sayi = null, secili = false }) =>
+  `<label class="sg-satir"><input type="${tur}" name="${esc(ad)}" value="${esc(deger)}"${secili ? ' checked' : ''}><span class="sg-cbx${tur === 'radio' ? ' sg-cbx--radyo' : ''}" aria-hidden="true"></span><span class="sg-satir__ad">${esc(etiket)}</span>${sayi !== null ? `<span class="sg-satir__n">${sayi}</span>` : ''}</label>`;
+
 /** Izgara son yuvasını dolduran yönlendirme kartı (uydurma içerik yok). */
 export const ctaKart = ({ href, baslik, metin, etiket, renk = '', ikonAd = 'ok', sinif = '' }) =>
   `<a class="sg-kart sg-cta-kart ${sinif}" href="${href}"${renk ? ` data-renk="${renk}"` : ''}><span class="sg-cta-kart__ikon">${ui(ikonAd, 28)}</span><h3>${esc(baslik)}</h3><p>${esc(metin)}</p><span class="sg-kart__alt">${esc(etiket)} ${ui('ok', 18)}</span></a>`;
 
 /* ---------- Seçki tipi hero (Gastro reklam seçki kalıbı; marka yerine mod) ---------- */
-export function seckiHero({ M, sahne, sahneAlt = '', kirinti: k = [], eyebrow, baslik, giris, istatistik = [], sag = '', not = '' }) {
+export function seckiHero({ M, sahne, sahneAlt = '', kirinti: k = [], eyebrow, baslik, giris, istatistik = [], sag = '', not = '', logolar = '' }) {
   return `<section class="sg-secki-hero" data-renk="${M ? M.renk : 'adacayi'}">
  ${sahne ? `<img class="sg-secki-sahne" src="${sahne}" alt="${esc(sahneAlt)}"${sahneAlt ? '' : ' aria-hidden="true"'} width="1600" height="900" fetchpriority="high" decoding="async">` : ''}
  <span class="sg-secki-katman" aria-hidden="true"></span>
@@ -160,6 +170,7 @@ export function seckiHero({ M, sahne, sahneAlt = '', kirinti: k = [], eyebrow, b
     <h1>${baslik}</h1>
     ${giris ? `<p class="sg-lead">${giris}</p>` : ''}
     ${istatistik.length ? `<div class="sg-stats">${istatistik.map(([b, s]) => `<div class="sg-st"><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}</div>` : ''}
+    ${logolar}
     ${not ? `<p class="sg-secki-not" role="note">${ui('uyari', 18)}<span>${esc(not)}</span></p>` : ''}
    </div>
    ${sag}
@@ -179,24 +190,36 @@ export function sss(sorular, { onek = 'sss', renk = '' } = {}) {
   }).join('')}</div></div>`;
 }
 
-/* ---------- Partner (Gastro seçki kalıbı: logo + ad + "Olası iş birliği"; yalnız admin) ---------- */
+/* ---------- Partner (Gastro seçki kalıbı: logo + ad + tanım + resmî site; yalnız admin) ----------
+   Beyar 2 Kas (2. EK): logolar banner'larda da kullanılır; kartlardaki "Olası iş birliği" etiketi kaldırıldı.
+   Banner şeridi yalnız "Bu alanda çalışan kurumlar" der (onay/iş birliği iddiası yok); hepsi data-yalniz-admin. */
 export const partnerLogoYol = (p) => (p.logo ? `varlik/saglik/partner/${String(p.logo).replace(/\.[a-z0-9]+$/i, '')}.webp` : null);
+export const partnerListe = (kod) => (kaynaklar[kod] || []).filter((p) => p && p.ad && p.site && !/çıkar/i.test(p.durum || ''));
+export function partnerLogo(p) {
+  const ly = partnerLogoYol(p);
+  const svg = p.logo && /\.svg$/i.test(p.logo) && var_(`varlik/saglik/partner/${p.logo}`) ? `varlik/saglik/partner/${p.logo}` : null;
+  return svg || (ly && var_(ly) ? ly : null);
+}
+/** Banner logo şeridi: logolu kurumlar beyaz karolarda; tıklanınca resmî site. */
+export function logoSeridi(liste, { sinif = '', baslik = 'Bu alanda çalışan kurumlar' } = {}) {
+  const l = liste.filter((p) => partnerLogo(p));
+  if (!l.length) return '';
+  return `<div class="sg-logo-serit ${sinif}" data-yalniz-admin="1"><span class="sg-logo-serit__bas">${esc(baslik)}</span><ul>${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></div>`;
+}
 export function partnerBolumu(M) {
-  const liste = (kaynaklar[M.kod] || []).filter((p) => p && p.ad && p.site && !/çıkar/i.test(p.durum || ''));
+  const liste = partnerListe(M.kod);
   if (!liste.length) return '';
   const kart = (p) => {
-    const ly = partnerLogoYol(p);
-    const svg = p.logo && /\.svg$/i.test(p.logo) && var_(`varlik/saglik/partner/${p.logo}`) ? `varlik/saglik/partner/${p.logo}` : null;
-    const src = svg || (ly && var_(ly) ? ly : null);
+    const src = partnerLogo(p);
     const logo = src
       ? `<span class="sg-partner__logo"><img src="${src}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></span>`
       : `<span class="sg-partner__logo sg-partner__logo--yer" aria-hidden="true"><span>${esc(p.ad)}</span></span>`;
-    return `<article class="sg-kart sg-partner" data-logo="${src ? 'var' : 'yok'}">${logo}<div class="sg-partner__govde"><span class="sg-etiket-olasi">Olası iş birliği</span><h3>${esc(p.ad)}</h3><p>${esc(p.tanim || '')}</p><a class="sg-partner__site" href="${esc(p.site)}" target="_blank" rel="noopener nofollow">${ui('bag', 16)}Resmî site <span class="sg-gizli">(yeni sekmede açılır)</span></a></div></article>`;
+    return `<article class="sg-kart sg-partner" data-logo="${src ? 'var' : 'yok'}">${logo}<div class="sg-partner__govde"><h3>${esc(p.ad)}</h3><p>${esc(p.tanim || '')}</p><a class="sg-partner__site" href="${esc(p.site)}" target="_blank" rel="noopener nofollow">${ui('bag', 16)}Resmî site <span class="sg-gizli">(yeni sekmede açılır)</span></a></div></article>`;
   };
   return `<section class="sg-bolum sg-partnerler" data-yalniz-admin="1" aria-labelledby="pt-${M.kod}">
  <div class="wrap">
   <p class="sg-admin-not">${ui('kalkan', 16)}<span><b>Yalnız yönetici görür.</b> Bu alan prototipte görünür; canlıda yönetici yetkisine bağlanacaktır.</span></p>
-  ${bolumBasi({ ust: 'İş birliği', baslik: 'Bu alanda çalışan kurumlar', alt: 'Olası iş birliği için not edilen kurumlar. Kurumların bu sayfayı onayladığı ya da desteklediği anlamına gelmez.', id: `pt-${M.kod}` })}
+  ${bolumBasi({ ust: 'İş birliği', baslik: 'Bu alanda çalışan kurumlar', alt: 'Bu alanda çalışan dernek, vakıf ve meslek kuruluşları.', id: `pt-${M.kod}` })}
   <div class="sg-ortala sg-kol-3 sg-izgara--partner">${liste.map(kart).join('')}</div>
  </div>
 </section>`;
