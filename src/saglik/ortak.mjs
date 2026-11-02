@@ -99,7 +99,7 @@ export function saglikLogoSvg({ sinif = '', etiket = 'Dada Gastro Sağlık', roz
 const EV_SVG = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M11.3 3.27a1.1 1.1 0 0 1 1.4 0l8.4 7.06c.78.66.32 1.94-.71 1.94H19v7.63c0 .61-.49 1.1-1.1 1.1h-3.6v-5.4a.9.9 0 0 0-.9-.9h-2.8a.9.9 0 0 0-.9.9V21H6.1c-.61 0-1.1-.49-1.1-1.1v-7.63H3.61c-1.03 0-1.49-1.28-.71-1.94z"/></svg>';
 export function altMenu(aktif) {
   const ev = `<a class="sg-ust__ev" href="saglik.html" aria-label="Dada Gastro Sağlık ana sayfa"${aktif === 'hub' ? ' aria-current="page"' : ''}>${EV_SVG}</a>`;
-  const linkler = MODLAR.map((M) => `<a href="${M.dosya}" data-renk="${M.renk}"${M.kod === aktif ? ' aria-current="page"' : ''}>${modIkon(M, 20)}${esc(SEKME[M.kod])}</a>`).join('');
+  const linkler = MODLAR.map((M) => `<a href="${M.dosya}" data-renk="${M.renk}"${M.kod === aktif ? ' aria-current="page"' : ''}>${esc(SEKME[M.kod])}</a>`).join('');
   return `<nav class="sg-ust" aria-label="Dada Gastro Sağlık menüsü"><div class="wrap">`
     + `<a class="sg-ust__logo" href="saglik.html" tabindex="-1" aria-hidden="true">${saglikLogoSvg({ sinif: 'sg-ust__logo-svg', etiket: '' })}</a>`
     + `<div class="sg-ust__menu">${ev}${linkler}</div>`
@@ -204,7 +204,7 @@ export function partnerLogo(p) {
 export function logoSeridi(liste, { sinif = '', baslik = 'Bu alanda çalışan kurumlar' } = {}) {
   const l = liste.filter((p) => partnerLogo(p));
   if (!l.length) return '';
-  return `<div class="sg-logo-serit ${sinif}" data-yalniz-admin="1"><span class="sg-logo-serit__bas">${esc(baslik)}</span><ul>${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></div>`;
+  return `<div class="sg-logo-serit ${l.length >= 5 ? 'sg-logo-serit--yay ' : ''}${sinif}" data-yalniz-admin="1"><span class="sg-logo-serit__bas">${esc(baslik)}</span><ul>${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></div>`;
 }
 export function partnerBolumu(M) {
   const liste = partnerListe(M.kod);

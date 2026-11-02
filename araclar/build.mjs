@@ -72,7 +72,7 @@ const KIDS_URL = 'https://gaviaworks-dev.github.io/DadaKids/v2/';
 const KIDS_CHIP = [['6–8 Ay', 6, '#FFC4A3'], ['9–12 Ay', 9, '#A6E3CB'], ['1–3 Yaş', 12, '#FFDF7E']];
 const MEGA_SERIT = `<div class="sg-mega-yuva" data-sg-dongu>
 <div class="sg-mega-serit" role="group" aria-label="Dada Gastro Sağlık" data-sg-dongu-oge="saglik">
-${ortak.saglikLogoSvg({ sinif: 'sg-mega-serit__logo' })}<span class="sg-mega-serit__chipler">${ortak.MODLAR.map((M) => `<a class="sg-mega-serit__chip" data-renk="${M.renk}" href="${M.dosya}">${ortak.modIkon(M, 16)}${esc(ortak.SEKME[M.kod])}</a>`).join('')}</span><a class="sg-mega-serit__kesfet" href="saglik.html" aria-label="Dada Gastro Sağlık'ı keşfet">Keşfet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+${ortak.saglikLogoSvg({ sinif: 'sg-mega-serit__logo' })}<span class="sg-mega-serit__chipler">${ortak.MODLAR.map((M) => `<a class="sg-mega-serit__chip" data-renk="${M.renk}" href="${M.dosya}">${esc(ortak.SEKME[M.kod])}</a>`).join('')}</span><a class="sg-mega-serit__kesfet" href="saglik.html" aria-label="Dada Gastro Sağlık'ı keşfet">Keşfet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
 </div>
 <div class="sg-mega-serit sg-mega-serit--kids" role="group" aria-label="Dada Gastro Kids" data-sg-dongu-oge="kids">
 ${ortak.saglikLogoSvg({ sinif: 'sg-mega-serit__logo', etiket: 'Dada Gastro Kids', rozet: 'kids' })}<span class="sg-mega-serit__metin">Yaşa göre bebek ve çocuk tarifleri</span><span class="sg-mega-serit__chipler">${KIDS_CHIP.map(([a, y, r]) => `<a class="sg-mega-serit__chip" style="--r-a:${r}" href="${KIDS_URL}kids-tarifler.html?yas=${y}">${a}</a>`).join('')}</span><a class="sg-mega-serit__kesfet" href="${KIDS_URL}kids.html" aria-label="Dada Gastro Kids'i keşfet">Keşfet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
@@ -133,7 +133,7 @@ async function saglikSayfasi({ dosya, baslik, aciklama, main, css = [], js = [],
 
 /* ---------- index.html — Gastro ana sayfa + Sağlık bandı (kapı A) ---------- */
 function saglikBandi() {
-  const chip = ortak.MODLAR.map((M) => `<a class="sg-chip" data-renk="${M.renk}" href="${M.dosya}">${ortak.modIkon(M, 20)}${esc(ortak.SEKME[M.kod])}</a>`).join('');
+  const chip = ortak.MODLAR.map((M) => `<a class="sg-chip" data-renk="${M.renk}" href="${M.dosya}">${ortak.ui(M.ikon, 18)}${esc(ortak.SEKME[M.kod])}</a>`).join('');
   const g = ortak.BANT_GORSEL;
   return `<section class="sg-bant-sec" aria-label="Dada Gastro Sağlık">
  <div class="wrap">

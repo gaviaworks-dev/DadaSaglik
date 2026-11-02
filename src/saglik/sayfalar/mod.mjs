@@ -1,7 +1,8 @@
-// Altı mod sayfası (alt sekme). Kids alt sekmesi × Gastro reklam seçki sayfası hibriti (tasks/saglik-plan.md §4).
+// Altı mod × iki sekme (Beyar 2 Kas): Tarifler (saglik-<kod>.html) · Bilgilendirme (saglik-<kod>-bilgi.html).
+// Kids alt sekmesi × Gastro reklam seçki sayfası hibriti (tasks/saglik-plan.md §4). Hero iki sekmede aynı; sekme çubuğu hero'nun hilal girişinde.
 export default async function (o) {
   const { esc, ui, MODLAR, ESLESME, SAHNE, icerik } = o;
-  return MODLAR.map((M) => {
+  return MODLAR.flatMap((M) => {
     const liste = ESLESME[M.kod];
     const ic = (icerik.modlar || {})[M.kod] || {};
     const sahne = SAHNE[M.kod];
@@ -9,17 +10,21 @@ export default async function (o) {
     const kategoriler = [...new Set(liste.map((x) => x.t.kategori[0]).filter(Boolean))]
       .map((k) => [k, liste.filter((x) => x.t.kategori[0] === k).length]).sort((a, b) => b[1] - a[1]);
 
-    const kimler = `<aside class="sg-secki-kutu" aria-labelledby="km-${M.kod}">
-     <h2 id="km-${M.kod}">Kimler için?</h2>
-     <ul class="sg-tikli">${M.kimler.map((k) => `<li>${ui('tik', 18)}<span>${esc(k)}</span></li>`).join('')}</ul>
-    </aside>`;
+    // "Kimler için?" — Bilgilendirme sekmesinin ilk bölümü (Beyar 2 Kas: hero'dan çıktı, daha şık): her kitle bir kart, mod tonunda
+    const KITLE_IKON = ['kisi', 'kalkan', 'kalp', 'arti'];
+    const kimler = `<section class="sg-bolum sg-kimler" data-renk="${M.renk}" aria-labelledby="km-${M.kod}">
+ <div class="wrap">
+  ${o.bolumBasi({ ust: 'Kapsam', baslik: 'Bu mod kimler için?', alt: esc(M.slogan), id: `km-${M.kod}` })}
+  <ul class="sg-ortala sg-kimler__liste${M.kimler.length === 3 ? ' sg-kol-3' : ''}">${M.kimler.map((k, i) => `<li class="sg-kart sg-kimler__kart"><span class="sg-kimler__ikon">${ui(KITLE_IKON[i % 4], 22)}</span><p>${esc(k)}</p></li>`).join('')}</ul>
+ </div>
+</section>`;
 
     const hero = o.seckiHero({
       M, sahne: sahne ? o.tarifSahne(sahne) : '', sahneAlt: sahne ? `${sahne.baslik.split('|')[0].trim()} — bu moda uygun bir Dada Gastro tarifi` : '',
       kirinti: [['Dada Gastro Sağlık', 'saglik.html'], [M.ad]], eyebrow: 'Sağlık modu', baslik: esc(M.ad),
       giris: esc(ic.giris || M.slogan),
       istatistik: [[String(liste.length), 'uyumlu tarif'], [String(ikameli), 'akıllı ikameli'], [String(M.riskli.length), 'riskli malzeme grubu']],
-      sag: kimler, not: o.UYARI, logolar: o.logoSeridi(o.partnerListe(M.kod)),
+      not: o.UYARI, logolar: o.logoSeridi(o.partnerListe(M.kod)),
     });
 
     const alerjenSecici = M.kod === 'alerji' ? `<section class="sg-bolum sg-bolum--sikisik sg-alerjen-bolum" aria-labelledby="alsec">
@@ -106,11 +111,22 @@ export default async function (o) {
  </div>
 </section>` : '';
 
-    const main = o.sayfa([hero, alerjenSecici, kural, riskli, ikame, dolapBant, izgara, bilgi, o.partnerBolumu(M), ss].join('\n'), M.kod);
-    return {
-      dosya: M.dosya, baslik: `${M.ad} — Dada Gastro Sağlık (prototip)`,
-      aciklama: `${M.slogan} ${liste.length} uyumlu Dada Gastro tarifi, akıllı ikameler ve sık sorulan sorular.`,
-      main, css: ['mod'], js: ['katalog'], gorsel: sahne ? o.tarifSahne(sahne) : '',
-    };
+    const bilgiDosya = M.dosya.replace('.html', '-bilgi.html');
+    const sekmeler = (aktif) => `<section class="sg-sekme-bolum" aria-label="${esc(M.ad)} sekmeleri"><div class="wrap"><nav class="sg-sekmeler">`
+      + `<a href="${M.dosya}"${aktif === 'tarif' ? ' aria-current="page"' : ''}>${ui('kitap', 20)}Tarifler <span class="sg-sekmeler__n">${liste.length}</span></a>`
+      + `<a href="${bilgiDosya}"${aktif === 'bilgi' ? ' aria-current="page"' : ''}>${ui('kalkan', 20)}Bilgilendirme</a>`
+      + `</nav></div></section>`;
+    const bilgiSonu = `<aside class="sg-dolap-bant" data-renk="${M.renk}"><div class="wrap"><a href="${M.dosya}">${ui('kitap', 22)}<span><b>${esc(o.SEKME[M.kod])}</b> moduna uygun ${liste.length} tarif</span><span class="sg-dolap-bant__git">Tariflere git ${ui('ok', 18)}</span></a></div></aside>`;
+    return [{
+      dosya: M.dosya, baslik: `${M.ad} — Tarifler · Dada Gastro Sağlık (prototip)`,
+      aciklama: `${M.slogan} ${liste.length} uyumlu Dada Gastro tarifi ve akıllı ikameler.`,
+      main: o.sayfa([hero, sekmeler('tarif'), alerjenSecici, dolapBant, izgara].join('\n'), M.kod),
+      css: ['mod'], js: ['katalog'], gorsel: sahne ? o.tarifSahne(sahne) : '',
+    }, {
+      dosya: bilgiDosya, baslik: `${M.ad} — Bilgilendirme · Dada Gastro Sağlık (prototip)`,
+      aciklama: `${M.slogan} Kimler için, sistem kuralı, riskli malzemeler, akıllı ikame, yazılar ve sık sorulan sorular.`,
+      main: o.sayfa([hero, sekmeler('bilgi'), kimler, kural, riskli, ikame, bilgi, o.partnerBolumu(M), ss, bilgiSonu].join('\n'), M.kod),
+      css: ['mod'], js: [], gorsel: sahne ? o.tarifSahne(sahne) : '',
+    }];
   });
 }

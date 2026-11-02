@@ -6,7 +6,7 @@ export default async function (o) {
   const { esc, ui, MODLAR } = o;
   const modBar = `<div class="sg-mod-bar" role="radiogroup" aria-label="Sağlık modu" data-sg-mod-bar>
    <button type="button" role="radio" class="sg-mod-bar__oge" data-mod="" aria-checked="false">Modsuz</button>
-   ${MODLAR.map((M) => `<button type="button" role="radio" class="sg-mod-bar__oge" data-mod="${M.kod}" data-renk="${M.renk}" aria-checked="false">${o.modIkon(M, 20)}${esc(o.SEKME[M.kod])}</button>`).join('')}
+   ${MODLAR.map((M) => `<button type="button" role="radio" class="sg-mod-bar__oge" data-mod="${M.kod}" data-renk="${M.renk}" aria-checked="false">${ui(M.ikon, 18)}${esc(o.SEKME[M.kod])}</button>`).join('')}
   </div>`;
   const kartlar = o.DOLAP_KATEGORI.map(([kat, ad], i) => {
     const l = o.DOLAP_KARTLAR.filter((x) => x.kat === kat);
