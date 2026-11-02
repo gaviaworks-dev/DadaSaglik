@@ -29,8 +29,9 @@ export default async function (o) {
   // Detay sözlüğü (Gastro tarif listesi süzgeçlerinden): beslenme etiketi + ikonu, mutfak bayrağı. Tarif başı alanlar tarifler.json'da (ortak.istemciVerisi).
   // H20: Gastro detayının kalan blokları için tarif başı ek veri (araclar/veri-hazirla.py → veri/gastro-tarifler.json, yalnız modlarda kullanılan tarifler):
   //   e = etiketler (#), s = adım süreleri (dk, tarifler.json `a` ile aynı sıra), pd = pişirme derecesi,
-  //   r = [değerlendirme, ortalama, 5★…1★ dağılımı (5), yorumsuz puan, yayındaki üst yorum, Ben de Yaptım, Eline Sağlık] — `degerlendirmeler`
-  //       satırlarından (Gastro TarifDetayServisi: tarifler.ortalama_puan/degerlendirme_sayisi donmuş "sahte sayaç"),
+  //   r = [değerlendirme, ortalama, 5★…1★ dağılımı (5), yorumsuz puan, yorum, Ben de Yaptım, Eline Sağlık, dağılım biliniyor mu (1/0)].
+  //       Beyar 2 Kas karar 3: puan ve sayılar KARTLA AYNI kayıtlı değerler (tarifler.puan/10 · degerlendirme · yorum); kart ile detay arasında fark yok.
+  //       5★…1★ dağılımı ve tavsiye yüzdesi yalnız `degerlendirmeler` satırları kayıtlı sayıyla birebir örtüşüyorsa basılır (uydurma dağılım yok).
   //   c = şef profili varsa [yayındaki tarif, takipçi, üyelik yılı]; yoksa 0 (Gastro: şefsiz tarifte bağ/şef kutusu basılmaz).
   const t = {};
   for (const x of o.TARIFLER) {
@@ -38,7 +39,8 @@ export default async function (o) {
     const g = x.gercek || {}, c = x.sef_sayac;
     t[x.slug] = {
       e: x.etiketler || [], s: (x.adimlar || []).map((a) => a.sure_dk || 0), pd: x.pisirme_derecesi || '',
-      r: [g.degerlendirme || 0, g.ortalama || 0, ...(g.dagilim || [0, 0, 0, 0, 0]), g.yorumsuz || 0, g.yorum || 0, g.deneme || 0, g.alkis || 0],
+      r: (() => { const n = x.degerlendirme || 0, d = g.dagilim || [0, 0, 0, 0, 0], tam = n > 0 && d.reduce((a, b) => a + b, 0) === n;
+        return [n, (x.puan || 0) / 10, ...(tam ? d : [0, 0, 0, 0, 0]), tam ? g.yorumsuz || 0 : 0, x.yorum || 0, g.deneme || 0, g.alkis || 0, tam ? 1 : 0]; })(),
       c: c ? [c.tarif || 0, c.takipci || 0, c.yil || ''] : 0,
     };
   }

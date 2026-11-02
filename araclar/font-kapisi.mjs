@@ -48,16 +48,17 @@ for (const w of [1440, 390]) {
       return out;
     }, [...YUZ]);
     const kotuDosya = dosya.filter(([, st]) => st !== 200);
-    const kotu = r.sapma.length + r.sahte.length + kotuDosya.length + hata.length;
+    // Beyar 2 Kas karar 1: kalın metin Gastro'nun çizdiği gibi (Medium'dan sentetik) — sahte kalın artık bilgi, hata değil; Gastro ile yüz paritesini araclar/font-rol-olc.mjs ölçer
+    const kotu = r.sapma.length + kotuDosya.length + hata.length;
     kirmizi += kotu;
     const ozet = `${kotu ? '✗' : '✓'} ${String(w).padEnd(4)} ${s.padEnd(44)} öğe ${String(r.oge).padStart(4)} · aile ${Object.entries(r.aile).map(([k, v]) => `${k}:${v}`).join(' ')} · sapma ${r.sapma.length} · sahte kalın ${r.sahte.length} (Gastro kabuğu mirası ${r.sahteGastro}) · font dosyası ${dosya.length ? dosya.map(([f, st]) => `${f} ${st}`).join(', ') : '(önbellek)'} · JS hata ${hata.length}`;
     console.log(ozet); rapor.push(ozet);
-    for (const x of [...r.sapma, ...r.sahte].slice(0, 8)) console.log('    ', x);
+    for (const x of r.sapma.slice(0, 8)) console.log('    ', x);
     if (w === 1440 && s === 'saglik.html') console.log('     yüklü Gilroy yüzleri:', r.yuzler.join(' · '), '\n     ağırlık dağılımı:', Object.entries(r.agirlik).map(([k, v]) => `${k}:${v}`).join(' '));
     await p.close();
   }
   await ctx.close();
 }
 await b.close();
-console.log(kirmizi ? `\nFONT KAPISI KIRMIZI (${kirmizi})` : '\nFONT KAPISI YEŞİL: her sayfada Gilroy, sapma 0, sahte kalın 0, dosyalar 200');
+console.log(kirmizi ? `\nFONT KAPISI KIRMIZI (${kirmizi})` : '\nFONT KAPISI YEŞİL: her sayfada Gilroy, sapma 0, dosyalar 200 (kalın: Gastro gibi sentetik — karar 1)');
 process.exit(kirmizi ? 1 : 0);

@@ -200,7 +200,8 @@ const TOL = { boyut: 0.05, satir: 0.005, harf: 0.001 };
 // yüz: Gastro "Gilroy 700"ü Gilroy-Medium'dan SENTETİK kalın çizer; Health css/yazi.css aynı isteği Gastro'nun ExtraBold dosyasına bağlar
 // (Beyar: sahte kalın yok; Gastro kanon §5 "700/800 → ExtraBold"). Hesaplanan değerler aynı olduğundan bu bilinçli fark sayılmaz.
 const yuzNorm = (s) => String(s.yuz || '').replace(' +sentetik kalın', '').replace(/^Gilroy-Medium$/, s.agirlik >= 600 ? 'Gilroy-ExtraBold' : 'Gilroy-Medium');
-const esit = (k, a, b) => { if (k === 'yuz') return yuzNorm(a) === yuzNorm(b); const x = oran(k, a), y = oran(k, b); return typeof x === 'number' && typeof y === 'number' ? Math.abs(x - y) < (TOL[k] ?? 0.05) : String(x) === String(y); };
+// Beyar karar 1: çizilen yüz de Gastro ile aynı olmalı (sentetik kalın dahil)
+const esit = (k, a, b) => { if (k === 'yuz') return String(a.yuz) === String(b.yuz); const x = oran(k, a), y = oran(k, b); return typeof x === 'number' && typeof y === 'number' ? Math.abs(x - y) < (TOL[k] ?? 0.05) : String(x) === String(y); };
 const isaret = (x, n) => `${x > 0 ? '+' : ''}${+x.toFixed(n)}`;
 const delta = (k, g, h) => (k === 'boyut' ? `${isaret(h.boyut - g.boyut, 2)}px` : k === 'satir' && g.satir !== 'normal' && h.satir !== 'normal' ? `${(g.satir / g.boyut).toFixed(3)}→${(h.satir / h.boyut).toFixed(3)}` : k === 'harf' ? `${(g.harf / g.boyut).toFixed(3)}em→${(h.harf / h.boyut).toFixed(3)}em` : `${g[k]}→${h[k]}`);
 const kisaStil = (s) => `${s.aile} ${s.agirlik} ${sayi(s.boyut)}px/${s.satir === 'normal' ? 'normal' : (s.satir / s.boyut).toFixed(2)}/${s.harf ? (s.harf / s.boyut).toFixed(3) + 'em' : '0'}/${s.donusum} [${s.yuz}]`;

@@ -90,7 +90,7 @@
     }
     var X = (EK.t && EK.t[slug]) || { e: [], s: [], pd: '', r: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], c: 0 };
     var R = X.r || [], dgN = R[0] || 0, ort = Number(R[1]) || 0, dag = [R[2] || 0, R[3] || 0, R[4] || 0, R[5] || 0, R[6] || 0];
-    var yorumsuz = R[7] || 0, yorumN = R[8] || 0, deneme = R[9] || 0, alkis = R[10] || 0;
+    var yorumsuz = R[7] || 0, yorumN = R[8] || 0, deneme = R[9] || 0, alkis = R[10] || 0, dagVar = R[11] === 1; // puan/sayılar kartla aynı kayıtlı değerler (Beyar karar 3)
     var modlar = Object.keys(V.modlar).filter(function (k) { return V.modlar[k].t[slug]; });
     var mod = modlar.indexOf(istenen) > -1 ? istenen : modlar[0], M = V.modlar[mod], ik = M.t[slug] || [];
     var al = window.DadaSaglik && window.DadaSaglik.alerjenler ? window.DadaSaglik.alerjenler() : [];
@@ -174,8 +174,8 @@
     var cubuklar = [5, 4, 3, 2, 1].map(function (k, i) { return '<div class="rs-bar"> <span class="lbl">' + k + ' ' + fa('star') + '</span> <span class="track"><i style="width:' + (dgN ? Math.round(dag[i] * 100 / dgN) : 0) + '%"></i></span> <span class="cnt">' + dag[i] + '</span> </div>'; }).join(' ');
     var yildizDugme = [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" aria-label="' + n + ' yıldız">' + fa('star') + '</button>'; }).join(' ');
     var degerlendirme = '<div class="rd-sec-head" style="margin-top:26px;margin-bottom:14px" id="yorumlar"> <div> <span class="eyebrow">' + fa('comments') + ' Değerlendirmeler</span> <h2>Yorumlar (' + yorumN + ')</h2> </div> </div>'
-      + ' <div class="rev-summary" aria-label="Puan özeti"> <div class="rs-avg"> <b>' + ort.toFixed(1) + '</b> ' + yildiz(ort) + ' <span>' + dgN + ' değerlendirme</span> <span class="rs-rec">' + fa('thumbs-up') + ' %' + tavsiye + '\'si tavsiye ediyor</span>'
-      + (yorumsuz > 0 ? ' <span>' + yorumsuz + ' kişi yorum yazmadan puan verdi</span>' : '') + ' </div> <div class="rs-bars"> ' + cubuklar + ' </div> </div>'
+      + ' <div class="rev-summary" aria-label="Puan özeti"> <div class="rs-avg"> <b>' + ort.toFixed(1) + '</b> ' + yildiz(ort) + ' <span>' + dgN + ' değerlendirme</span>' + (dagVar ? ' <span class="rs-rec">' + fa('thumbs-up') + ' %' + tavsiye + '\'si tavsiye ediyor</span>' : '')
+      + (yorumsuz > 0 ? ' <span>' + yorumsuz + ' kişi yorum yazmadan puan verdi</span>' : '') + ' </div>' + (dagVar || !dgN ? ' <div class="rs-bars"> ' + cubuklar + ' </div>' : '') + ' </div>'
       + ' <div class="rev-login" id="revLogin"> <span class="rl-ico">' + fa('lock') + '</span> <div class="rl-body"> <b>Yorum yapmak için giriş yap</b> <p>Bu tarifi puanlamak, deneyimini paylaşmak ve yorumlara katılmak için DadaGastro hesabına giriş yapman gerekiyor. Yorumları okumak serbest.</p> <div class="rl-acts"> <a class="btn btn-primary" href="' + GASTRO + '/giris" rel="nofollow">' + fa('user') + ' Giriş Yap</a> <a class="btn btn-ghost" href="' + GASTRO + '/kayit">Üye Ol</a> </div> </div> </div>'
       // Gastro'nun üye puan formu (#revForm): yıldız seçimi + "Puan zorunlu" kuralı Gastro tarif-detay.js'te; gönderim yerelde giriş kapısını açar (yorum yayımlanmaz)
       + ' <form class="rev-form" id="revForm" data-sg-yerel> <input type="hidden" name="puan" id="rfRatingInput" value=""> <div class="av av-init">' + fa('user') + '</div> <div class="rf-body"> <div class="rf-top"> <span class="t">Tarifi değerlendir</span> <span class="rf-stars" id="rfStars" role="radiogroup" aria-label="Yıldız puanı"> ' + yildizDugme + ' </span> <span class="rf-hint" id="rfHint" role="status">Puan zorunlu</span> </div>'
