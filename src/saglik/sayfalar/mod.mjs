@@ -2,10 +2,16 @@
 // Kids alt sekmesi × Gastro reklam seçki sayfası hibriti (tasks/saglik-plan.md §4). Hero iki sekmede aynı; sekme çubuğu hero'nun hilal girişinde.
 import { readFile } from 'node:fs/promises';
 
-// Gastro kategori süzgecinin küçük görselleri (.cat-fct .cn-thumb) — Gastro tarif listesi donöründen, kategori slug'ı → görsel (H18)
-const KAT_THUMB = await readFile(new URL('../../donor/tarifler.html', import.meta.url), 'utf8')
-  .then((h) => Object.fromEntries([...h.matchAll(/name="kategori\[\]" value="([^"]+)">\s*<span class="cbx"><\/span>\s*<span class="cn-thumb" style="background-image:url\('([^']+)'\)"/g)].map((m) => [m[1], m[2]])))
-  .catch(() => ({}));
+// Gastro tarif listesi sol filtresinin grup tanımları — donörden (H28a): grup → [[değer, ad, satır süsü (bayrak / ikon)], …] Gastro sırasıyla.
+// Kategori satırları resimsiz (Beyar: checkbox + ad + sayı); mutfak bayrağı ve beslenme ikonu Gastro'daki gibi kalır.
+const GASTRO_FCT = await readFile(new URL('../../donor/tarifler.html', import.meta.url), 'utf8').then((h) => {
+  const out = {};
+  for (const m of h.matchAll(/<div class="fct[^"]*" data-group="([a-z_]+)">([\s\S]*?)<\/div>\s*<\/div>/g)) {
+    out[m[1]] = [...m[2].matchAll(/<input type="checkbox" name="[a-z_]+\[\]" value="([^"]+)">\s*<span class="cbx"><\/span>\s*([\s\S]*?)<span class="ft">([^<]*)<\/span>/g)]
+      .map(([, v, susle, ad]) => [v, ad.trim(), /cn-thumb/.test(susle) ? '' : susle.trim()]);
+  }
+  return out;
+}).catch(() => ({}));
 
 export default async function (o) {
   const { esc, ui, MODLAR, ESLESME, SAHNE, icerik } = o;
@@ -72,14 +78,23 @@ export default async function (o) {
     // Süzgeç = Gastro tarif listesi sol paneli BİREBİR (H18): .lst-side > .sheet-head · form > .sheet-body (.fil-top · .fct …) · .sheet-foot;
     // ≤1024 alttan açılan sayfa (.lst-side.open + .sheet-overlay.open). Stil tamamen Gastro tarif-liste.css (+ p1/tarifler.css, p4-f);
     // davranış katalog.js (sunucusuz). data-bound="1": Gastro app.js'in "onay kutusu değişince formu gönder" bağını kurmaması için.
-    const sureN = (dk) => liste.filter((x) => { const s = (x.t.hazirlik_dk || 0) + (x.t.pisirme_dk || 0); return s && s <= dk; }).length;
+    const dk = (x) => (x.t.hazirlik_dk || 0) + (x.t.pisirme_dk || 0);
     const fct = ({ grup, ad, ikon = '', govde, sinif = '' }) => `<div class="fct${sinif ? ' ' + sinif : ''} open" data-group="${grup}">
     <button class="fct-head" type="button" aria-expanded="true">${ikon ? `<i class="fa-solid fa-${ikon} fct-head-ico" aria-hidden="true"></i>` : ''} ${ad} <span class="fct-dot">0</span><i class="fa-solid fa-chevron-down fct-car" aria-hidden="true"></i></button>
     <div class="fct-body">${govde}</div>
    </div>`;
     const GORUNEN = 8; // Gastro: grup başına 8 satır, kalanı "N seçenek daha"
-    const katGovde = kategoriler.map(([k, n], i) => o.satir({ tur: 'checkbox', ad: 'kat', deger: k, etiket: o.katAd(k), sayi: n, thumb: KAT_THUMB[k] || '', xtra: i >= GORUNEN })).join('')
-      + (kategoriler.length > GORUNEN ? `<button class="fct-more" type="button" data-more="${kategoriler.length - GORUNEN} seçenek daha" data-less="Daha az göster">${kategoriler.length - GORUNEN} seçenek daha <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>` : '');
+    const daha = (n) => (n > GORUNEN ? `<button class="fct-more" type="button" data-more="${n - GORUNEN} seçenek daha" data-less="Daha az göster">${n - GORUNEN} seçenek daha <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>` : '');
+    // satırlar: [değer, ad, sayı, süs]; hepsi = Gastro gibi sıfır sayılı satırlar da görünür (süre/zorluk/bütçe), aksi hâlde yalnız bu modda geçenler
+    const grupGovde = (ad, satirlar) => satirlar.map(([v, et, n, susle], i) => o.satir({ tur: 'checkbox', ad, deger: v, etiket: et, sayi: n, susle, xtra: i >= GORUNEN })).join('') + daha(satirlar.length);
+    const say = (f) => liste.filter(f).length;
+    const SURE = { 15: [0, 15], '15-30': [15, 30], '30-45': [30, 45], '45-60': [45, 60], '60-120': [60, 120], 120: [120, 1e9] };
+    const katGovde = grupGovde('kat', kategoriler.map(([k, n]) => [k, o.katAd(k), n, '']));
+    const mutfakGovde = grupGovde('mutfak', (GASTRO_FCT.mutfak || []).map(([v, et, su]) => [v, et, say((x) => o.SLUG(x.t.mutfak) === v), su]).filter((r) => r[2] > 0));
+    const sureGovde = grupGovde('sure', (GASTRO_FCT.sure || []).map(([v, et, su]) => [v, et, say((x) => { const d = dk(x), [a, b] = SURE[v] || [0, 0]; return d > 0 && d >= a && d < b; }), su]));
+    const zorlukGovde = grupGovde('zorluk', (GASTRO_FCT.zorluk || []).map(([v, et, su]) => [v, et, say((x) => o.ZORLUK[x.t.zorluk] === v), su]));
+    const beslenmeGovde = grupGovde('beslenme', (GASTRO_FCT.beslenme || []).map(([v, et, su]) => [v, et, say((x) => (x.t.beslenme || []).includes(v)), su]).filter((r) => r[2] > 0));
+    const butceGovde = grupGovde('butce', (GASTRO_FCT.butce || []).map(([v, et, su]) => [v, et, say((x) => String(x.t.butce || '') === v), su]));
     const temizle = (ek = '') => `<a class="fil-clear" href="${M.dosya}" data-sg-temizle${ek}>`;
     const filtre = `<aside class="lst-side" id="lstSide" aria-label="Tarif filtreleri">
   <div class="sheet-head">
@@ -90,8 +105,12 @@ export default async function (o) {
    <div class="sheet-body">
    <div class="fil-top"><h3><i class="fa-solid fa-sliders" aria-hidden="true"></i> Filtreler</h3></div>
    ${fct({ grup: 'ara', ad: 'Ara', ikon: 'magnifying-glass', sinif: 'sg-fct-ara', govde: `<label class="sg-fct-ara__alan"><span class="sg-gizli">Tariflerde ara</span><input type="search" name="q" placeholder="Tarif adı ya da malzeme" autocomplete="off"></label>` })}
-   ${fct({ grup: 'kategori', ad: 'Kategori', sinif: 'cat-fct', govde: katGovde })}
-   ${fct({ grup: 'sure', ad: 'Süre', ikon: 'clock', govde: [['', 'Tümü', liste.length], ['30', '30 dk ve altı', sureN(30)], ['60', '60 dk ve altı', sureN(60)]].map(([v, a, n], i) => o.satir({ tur: 'radio', ad: 'sure', deger: v, etiket: a, sayi: n, secili: i === 0 })).join('') })}
+   ${fct({ grup: 'kategori', ad: 'Kategori', govde: katGovde }) /* cat-fct yok: Gastro o sınıfta onay kutusunu gizleyip küçük resim gösterir; Beyar H28a: checkbox + ad + sayı */}
+   ${mutfakGovde ? fct({ grup: 'mutfak', ad: 'Mutfak', ikon: 'earth-americas', govde: mutfakGovde }) : ''}
+   ${fct({ grup: 'sure', ad: 'Süre', ikon: 'clock', govde: sureGovde })}
+   ${fct({ grup: 'zorluk', ad: 'Zorluk', ikon: 'gauge-simple', govde: zorlukGovde })}
+   ${beslenmeGovde ? fct({ grup: 'beslenme', ad: 'Beslenme / Tip', ikon: 'heart-pulse', sinif: 'dt-fct', govde: beslenmeGovde }) : ''}
+   ${fct({ grup: 'butce', ad: 'Bütçe', govde: butceGovde })}
    ${M.kod !== 'alerji' ? fct({ grup: 'ikame', ad: 'Akıllı İkame', ikon: 'right-left', govde: o.satir({ tur: 'checkbox', ad: 'ikamesiz', deger: '1', etiket: 'Yalnız ikame gerektirmeyenler', sayi: liste.length - ikameli }) }) : ''}
    </div>
    <div class="sheet-foot">${temizle(' data-f-ayak')}Tümünü Temizle</a></div>

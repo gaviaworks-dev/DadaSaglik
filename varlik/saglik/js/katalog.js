@@ -1,4 +1,4 @@
-/* Mod sayfası tarif kataloğu: arama · süre · kategori · "yalnız ikamesiz" · sıralama · sayfalama (12'şer) ·
+/* Mod sayfası tarif kataloğu: arama · kategori · mutfak · süre · zorluk · beslenme/tip · bütçe (Gastro grupları, H28) · "yalnız ikamesiz" · sıralama · sayfalama (12'şer) ·
    genel alerjen süzgeci (DadaSaglik.uygunMu) · boş durum · mobil filtre alt sayfası.
    İşaretleme = Gastro tarif listesi (H18): .lst-side süzgeç, .lst-bar (.lst-sum · .btn-filter/.fb-count · .sort-dd), .lst-empty.
    Gastro'nun sunucuya giden davranışları (form gönderimi, sıralama bağlantıları) burada istemci tarafında; aç/kapa kalıpları
@@ -10,6 +10,7 @@
   var $ = function (s, k) { return (k || document).querySelector(s); };
   var $$ = function (s, k) { return Array.prototype.slice.call((k || document).querySelectorAll(s)); };
   var ADIM = 12;
+  var SURE = { '15': [0, 15], '15-30': [15, 30], '30-45': [30, 45], '45-60': [45, 60], '60-120': [60, 120], '120': [120, 1e9] };
   function kur(kok) {
     var S = window.DadaSaglik, iz = $('[data-sg-izgara]', kok), form = $('[data-sg-filtre]', kok), siralama = 'onerilen';
     var sayac = $('[data-sg-sonuc]', kok), bos = $('[data-sg-bos]', kok), pagi = $('[data-sg-sayfala]', kok), mod = kok.getAttribute('data-mod');
@@ -21,11 +22,16 @@
     dolgu.innerHTML = '<span class="sg-cta-kart__ikon"><i class="fa-solid fa-basket-shopping sg-fa" style="font-size:22px" aria-hidden="true"></i></span><h3>Dolapta ne var?</h3><p>Elindeki malzemelerle bu moda uygun tarif bul.</p><span class="sg-kart__alt">Dolabı aç →</span>';
     function d() {
       var f = new FormData(form);
-      return { q: S.normal(f.get('q') || '').trim(), sure: +(f.get('sure') || 0), ikamesiz: !!f.get('ikamesiz'), kat: f.getAll('kat') };
+      return { q: S.normal(f.get('q') || '').trim(), sure: f.getAll('sure'), ikamesiz: !!f.get('ikamesiz'), kat: f.getAll('kat'), mutfak: f.getAll('mutfak'), zorluk: f.getAll('zorluk'), beslenme: f.getAll('beslenme'), butce: f.getAll('butce') };
     }
     function uyar(k, x) {
       if (!S.uygunMu(k)) return false;
-      if (x.sure && +k.dataset.sure > x.sure) return false;
+      // Gastro grupları (H28): grup içinde VEYA, gruplar arası VE. Süre aralıkları Gastro'nunki (dk): 15 · 15-30 · 30-45 · 45-60 · 60-120 · 120+
+      if (x.sure.length) { var dk = +k.dataset.sure; if (!(dk < 999) || !x.sure.some(function (v) { var r = SURE[v] || [0, 0]; return dk >= r[0] && dk < r[1]; })) return false; }
+      if (x.mutfak.length && x.mutfak.indexOf(k.dataset.mutfak) < 0) return false;
+      if (x.zorluk.length && x.zorluk.indexOf(k.dataset.zorluk) < 0) return false;
+      if (x.butce.length && x.butce.indexOf(k.dataset.butce) < 0) return false;
+      if (x.beslenme.length) { var bs = (k.dataset.beslenme || '').split(' '); if (!x.beslenme.some(function (v) { return bs.indexOf(v) > -1; })) return false; }
       if (x.ikamesiz && +k.dataset.ikame > 0) return false;
       if (x.kat.length) { var ks = k.dataset.kat.split(' '); if (!x.kat.some(function (c) { return ks.indexOf(c) > -1; })) return false; }
       if (x.q && S.normal(k.dataset.ad + ' ' + k.textContent).indexOf(x.q) < 0) return false;

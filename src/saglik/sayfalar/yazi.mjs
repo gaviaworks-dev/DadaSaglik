@@ -9,9 +9,12 @@ const KAT_DIS = new Set(['icecek', 'sos', 'tursu-ve-konserve', 'recel']);
 /** Tüm yazılar (mod sırası) + her yazıya TEKİL tarif görseli (listede aynı foto iki kez görünmez) + mod başına bir tarif-CTA görseli. */
 export function yaziVerisi(o) {
   const { MODLAR, icerik, ESLESME } = o;
-  const alinan = new Set(Object.values(o.SAHNE || {}).map((t) => t.slug));
+  // H26: hub + mod hero'ları da alınmış sayılır; görsel yalnız hafif tariflerden (o.sahneHafif — kızartma/acı/tatlı/ağır et yok, ortak.mjs)
+  const alinan = new Set([...Object.values(o.SAHNE || {}), o.HUB_SAHNE].filter(Boolean).map((t) => t.slug));
   const sec = (kod, bas) => {
-    const l = ESLESME[kod] || [];
+    const tum = ESLESME[kod] || [];
+    const hafif = o.sahneHafif ? tum.filter(({ t }) => o.sahneHafif(t)) : [];
+    const l = hafif.length ? hafif : tum;
     for (let k = 0; k < l.length; k++) {
       const t = l[(bas + k) % l.length].t;
       if (alinan.has(t.slug) || t.kategori.some((x) => KAT_DIS.has(x))) continue;

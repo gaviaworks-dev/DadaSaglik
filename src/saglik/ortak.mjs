@@ -230,21 +230,57 @@ export function partnerBolumu(M) {
 </section>`;
 }
 
-/* ---------- Sahne (hero) seçimi: her moda farklı, uyumlu ve görsel olarak güçlü bir tarif ---------- */
+/* ---------- Sahne (hero) seçimi: her moda farklı, uyumlu ve SAĞLIK ALANINA YAKIŞAN hafif bir tarif ---------- */
+// H26 (Beyar 2 Kas): hero'da kızartma, parlak yağ, acı biber, tatlı/şekerli, ağır et görünmez. Seçim kurallı + küçük açık listeler:
+//  1) sahneHafif(t): ağır kategori ve başlık sözcükleri elenir; hafif kategori (salata, sebze, zeytinyağlı, bakliyat, balık, çorba, meze) şart.
+//  2) SAHNE_RED: kural geçse de görsele bakılıp elenenler (slug → neden).
+//  3) SAHNE_TERCIH: görsele bakılıp seçilenler (mod/hub → slug). Tercih o modun ESLESME listesinde değilse ya da elendiyse kural seçer
+//     (hub: en çok moda uyan, mod: ESLESME sırasıyla ilk hafif tarif). Yazı görselleri de (yazi.mjs) aynı süzgeci kullanır.
 const SAHNE_KAT_DIS = new Set(['icecek', 'sos', 'tursu-ve-konserve', 'recel']);
+const SAHNE_AGIR_KAT = new Set([...SAHNE_KAT_DIS, 'tatli', 'dondurma-ve-soguk-tatlilar', 'meyve-tarifleri', 'kofte-ve-kebap', 'kirmizi-et', 'sakatat', 'sandvic-burger-ve-durum', 'pizza-ve-pide', 'hamur-isi', 'ekmek', 'manti-ve-dolgulu-hamurlar', 'atistirmalik', 'kahvaltilik']);
+const SAHNE_HAFIF_KAT = new Set(['salata', 'sebze', 'zeytinyaglilar', 'bakliyat', 'balik-ve-deniz-urunleri', 'corba', 'meze']);
+const SAHNE_AGIR_SOZ = /kizar|citir|tava|airfryer|kavurma|acili|aci-|pul-biber|harissa|harra|baharatli|berbere|tatli|balli|helva|serbet|karamel|cikolata|tereyag|kremali|peynirli|kasarli|graten|borek|kofte|sucuk|pastirma|pestil/;
+const SAHNE_RED = {
+  'boquerones-ispanyol-usulu-sirkeli-marine-hamsi': 'tabakta parlak yağ havuzu',
+  'zeytin-ezmesi-zeytinyagli-meze': 'koyu, yağlı ezme; iştah açmıyor',
+  'tuzda-levrek-turk-usulu-firinda-kabuk-pisirme-teknigi': 'tuz kabuğu: sodyum mesajına ters',
+  'butun-izgara-sazan-avusturya-usulu-noel-arifesi-odun-atesinde-sazan': 'kararmış, yanık görünümlü balık',
+  'etli-kuru-fasulye-geleneksel-ev-yapimi-tarif': 'yağlı etli ağır yemek',
+  'kiymali-kereviz-yahnisi-soganli-domates-soslu': 'koyu, ağır kıymalı yahni',
+  'kereviz-yemegi-etli-kislik-kereviz-yemegi': 'etli ağır yemek',
+  'kuzu-incik-corbasi-duduklu-tencerede-kemik-iligi-aromali-corba': 'kemik iliği, ağır et',
+  'kazak-usulu-sorpa-etli-eriste-corbasi': 'etli erişte, ağır',
+  'pav-bhaji-hint-usulu-baharatli-sebze-ezmesi-ve-ekmek': 'tereyağlı ekmek + acı sos',
+  'zeytinyagli-ayva-nar-eksili-kislik-meze': 'karamelize, şekerli görünüm',
+  'firinda-bal-kabagi-cevizli-tarcinli': 'tarçınlı tatlı gibi görünüyor (diyabet)',
+  'murekkep-baligi-sote-soganli-domates-soslu': 'yağlı sote',
+  'labne-mezesi-zeytinyagli-suzme-yogurt': 'süt ürünü odaklı; alerji/laktoz bağlamında ters mesaj',
+};
+const SAHNE_TERCIH = {
+  hub: 'mevsim-salatasi-karisik-yesillikli-taze-salata', // 6 modun 6'sına uyar; taze yeşillik, yağ/kızartma yok
+  colyak: 'yesil-mercimek-salatasi-naneli-zeytinyagli-meze', // bakliyat salatası (değişmedi)
+  diyabet: 'balik-bugulama-sebzeli-buharda-pisen-balik-tarifi', // buharda balık + sebze; eski: harissalı acı çorba
+  alerji: 'izgara-tavuklu-renkli-salata-misirli-biberli-tarif', // ızgara tavuk + renkli salata; eski: salçalı beyaz pilav
+  laktoz: 'zeytinyagli-semizotu-soganli-pirincli', // zeytinyağlı yeşillik (değişmedi)
+  ibs: 'somon-pose-dereotu-yogurt-soslu', // haşlanmış somon, limon; eski: yağ havuzunda marine hamsi
+  kalp: 'babagannus-tahinli-patlican-mezesi', // közlenmiş patlıcan (değişmedi)
+};
+export const sahneHafif = (t) => !SAHNE_RED[t.slug] && !SAHNE_AGIR_SOZ.test(t.slug)
+  && !t.kategori.some((k) => SAHNE_AGIR_KAT.has(k)) && t.kategori.some((k) => SAHNE_HAFIF_KAT.has(k));
+const _sahneSayi = new Map(); for (const M of MODLAR) for (const { t } of ESLESME[M.kod]) _sahneSayi.set(t.slug, (_sahneSayi.get(t.slug) || 0) + 1);
+export const HUB_SAHNE = (() => {
+  const l = TARIFLER.filter((t) => (_sahneSayi.get(t.slug) || 0) >= 5 && sahneHafif(t));
+  return l.find((t) => t.slug === SAHNE_TERCIH.hub)
+    || l.sort((a, b) => _sahneSayi.get(b.slug) - _sahneSayi.get(a.slug) || (b.puan || 0) - (a.puan || 0))[0] || null;
+})();
 export const SAHNE = (() => {
-  const alinan = new Set(); const s = {};
+  const alinan = new Set(HUB_SAHNE ? [HUB_SAHNE.slug] : []); const s = {};
   for (const M of MODLAR) {
-    const x = ESLESME[M.kod].find(({ t }) => !alinan.has(t.slug) && !t.kategori.some((k) => SAHNE_KAT_DIS.has(k)));
-    if (x) { alinan.add(x.t.slug); s[M.kod] = x.t; }
+    const l = ESLESME[M.kod].map((x) => x.t).filter((t) => !alinan.has(t.slug));
+    const t = l.find((x) => x.slug === SAHNE_TERCIH[M.kod] && sahneHafif(x)) || l.find(sahneHafif) || l.find((x) => !x.kategori.some((k) => SAHNE_KAT_DIS.has(k)));
+    if (t) { alinan.add(t.slug); s[M.kod] = t; }
   }
   return s;
-})();
-export const HUB_SAHNE = (() => {
-  const sayi = new Map(); for (const M of MODLAR) for (const { t } of ESLESME[M.kod]) sayi.set(t.slug, (sayi.get(t.slug) || 0) + 1);
-  const al = new Set(Object.values(SAHNE).map((t) => t.slug));
-  return TARIFLER.filter((t) => (sayi.get(t.slug) || 0) >= 5 && !al.has(t.slug) && !t.kategori.some((k) => SAHNE_KAT_DIS.has(k)))
-    .sort((a, b) => sayi.get(b.slug) - sayi.get(a.slug) || (b.puan || 0) - (a.puan || 0))[0] || null;
 })();
 export const SAHNE_SLUGLARI = [...Object.values(SAHNE), HUB_SAHNE].filter(Boolean).map((t) => t.slug);
 export const BANT_GORSEL = SAHNE.kalp ? tarifGorsel(SAHNE.kalp) : '';
