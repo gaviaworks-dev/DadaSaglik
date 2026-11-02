@@ -344,3 +344,7 @@
 .sg-secki-hero + .sg-sekme-bolum { padding-top: calc(var(--sg-s8) + var(--sg-s4)) !important; padding-bottom: var(--sg-s4) !important; }
 .sg-sekmeler { margin-inline: auto; }
 .sg-secki-hero + .sg-sekme-bolum::before { height: var(--sg-s8); }
+/* Sekmeler (6. revize): banner alt kenarı ile Dolap çizgisi arasında dikeyde tam ortalı — üst/alt boşluk eşit */
+.sg-secki-hero + .sg-sekme-bolum { padding-top: var(--sg-s5) !important; padding-bottom: var(--sg-s5) !important; }
+.sg-secki-hero + .sg-sekme-bolum { background: color-mix(in srgb, var(--r-a, var(--sg-tema-a)) 70%, var(--sg-zemin)); }
+.sg-secki-hero + .sg-sekme-bolum::before { height: 100%; }
