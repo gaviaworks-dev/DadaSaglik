@@ -129,6 +129,8 @@ async function saglikSayfasi({ dosya, baslik, aciklama, main, css = [], js = [],
   html = basliklar(html, baslik, aciklama, { dosya, gorsel });
   html = html.replace(/\s*<a href="https:\/\/dadagastro\.com\/tarif-ekle"[^>]*>[^<]*<\/a>/g, '');
   // Tarif kartı Gastro tarif listesi CSS'iyle çizilir (kart + .lst-grid ızgarası birebir); detay sayfası Gastro detay CSS'inde kalır
+  // Titreme önleme: Gilroy dosyaları <head> başında preload (Gastro tokens CSS'teki aynı URL'ler; ilk boyamada font hazır)
+  html = zorunlu(html, '<head>', `<head>\n${['Gilroy-Medium', 'Gilroy-ExtraBold'].map((f) => `<link rel="preload" href="varlik/gastro/varliklar/fonts/gilroy/${f}.woff2" as="font" type="font/woff2" crossorigin>`).join('\n')}\n<link rel="preload" href="varlik/gastro/varliklar/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>`, 'font preload');
   if (!detay) html = zorunlu(html, '</head>', '<link rel="stylesheet" href="varlik/gastro/varliklar/reference/tarif-liste/tarif-liste.css">\n</head>', 'tarif-liste css');
   return yorum('https://dadagastro.com (kabuk: tarif detayı)', 'Health sayfası') + await kabukEkle(html, { css: ['yazi', ...css], js });
 }

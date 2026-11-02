@@ -3,6 +3,7 @@
 //   main = o.sayfa(icerik, aktif)  (Sağlık alt menüsü + zemin)
 import { readFile } from 'node:fs/promises';
 import { readFileSync, existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { MODLAR, MOD, eslestir, tarifBilgi } from './modlar.mjs';
 import { ALERJENLER, siniflandir } from './malzeme.mjs';
@@ -108,6 +109,9 @@ export function altMenu(aktif) {
   return `<nav class="sg-ust" aria-label="${MARKA} menüsü"><div class="wrap">`
     + `<a class="sg-ust__logo" href="saglik.html" tabindex="-1" aria-hidden="true">${saglikLogoSvg({ sinif: 'sg-ust__logo-svg', etiket: '' })}</a>`
     + `<div class="sg-ust__menu"><div class="disc-tabs sg-ust__sekmeler">${ev}${linkler}</div></div>`
+    // Titreme önleme: sekme şeridinin yatay kaydırması ilk boyamadan ÖNCE eşzamanlı ayarlanır (önceki sayfanın konumu korunur,
+    // etkin sekme görünmüyorsa en az kaydırmayla görünür yapılır); yükleme sonrası JS kaydırması yok.
+    + `<script>(function(){try{var m=document.currentScript.parentNode.querySelector('.sg-ust__menu');if(!m)return;var k=+sessionStorage.getItem('dadagastrohealth.sekme.x')||0;m.scrollLeft=k;var a=m.querySelector('.dt.active');if(!a)return;var mr=m.getBoundingClientRect(),ar=a.getBoundingClientRect();if(ar.left<mr.left+8)m.scrollLeft-=mr.left+8-ar.left+24;else if(ar.right>mr.right-8)m.scrollLeft+=ar.right-(mr.right-8)+24;}catch(e){}})();</script>`
     + `</div></nav>`;
 }
 export const sayfa = (icerik, aktif) => `<div class="sg-sayfa"${MOD[aktif] ? ` data-renk="${MOD[aktif].renk}" data-mod="${aktif}"` : ''}>\n${altMenu(aktif)}\n<div class="sg-alerjen-durum" id="sgAlerjenDurum" hidden></div>\n${icerik}\n</div>`;
@@ -205,6 +209,19 @@ export function sss(sorular, { onek = 'sss', renk = '' } = {}) {
    Başlık "Bizimle iş birliği yapan kurumlar" (Beyar 2 Kas; canlı öncesi yazılı iş birliği + logo izni şart, yoksa "Bu alanda çalışan kurumlar"a döner); hepsi data-yalniz-admin. */
 export const partnerLogoYol = (p) => (p.logo ? `varlik/saglik/partner/${String(p.logo).replace(/\.[a-z0-9]+$/i, '')}.webp` : null);
 export const partnerListe = (kod) => (kaynaklar[kod] || []).filter((p) => p && p.ad && p.site && !/çıkar/i.test(p.durum || ''));
+/** Logo görselinin doğal boyutu (width/height özniteliği → yüklenirken yer ayrılır, CLS 0). SVG viewBox, raster sips. */
+const _boyut = new Map();
+export function logoBoyut(yol) {
+  if (_boyut.has(yol)) return _boyut.get(yol);
+  let b = null;
+  try {
+    const tam = path.join(KOK, yol);
+    if (/\.svg$/i.test(yol)) { const v = readFileSync(tam, 'utf8').match(/viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/); if (v) b = [Math.round(+v[1]), Math.round(+v[2])]; }
+    else { const o = execFileSync('sips', ['-g', 'pixelWidth', '-g', 'pixelHeight', tam]).toString(); b = [+o.match(/pixelWidth: (\d+)/)[1], +o.match(/pixelHeight: (\d+)/)[1]]; }
+  } catch { b = null; }
+  _boyut.set(yol, b); return b;
+}
+export const logoImg = (yol, alt) => { const b = logoBoyut(yol); return `<img src="${yol}" alt="${esc(alt)}"${b ? ` width="${b[0]}" height="${b[1]}"` : ''} loading="lazy" decoding="async">`; };
 export function partnerLogo(p) {
   const ly = partnerLogoYol(p);
   const svg = p.logo && /\.svg$/i.test(p.logo) && var_(`varlik/saglik/partner/${p.logo}`) ? `varlik/saglik/partner/${p.logo}` : null;
@@ -214,13 +231,13 @@ export function partnerLogo(p) {
 export function logoSeridi(liste, { sinif = '', baslik = 'Bizimle iş birliği yapan kurumlar' } = {}) {
   const l = liste.filter((p) => partnerLogo(p));
   if (!l.length) return '';
-  return `<div class="sg-logo-serit ${l.length >= 5 ? 'sg-logo-serit--yay ' : ''}${sinif}" data-yalniz-admin="1"><span class="sg-logo-serit__bas">${esc(baslik)}</span><ul>${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></div>`;
+  return `<div class="sg-logo-serit ${l.length >= 5 ? 'sg-logo-serit--yay ' : ''}${sinif}" data-yalniz-admin="1"><span class="sg-logo-serit__bas">${esc(baslik)}</span><ul>${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}">${logoImg(partnerLogo(p), `${p.ad} logosu`)}</a></li>`).join('')}</ul></div>`;
 }
 /** Hub hero sağ kartı: "Bizimle iş birliği yapan kurumlar" logo ızgarası (yalnız admin bayraklı). */
 export function kurumKutusu(liste) {
   const l = liste.filter((p) => partnerLogo(p));
   if (!l.length) return '';
-  return `<aside class="sg-secki-kutu sg-kurum-kutu" data-yalniz-admin="1" aria-labelledby="kurum-bas"><h2 id="kurum-bas">Bizimle iş birliği yapan kurumlar</h2><ul class="sg-kurum-kutu__izgara">${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></aside>`;
+  return `<aside class="sg-secki-kutu sg-kurum-kutu" data-yalniz-admin="1" aria-labelledby="kurum-bas"><h2 id="kurum-bas">Bizimle iş birliği yapan kurumlar</h2><ul class="sg-kurum-kutu__izgara">${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}">${logoImg(partnerLogo(p), `${p.ad} logosu`)}</a></li>`).join('')}</ul></aside>`;
 }
 export function partnerBolumu(M) {
   const liste = partnerListe(M.kod);
@@ -228,7 +245,7 @@ export function partnerBolumu(M) {
   const kart = (p) => {
     const src = partnerLogo(p);
     const logo = src
-      ? `<span class="sg-partner__logo"><img src="${src}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></span>`
+      ? `<span class="sg-partner__logo">${logoImg(src, `${p.ad} logosu`)}</span>`
       : `<span class="sg-partner__logo sg-partner__logo--yer" aria-hidden="true"><span>${esc(p.ad)}</span></span>`;
     return `<article class="sg-kart sg-partner" data-logo="${src ? 'var' : 'yok'}">${logo}<div class="sg-partner__govde"><h3>${esc(p.ad)}</h3><p>${esc(p.tanim || '')}</p><a class="sg-partner__site" href="${esc(p.site)}" target="_blank" rel="noopener nofollow">${ui('bag', 16)}Resmî site <span class="sg-gizli">(yeni sekmede açılır)</span></a></div></article>`;
   };

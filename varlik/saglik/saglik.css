@@ -383,3 +383,15 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
 .pg-saglik .r-card, .pg-saglik .r-card:hover { box-shadow: none !important; transform: none !important; }
 .sg-ust, html.sg-ust-gizli .sg-ust, .sg-ust .disc-tabs, .sg-sekmeler, .sg-mod-bar__sekmeler { box-shadow: none !important; }
 .sg-secki-hero + section, .sg-secki-hero + .sg-sekme-bolum { box-shadow: none !important; }
+
+/* =====================================================================
+   Titreme yok (Beyar 2 Kas): sekme çubuğu yükleme anında yer değiştirmez.
+   · Gastro header'ın gerçek alt kenarı --header-offset + 1px (topbar 40 + header 73 = 113 / mobil 63); yapışkan bar JS ölçümünden
+     ÖNCE de aynı yerde başlar (eskiden 112 → 113, 1px zıplama).
+   · Fontlar <head>'de preload (araclar/build.mjs) → ilk boyamada Gilroy hazır, metin genişliği kaymaz.
+   ===================================================================== */
+:root { --sg-ust-bosluk: calc(var(--header-offset, 112px) + 1px); }
+.sg-sayfa { padding-top: calc(var(--header-offset, 112px) + 1px); }
+/* Sekme köşesi = Gastro BUTON köşesi (--radius-md 12px; tokens-n1Tp8NEY.css:1 · portal-DQfW7by7.css:1 .btn/.btn-login border-radius:var(--radius-md)) */
+.sg-ust .disc-tabs, .sg-ust .disc-tabs .dt, .sg-sekmeler, .sg-sekmeler .dt, .sg-mod-bar__sekmeler, .sg-mod-bar__sekmeler .dt { border-radius: var(--radius-md, 12px); }
+.sg-ust__ev .fa-house { display: inline-block; width: 1.125em; text-align: center; } /* FA house 576/512 em: ikon yazı tipi gelmeden de aynı genişlik */

@@ -115,6 +115,9 @@
     var m = $('.sg-ust__menu'); if (!m) return;
     function tasma() { m.classList.toggle('sg-tasma-sag', m.scrollLeft + m.clientWidth < m.scrollWidth - 2); m.classList.toggle('sg-tasma-sol', m.scrollLeft > 2); }
     m.addEventListener('scroll', tasma, { passive: true }); addEventListener('resize', tasma); tasma();
+    // sekme şeridi konumu sayfalar arası korunur (satır içi betik ilk boyamadan önce geri yükler → titreme yok)
+    function sakla() { try { sessionStorage.setItem('dadagastrohealth.sekme.x', String(Math.round(m.scrollLeft))); } catch (e) {} }
+    m.addEventListener('scroll', sakla, { passive: true }); m.addEventListener('click', sakla); addEventListener('pagehide', sakla);
     var a = $('[aria-current="page"]:not(.sg-ust__ev)', m); if (!a) return;
     function goster() { var mr = m.getBoundingClientRect(), ar = a.getBoundingClientRect(); if (ar.left < mr.left + 8 || ar.right > mr.right - 8) m.scrollLeft += (ar.left + ar.width / 2) - (mr.left + mr.width / 2); }
     goster(); addEventListener('resize', goster);

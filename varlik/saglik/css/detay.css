@@ -2,7 +2,7 @@
    0) Alt menü header'ın altında (mod sayfalarındaki .sg-sayfa boşluğunun aynısı); Gastro .rd-top'un header boşluğunu alt menü üstlenir.
    1) Puan dağılımı (rs-bars) verisi yok: özet tek sütun, ortalama ortada (Gastro .rs-avg aynı).
    2) Paylaş "…" Gastro'da #rdSharePop açar; popover yok: düğme aynı satırdaki kanalları açar (Gastro düğmeleri aynen). */
-.pg-tarif-detay .page-main > .sg-ust { margin-top: var(--header-offset, 112px); }
+.pg-tarif-detay .page-main > .sg-ust { margin-top: calc(var(--header-offset, 112px) + 1px); }
 .pg-saglik.pg-tarif-detay .rd-top { padding-top: 16px; } /* Gastro: header altı → sayfa yolu 15–16px (1440 ölçüldü) */
 .rev-summary.sg-rev-tek { grid-template-columns: 1fr; }
 .rev-summary.sg-rev-tek .rs-avg { border-right: 0; padding-right: 0; }
