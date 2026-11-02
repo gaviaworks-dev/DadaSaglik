@@ -57,9 +57,9 @@ ok(await p.locator('a.sg-fct-saglik[href="saglik-kalp.html"]').count() === 1 && 
 await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
 const menu = await p.$$eval('.sg-ust__menu > a', (l) => l.map((a) => a.textContent.trim() || a.getAttribute('aria-label')));
 ok(menu.length === 7 && /ana sayfa/i.test(menu[0]), `alt menü: ev ikonu + 6 mod (${menu.join(' | ')})`);
-ok(await p.$eval('.sg-ust__menu [aria-current="page"]', (a) => a.textContent.trim()) === 'Glutensiz', 'aktif sekme işaretli');
+ok(await p.$eval('.sg-ust__menu .dt.active[aria-current="page"]', (a) => a.textContent.trim()) === 'Glutensiz', 'aktif sekme işaretli');
 const rozet = await p.$eval('.header .brand', (b) => getComputedStyle(b, '::after').content);
-ok(/sağlık/.test(rozet), `header logosu yanında "sağlık" rozeti (CSS ::after: ${rozet})`);
+ok(/health/.test(rozet), `header logosu yanında "health" rozeti (CSS ::after: ${rozet})`);
 await p.mouse.wheel(0, 900); await p.waitForTimeout(250); await p.mouse.wheel(0, 300); await p.waitForTimeout(500);
 const st = await p.evaluate(() => { const tb = document.querySelector('.topbar'), h = document.querySelector('header.header'), u = document.querySelector('.sg-ust'); return { gizli: document.documentElement.classList.contains('sg-ust-gizli'), tb: tb.getBoundingClientRect().bottom, hb: h.getBoundingClientRect().bottom, u: u.getBoundingClientRect().top, logo: getComputedStyle(document.querySelector('.sg-ust__logo')).visibility }; });
 ok(st.gizli && st.hb <= st.tb + 1 && Math.abs(st.u - st.tb) <= 1 && st.logo === 'visible', `sticky aşağı: header gizli, siyah bant + Sağlık barı görünür, mini kilit (${JSON.stringify(st)})`);
