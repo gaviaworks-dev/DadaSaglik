@@ -18,7 +18,7 @@
     document.title = t.b.split('|')[0].trim() + ' — ' + M.uyum + ' · Dada Gastro Sağlık (prototip)';
     var gizli = al && al.length && window.DadaSaglik && (t.pk || t.al.some(function (a) { return al.indexOf(a) > -1 || (a === 'gluten-yulaf' && al.indexOf('gluten') > -1); }));
     kok.innerHTML = '<div class="sg-detay-ust"><div>'
-      + '<span class="sg-uyum">' + svg(TIK, 14) + esc(M.uyum) + ' uyumlu</span>'
+      + '<span class="sg-uyum"><i class="fa-solid fa-check sg-fa" aria-hidden="true"></i>' + esc(M.uyum) + ' uyumlu</span>'
       + '<h1>' + esc(t.b.split('|')[0].trim()) + '</h1>'
       + (t.o ? '<p class="sg-lead">' + esc(t.o) + '</p>' : '')
       + '<div class="sg-detay-meta">' + (t.sure ? '<span><b>' + t.sure + ' dk</b> toplam</span>' : '') + (t.p ? '<span><b>' + t.p + '</b> ' + esc(t.pb || 'kişilik') + '</span>' : '') + (t.z ? '<span>' + esc(t.z) + '</span>' : '') + (t.mt ? '<span>' + esc(t.mt) + '</span>' : '') + '</div>'

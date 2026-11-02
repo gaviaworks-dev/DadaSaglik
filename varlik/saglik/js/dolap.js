@@ -55,12 +55,13 @@
     }).join('');
   }
   function kart(slug, ik, eksik) {
-    var t = V.tarifler[slug], M = durum.mod && V.modlar[durum.mod];
-    var ikH = M ? (ik.length ? '<p class="sg-tarif__ikame"><span class="sg-tarif__ikame-bas">Akıllı ikame</span> ' + ik.slice(0, 2).map(function (x) { return '<span class="sg-tarif__ikame-oge">' + esc(x[0]) + ' → <b>' + esc(x[1]) + '</b></span>'; }).join('') + '</p>' : '<p class="sg-tarif__ikame sg-tarif__ikame--yok">' + svg(TIK) + '<span>İkame gerekmez</span></p>') : '';
-    return '<article class="sg-kart sg-tarif"' + (M ? ' data-renk="' + M.renk + '"' : '') + ' data-alerjen="' + esc(t.al.join(' ')) + '" data-paketli="' + t.pk + '">'
-      + '<div class="sg-tarif__medya"><img src="' + esc(t.k) + '" alt="' + esc(t.b) + ' — Dada Gastro tarif fotoğrafı" width="640" height="429" loading="lazy" decoding="async">' + (M ? '<span class="sg-uyum">' + svg(TIK, 14) + esc(M.uyum) + '</span>' : '') + '<span class="sg-eslesme">' + (eksik ? 'Eksik: ' + esc((V.dk[eksik] || {}).ad || eksik) : '✓ Hepsi dolapta') + '</span></div>'
-      + '<div class="sg-kart__govde"><h3><a class="sg-tarif__bag" href="saglik-tarif.html?t=' + encodeURIComponent(slug) + (durum.mod ? '&mod=' + durum.mod : '') + '">' + esc(t.b.split('|')[0].trim()) + '</a></h3>' + ikH
-      + '<p class="sg-tarif__meta">' + (t.sure ? '<span>' + svg(SAAT) + t.sure + ' dk</span>' : '') + (t.z ? '<span>' + esc(t.z) + '</span>' : '') + '</p></div></article>';
+    var t = V.tarifler[slug], M = durum.mod && V.modlar[durum.mod], b = t.b.split('|')[0].trim();
+    var ikH = M ? (ik.length ? '<div class="sg-r-ikame"><span class="sg-r-ikame__bas"><i class="fa-solid fa-right-left" aria-hidden="true"></i> Akıllı ikame</span>' + ik.slice(0, 2).map(function (x) { return '<span class="sg-tarif__ikame-oge">' + esc(x[0]) + ' → <b>' + esc(x[1]) + '</b></span>'; }).join('') + '</div>' : '<div class="sg-r-ikame sg-r-ikame--yok"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> İkame gerekmez</div>') : '';
+    return '<article class="r-card sg-tarif"' + (M ? ' data-renk="' + M.renk + '"' : '') + ' data-alerjen="' + esc(t.al.join(' ')) + '" data-paketli="' + t.pk + '">'
+      + '<div class="r-media-wrap"><div class="r-media" role="img" aria-label="' + esc(b) + ' — Dada Gastro tarif fotoğrafı" style="background-image:url(\'' + esc(t.k) + '\')"><span class="r-chip">' + (eksik ? 'Eksik: ' + esc((V.dk[eksik] || {}).ad || eksik) : '✓ Hepsi dolapta') + '</span></div></div>'
+      + '<div class="r-body"><h4><a class="sg-tarif__bag" href="saglik-tarif.html?t=' + encodeURIComponent(slug) + (durum.mod ? '&mod=' + durum.mod : '') + '">' + esc(b) + '</a></h4>'
+      + '<div class="r-facts">' + (t.sure ? '<span><i class="fa-solid fa-clock" aria-hidden="true"></i> <span class="rf-txt">' + t.sure + ' dk</span></span>' : '') + (t.z ? '<span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> <span class="rf-txt">' + esc(t.z) + '</span></span>' : '') + (t.p ? '<span class="f-serv"><i class="fa-solid fa-utensils" aria-hidden="true"></i> <span class="rf-txt">' + t.p + ' ' + esc(t.pb || 'kişilik') + '</span></span>' : '') + '</div>'
+      + ikH + (M ? '<div class="r-foot sg-r-foot"><span class="sg-r-uyum"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> ' + esc(M.uyum) + ' uyumlu</span></div>' : '') + '</div></article>';
   }
   function grup(baslik, liste, eksikli) {
     if (!liste.length) return '';
@@ -69,7 +70,7 @@
   }
   function sonucCiz() {
     var kap = $('[data-sg-dolap-sonuc]'), e = etkin();
-    if (!e.length) { kap.innerHTML = '<p class="sg-ikincil sg-bos-satir">' + svg('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 10h14M9 6.5v1M9 13.5v2"/>', 24) + 'Malzeme seçtikçe sonuçlar burada görünür. Tuz, su, yağ ve baharatlar evde var sayılır.</p>'; return; }
+    if (!e.length) { kap.innerHTML = '<p class="sg-ikincil sg-bos-satir"><i class="fa-solid fa-basket-shopping sg-fa" style="font-size:19px" aria-hidden="true"></i>Malzeme seçtikçe sonuçlar burada görünür. Tuz, su, yağ ve baharatlar evde var sayılır.</p>'; return; }
     var M = durum.mod && V.modlar[durum.mod];
     var aday = M ? Object.keys(M.t) : Object.keys(V.tarifler), hemen = [], bir = [];
     var al = S.alerjenler();
@@ -83,7 +84,7 @@
       if (!eksik.length) hemen.push([slug, ik]); else if (eksik.length === 1) bir.push([slug, ik, eksik[0]]);
     });
     kap.innerHTML = (hemen.length || bir.length) ? grup('Hemen yapabilirsin', hemen, false) + grup('1 malzeme eksik', bir, true)
-      : '<div class="sg-bos">' + svg('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 10h14M9 6.5v1M9 13.5v2"/>', 32) + '<h3>Bu malzemelerle eşleşen tarif yok</h3><p>Bir iki malzeme daha ekle' + (M ? ' ya da modu değiştir' : '') + '.</p></div>';
+      : '<div class="sg-bos"><i class="fa-solid fa-basket-shopping sg-fa" style="font-size:26px" aria-hidden="true"></i><h3>Bu malzemelerle eşleşen tarif yok</h3><p>Bir iki malzeme daha ekle' + (M ? ' ya da modu değiştir' : '') + '.</p></div>';
   }
   function hepsi() { renkAyarla(); kartCiz(); seritCiz(); sonucCiz(); adresYaz(); }
   function durumYaz(t) { $('[data-sg-dolap-durum]').textContent = t; }

@@ -17,7 +17,7 @@ export default async function (o) {
     M: null, sahne: hubSahne ? o.tarifSahne(hubSahne) : '', sahneAlt: hubSahne ? `${hubSahne.baslik.split('|')[0].trim()} — altı modun beşine uyan bir Dada Gastro tarifi` : '',
     kirinti: [['Dada Gastro Sağlık']], eyebrow: 'Dada Gastro Sağlık', baslik: esc(hub.baslik || 'Sofranı yaşam moduna göre kur'),
     giris: esc(hub.giris || 'Çölyak, diyabet, gıda alerjisi, süt hassasiyeti, hassas bağırsak ya da kalp sağlığı: Dada Gastro tariflerini senin moduna göre süzer, gerekirse malzemeyi akıllıca değiştirir.'),
-    istatistik: [['6', 'yaşam modu'], [String(toplam), 'uyumlu tarif'], [String(ikameToplam), 'akıllı ikameli']], not: o.UYARI, logolar: o.logoSeridi(MODLAR.map((M) => o.partnerListe(M.kod).find((p) => o.partnerLogo(p))).filter(Boolean)),
+    istatistik: [['6', 'yaşam modu'], [String(toplam), 'uyumlu tarif'], [String(ikameToplam), 'akıllı ikameli']], not: o.UYARI, sag: o.kurumKutusu(MODLAR.map((M) => o.partnerListe(M.kod).find((p) => o.partnerLogo(p))).filter(Boolean)),
   });
 
   const modKart = (M) => {
@@ -60,7 +60,7 @@ export default async function (o) {
   const bilgi = bilgiKart.length ? `<section class="sg-bolum sg-bolum--beyaz" aria-labelledby="bk">
  <div class="wrap">
   ${o.bolumBasi({ ust: 'Bilgi kartları', baslik: 'Her mod için kısa okumalar', id: 'bk', sag: '<a class="sg-bag" href="saglik-bilgi.html">Tüm yazılar</a>' })}
-  <div class="sg-izgara sg-izgara--3 sg-esit">${bilgiKart.map(([M, a]) => `<a class="sg-kart sg-bilgi-kart" href="saglik-bilgi.html#${esc(a.slug)}" data-renk="${M.renk}"><span class="sg-bilgi-kart__mod">${ui(M.ikon, 18)}${esc(o.SEKME[M.kod])}</span><h3>${esc(a.baslik)}</h3><p>${esc(a.ozet)}</p><span class="sg-kart__alt">${esc(a.okuma_dk || 3)} dk okuma ${ui('ok', 18)}</span></a>`).join('')}</div>
+  <div class="sg-izgara sg-izgara--3 sg-esit">${bilgiKart.map(([M, a]) => `<a class="sg-kart sg-bilgi-kart" href="saglik-bilgi.html#${esc(a.slug)}" data-renk="${M.renk}"><span class="sg-bilgi-kart__mod">${ui(M.ikon, 22)}${esc(o.SEKME[M.kod])}</span><h3>${esc(a.baslik)}</h3><p>${esc(a.ozet)}</p><span class="sg-kart__alt">${esc(a.okuma_dk || 3)} dk okuma ${ui('ok', 18)}</span></a>`).join('')}</div>
  </div>
 </section>` : '';
 

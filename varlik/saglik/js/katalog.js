@@ -12,7 +12,7 @@
     var kartlar = $$('.sg-tarif', iz), ilk = kartlar.slice(), goster = ADIM;
     var dolgu = document.createElement('a');
     dolgu.className = 'sg-kart sg-cta-kart sg-dolgu'; dolgu.href = 'saglik-dolap.html?mod=' + mod;
-    dolgu.innerHTML = '<span class="sg-cta-kart__ikon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 10h14M9 6.5v1M9 13.5v2"/></svg></span><h3>Dolapta ne var?</h3><p>Elindeki malzemelerle bu moda uygun tarif bul.</p><span class="sg-kart__alt">Dolabı aç →</span>';
+    dolgu.innerHTML = '<span class="sg-cta-kart__ikon"><i class="fa-solid fa-basket-shopping sg-fa" style="font-size:22px" aria-hidden="true"></i></span><h3>Dolapta ne var?</h3><p>Elindeki malzemelerle bu moda uygun tarif bul.</p><span class="sg-kart__alt">Dolabı aç →</span>';
     function d() {
       var f = new FormData(form);
       return { q: S.normal(f.get('q') || '').trim(), sure: +(f.get('sure') || 0), ikamesiz: !!f.get('ikamesiz'), kat: f.getAll('kat') };

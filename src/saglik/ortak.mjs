@@ -65,7 +65,10 @@ const UI = {
   ara: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
   filtre: '<path d="M4 6h16M7 12h10M10 18h4"/>',
 };
-export const ui = (ad, boy = 24) => _s(UI[ad] || '', boy);
+// Beyar 2 Kas: ikonlar Gastro'daki gibi DOLU (Font Awesome 6 solid; Gastro kabuğu all.min.css'i zaten yükler). Eski çizgisel SVG yolu: uiCizgi.
+const FA = { basak: 'wheat-awn', damla: 'droplet', kalkan: 'shield-halved', sut: 'glass-water', yaprak: 'leaf', kalp: 'heart-pulse', ok: 'arrow-right', saat: 'clock', kisi: 'user', tik: 'check', uyari: 'triangle-exclamation', gizle: 'ban', arti: 'plus', dolap: 'basket-shopping', kitap: 'utensils', bag: 'link', ara: 'magnifying-glass', filtre: 'sliders', bilgi: 'circle-info', zorluk: 'gauge-simple', porsiyon: 'utensils', degistir: 'right-left', yildiz: 'star' };
+export const ui = (ad, boy = 24) => `<i class="fa-solid fa-${FA[ad] || 'circle'} sg-fa" style="font-size:${Math.round(boy * 0.78)}px" aria-hidden="true"></i>`;
+export const uiCizgi = (ad, boy = 24) => _s(UI[ad] || '', boy);
 
 /* ---------- Mod meta ---------- */
 // Menü sekme adları (kısa); sıra = MODLAR sırası
@@ -130,21 +133,24 @@ export const alerjenKisa = (k) => ALERJEN_KISA[k] || k;
  * data-alerjen / data-paketli: saglik.js genel alerjen süzgeci (seçilen alerjen + aynı bant riski tüm listelerden kalkar).
  */
 export function tarifKart(t, r, M, { alerjenGoster = false, sira = 0, rozetMod = true } = {}) {
+  // Gastro tarif kartının kendi işaretlemesi (.r-card · .r-media + .r-chip kategori · .r-diet rozeti · .r-facts dolu ikonlar · .r-foot);
+  // Sağlık ekleri: mod rozeti (.r-diet içinde), Akıllı ikame satırı, uyum. data-* katalog/alerjen süzgeci içindir.
   const ik = r.ikameler || [];
   const ikHtml = ik.length
-    ? `<p class="sg-tarif__ikame"><span class="sg-tarif__ikame-bas">Akıllı ikame</span> ${ik.slice(0, 2).map((x) => `<span class="sg-tarif__ikame-oge">${esc(x.ad)} → <b>${esc(x.yerine)}</b></span>`).join('')}${ik.length > 2 ? ` <span class="sg-ikincil">+${ik.length - 2}</span>` : ''}</p>`
-    : `<p class="sg-tarif__ikame sg-tarif__ikame--yok">${ui('tik', 16)}<span>İkame gerekmez</span></p>`;
+    ? `<div class="sg-r-ikame"><span class="sg-r-ikame__bas"><i class="fa-solid fa-right-left" aria-hidden="true"></i> Akıllı ikame</span>${ik.slice(0, 2).map((x) => `<span class="sg-tarif__ikame-oge">${esc(x.ad)} → <b>${esc(x.yerine)}</b></span>`).join('')}${ik.length > 2 ? `<span class="sg-ikincil">+${ik.length - 2} ikame daha</span>` : ''}</div>`
+    : `<div class="sg-r-ikame sg-r-ikame--yok"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> İkame gerekmez</div>`;
   const al = t._b.alerjen.filter((a) => a !== 'gluten-yulaf');
   const alHtml = alerjenGoster ? `<p class="sg-tarif__alerjen">${al.length ? `<span class="sg-ikincil">İçerir:</span> ${al.map((a) => `<span class="sg-al">${esc(alerjenKisa(a))}</span>`).join('')}` : '<span class="sg-al sg-al--yok">Ana alerjen içermez</span>'}</p>` : '';
   const dk = sure(t);
-  return `<article class="sg-kart sg-tarif sg-gir" data-renk="${M.renk}" data-slug="${esc(t.slug)}" data-alerjen="${t._b.alerjen.join(' ')}" data-paketli="${t._b.paketli ? 1 : 0}" data-kat="${esc(t.kategori.join(' '))}" data-sure="${dk || 999}" data-ikame="${ik.length}" data-ikameler="${esc(ik.map((x) => x.ad + '→' + x.yerine).join('|'))}" data-puan="${t.puan || 0}" data-ad="${esc(t.baslik.toLocaleLowerCase('tr'))}" data-sira="${sira}">
- <div class="sg-tarif__medya">${foto(tarifGorsel(t), `${t.baslik} — Dada Gastro tarif fotoğrafı`)}${rozetMod ? `<span class="sg-uyum" data-renk="${M.renk}">${ui('tik', 14)}${esc(modUyumAdi(M))}</span>` : ''}</div>
- <div class="sg-kart__govde">
-  <p class="sg-tarif__kat">${esc(katAd(t.kategori[0] || ''))}</p>
-  <h3><a class="sg-tarif__bag" href="${tarifHref(t, M.kod)}">${esc(t.baslik.split('|')[0].trim())}</a></h3>
+  const baslik = t.baslik.split('|')[0].trim();
+  return `<article class="r-card sg-tarif sg-gir" data-renk="${M.renk}" data-slug="${esc(t.slug)}" data-alerjen="${t._b.alerjen.join(' ')}" data-paketli="${t._b.paketli ? 1 : 0}" data-kat="${esc(t.kategori.join(' '))}" data-sure="${dk || 999}" data-ikame="${ik.length}" data-ikameler="${esc(ik.map((x) => x.ad + '→' + x.yerine).join('|'))}" data-puan="${t.puan || 0}" data-ad="${esc(t.baslik.toLocaleLowerCase('tr'))}" data-sira="${sira}">
+ <div class="r-media-wrap"><div class="r-media" role="img" aria-label="${esc(baslik)} — Dada Gastro tarif fotoğrafı" style="background-image:url('${tarifGorsel(t)}')"><span class="r-chip">${esc(katAd(t.kategori[0] || ''))}</span>${rozetMod ? `<div class="r-diet"><span class="rd-b sg-rd-mod" data-renk="${M.renk}" title="${esc(modUyumAdi(M))} uyumlu" aria-label="${esc(modUyumAdi(M))} uyumlu">${ui(M.ikon, 16)}</span></div>` : ''}</div></div>
+ <div class="r-body">
+  <h4><a class="sg-tarif__bag" href="${tarifHref(t, M.kod)}">${esc(baslik)}</a></h4>
+  <div class="r-facts">${dk ? `<span><i class="fa-solid fa-clock" aria-hidden="true"></i> <span class="rf-txt">${dk} dk</span></span>` : ''}${t.zorluk ? `<span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> <span class="rf-txt">${esc(t.zorluk)}</span></span>` : ''}${t.porsiyon ? `<span class="f-serv"><i class="fa-solid fa-utensils" aria-hidden="true"></i> <span class="rf-txt">${t.porsiyon} ${esc(t.porsiyon_birimi || 'kişilik')}</span></span>` : ''}</div>
   ${ikHtml}
   ${alHtml}
-  <p class="sg-tarif__meta">${dk ? `<span>${ui('saat', 16)}${dk} dk</span>` : ''}${t.porsiyon ? `<span>${ui('kisi', 16)}${t.porsiyon} ${esc(t.porsiyon_birimi || 'kişilik')}</span>` : ''}${t.zorluk ? `<span>${esc(t.zorluk)}</span>` : ''}</p>
+  <div class="r-foot sg-r-foot"><span class="sg-r-uyum" data-renk="${M.renk}"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> ${esc(modUyumAdi(M))} uyumlu</span>${t.puan ? `<div class="r-stats"><span class="r-rate"><i class="fa-solid fa-star" aria-hidden="true"></i> ${(Number(t.puan) / 10).toFixed(1)}</span></div>` : ''}</div>
  </div>
 </article>`;
 }
@@ -205,6 +211,12 @@ export function logoSeridi(liste, { sinif = '', baslik = 'Bu alanda çalışan k
   const l = liste.filter((p) => partnerLogo(p));
   if (!l.length) return '';
   return `<div class="sg-logo-serit ${l.length >= 5 ? 'sg-logo-serit--yay ' : ''}${sinif}" data-yalniz-admin="1"><span class="sg-logo-serit__bas">${esc(baslik)}</span><ul>${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></div>`;
+}
+/** Hub hero sağ kartı: "Bu alanda çalışan kurumlar" logo ızgarası (yalnız admin bayraklı). */
+export function kurumKutusu(liste) {
+  const l = liste.filter((p) => partnerLogo(p));
+  if (!l.length) return '';
+  return `<aside class="sg-secki-kutu sg-kurum-kutu" data-yalniz-admin="1" aria-labelledby="kurum-bas"><h2 id="kurum-bas">Bu alanda çalışan kurumlar</h2><ul class="sg-kurum-kutu__izgara">${l.map((p) => `<li><a href="${esc(p.site)}" target="_blank" rel="noopener nofollow" title="${esc(p.ad)}"><img src="${partnerLogo(p)}" alt="${esc(p.ad)} logosu" loading="lazy" decoding="async"></a></li>`).join('')}</ul></aside>`;
 }
 export function partnerBolumu(M) {
   const liste = partnerListe(M.kod);

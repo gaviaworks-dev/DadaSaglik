@@ -10,21 +10,19 @@ export default async function (o) {
     const kategoriler = [...new Set(liste.map((x) => x.t.kategori[0]).filter(Boolean))]
       .map((k) => [k, liste.filter((x) => x.t.kategori[0] === k).length]).sort((a, b) => b[1] - a[1]);
 
-    // "Kimler için?" — Bilgilendirme sekmesinin ilk bölümü (Beyar 2 Kas: hero'dan çıktı, daha şık): her kitle bir kart, mod tonunda
+    // "Kimler için?" — hero'nun sağ kartı (Beyar 2 Kas: dar sol sütun + sağ kart düzeni korunur); her kitle ikonlu satır
     const KITLE_IKON = ['kisi', 'kalkan', 'kalp', 'arti'];
-    const kimler = `<section class="sg-bolum sg-kimler" data-renk="${M.renk}" aria-labelledby="km-${M.kod}">
- <div class="wrap">
-  ${o.bolumBasi({ ust: 'Kapsam', baslik: 'Bu mod kimler için?', alt: esc(M.slogan), id: `km-${M.kod}` })}
-  <ul class="sg-ortala sg-kimler__liste${M.kimler.length === 3 ? ' sg-kol-3' : ''}">${M.kimler.map((k, i) => `<li class="sg-kart sg-kimler__kart"><span class="sg-kimler__ikon">${ui(KITLE_IKON[i % 4], 22)}</span><p>${esc(k)}</p></li>`).join('')}</ul>
- </div>
-</section>`;
+    const kimler = `<aside class="sg-secki-kutu sg-kimler-kutu" data-renk="${M.renk}" aria-labelledby="km-${M.kod}">
+     <h2 id="km-${M.kod}">Kimler için?</h2>
+     <ul class="sg-kimler-kutu__liste">${M.kimler.map((k, i) => `<li><span class="sg-kimler-kutu__ikon">${ui(KITLE_IKON[i % 4], 18)}</span><span>${esc(k)}</span></li>`).join('')}</ul>
+    </aside>`;
 
     const hero = o.seckiHero({
       M, sahne: sahne ? o.tarifSahne(sahne) : '', sahneAlt: sahne ? `${sahne.baslik.split('|')[0].trim()} — bu moda uygun bir Dada Gastro tarifi` : '',
       kirinti: [['Dada Gastro Sağlık', 'saglik.html'], [M.ad]], eyebrow: 'Sağlık modu', baslik: esc(M.ad),
       giris: esc(ic.giris || M.slogan),
       istatistik: [[String(liste.length), 'uyumlu tarif'], [String(ikameli), 'akıllı ikameli'], [String(M.riskli.length), 'riskli malzeme grubu']],
-      not: o.UYARI, logolar: o.logoSeridi(o.partnerListe(M.kod)),
+      sag: kimler, not: o.UYARI, logolar: o.logoSeridi(o.partnerListe(M.kod)),
     });
 
     const alerjenSecici = M.kod === 'alerji' ? `<section class="sg-bolum sg-bolum--sikisik sg-alerjen-bolum" aria-labelledby="alsec">
@@ -48,7 +46,7 @@ export default async function (o) {
     const riskli = `<section class="sg-bolum sg-bolum--beyaz" aria-labelledby="rs-${M.kod}">
  <div class="wrap">
   ${o.bolumBasi({ ust: 'Dikkat listesi', baslik: 'Yasaklı ve riskli malzemeler', alt: M.kod === 'alerji' ? 'Seçtiğin alerjene ek olarak şu ürünler aynı bantta üretim ya da gizli içerik nedeniyle listeden çıkarılır.' : 'Bu malzemeleri içeren tarifler, tanımlı bir ikame yoksa listede yer almaz.', id: `rs-${M.kod}` })}
-  <ul class="sg-riskli" data-renk="${M.renk}">${M.riskli.map(([a, n]) => `<li class="sg-riskli__oge"><span class="sg-riskli__ikon">${ui('uyari', 18)}</span><span class="sg-riskli__ad">${esc(a)}</span><span class="sg-riskli__neden">${esc(n)}</span></li>`).join('')}</ul>
+  <ul class="sg-riskli" data-renk="${M.renk}">${M.riskli.map(([a, n]) => `<li class="sg-riskli__oge"><span class="sg-riskli__ikon">${ui('uyari', 22)}</span><span class="sg-riskli__ad">${esc(a)}</span><span class="sg-riskli__neden">${esc(n)}</span></li>`).join('')}</ul>
  </div>
 </section>`;
 
@@ -114,7 +112,7 @@ export default async function (o) {
     const bilgiDosya = M.dosya.replace('.html', '-bilgi.html');
     const sekmeler = (aktif) => `<section class="sg-sekme-bolum" aria-label="${esc(M.ad)} sekmeleri"><div class="wrap"><nav class="sg-sekmeler">`
       + `<a href="${M.dosya}"${aktif === 'tarif' ? ' aria-current="page"' : ''}>${ui('kitap', 20)}Tarifler <span class="sg-sekmeler__n">${liste.length}</span></a>`
-      + `<a href="${bilgiDosya}"${aktif === 'bilgi' ? ' aria-current="page"' : ''}>${ui('kalkan', 20)}Bilgilendirme</a>`
+      + `<a href="${bilgiDosya}"${aktif === 'bilgi' ? ' aria-current="page"' : ''}>${ui('bilgi', 20)}Bilgilendirme</a>`
       + `</nav></div></section>`;
     const bilgiSonu = `<aside class="sg-dolap-bant" data-renk="${M.renk}"><div class="wrap"><a href="${M.dosya}">${ui('kitap', 22)}<span><b>${esc(o.SEKME[M.kod])}</b> moduna uygun ${liste.length} tarif</span><span class="sg-dolap-bant__git">Tariflere git ${ui('ok', 18)}</span></a></div></aside>`;
     return [{
@@ -125,7 +123,7 @@ export default async function (o) {
     }, {
       dosya: bilgiDosya, baslik: `${M.ad} — Bilgilendirme · Dada Gastro Sağlık (prototip)`,
       aciklama: `${M.slogan} Kimler için, sistem kuralı, riskli malzemeler, akıllı ikame, yazılar ve sık sorulan sorular.`,
-      main: o.sayfa([hero, sekmeler('bilgi'), kimler, kural, riskli, ikame, bilgi, o.partnerBolumu(M), ss, bilgiSonu].join('\n'), M.kod),
+      main: o.sayfa([hero, sekmeler('bilgi'), kural, riskli, ikame, bilgi, o.partnerBolumu(M), ss, bilgiSonu].join('\n'), M.kod),
       css: ['mod'], js: [], gorsel: sahne ? o.tarifSahne(sahne) : '',
     }];
   });

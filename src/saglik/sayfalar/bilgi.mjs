@@ -2,7 +2,7 @@
 export default async function (o) {
   const { esc, ui, MODLAR, icerik, ESLESME } = o;
   const gruplar = MODLAR.map((M) => [M, ((icerik.modlar || {})[M.kod] || {}).makaleler || []]).filter(([, l]) => l.length);
-  const icindekiler = `<nav class="sg-icindekiler" aria-label="Modlara göre yazılar">${gruplar.map(([M]) => `<a href="#${M.kod}" data-renk="${M.renk}">${ui(M.ikon, 18)}${esc(o.SEKME[M.kod])}</a>`).join('')}</nav>`;
+  const icindekiler = `<nav class="sg-icindekiler" aria-label="Modlara göre yazılar">${gruplar.map(([M]) => `<a href="#${M.kod}" data-renk="${M.renk}">${ui(M.ikon, 22)}${esc(o.SEKME[M.kod])}</a>`).join('')}</nav>`;
   const yazi = (M, a, i) => {
     const g = ESLESME[M.kod][5 + i * 4];
     return `<article class="sg-kart sg-yazi" id="${esc(a.slug)}" data-renk="${M.renk}">

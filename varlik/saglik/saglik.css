@@ -68,7 +68,7 @@ html.sg-ust-gizli .sg-ust__logo { max-width: 156px; margin-right: 0; opacity: 1;
 .sg-ust__menu::-webkit-scrollbar { display: none; }
 .sg-ust__menu > a { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: var(--sg-r); font-size: 14.5px; font-weight: 700; font-family: var(--sg-font-kalin); line-height: 1; text-decoration: none; color: var(--sg-murekkep); white-space: nowrap; transition: background-color .18s ease, color .18s ease; }
 .sg-ust__menu > .sg-ust__ev { justify-content: center; min-width: 44px; padding: 0; }
-.sg-ust__ev svg { display: block; width: 22px; height: 22px; }
+.sg-ust__ev :is(svg, .sg-fa) { display: block; width: 22px; height: 22px; }
 .sg-ust__menu > a:hover { background: var(--r-a, var(--sg-zemin-2)); }
 .sg-ust__menu > a[aria-current="page"] { background: var(--r-a, var(--sg-tema-a)); color: var(--r-k, var(--sg-tema-k)); box-shadow: inset 0 -2px 0 var(--r-k, var(--sg-tema)); }
 .sg-ust__menu > a:focus-visible { outline: 3px solid var(--r-k, var(--sg-tema)); outline-offset: -3px; }
@@ -121,7 +121,7 @@ a.sg-chip:hover { background: var(--r-o, var(--sg-cizgi)); color: var(--sg-murek
 .sg-secim-grup { display: flex; flex-wrap: wrap; gap: var(--sg-s2); }
 .sg-sec { font: inherit; font-weight: 700; font-family: var(--sg-font-kalin); font-size: 14px; min-height: 40px; padding: var(--sg-s2) 38px var(--sg-s2) 14px; border: 0; border-radius: var(--sg-r); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232A2724' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center; box-shadow: inset 0 0 0 1.5px var(--sg-cizgi); appearance: none; -webkit-appearance: none; color: var(--sg-murekkep); cursor: pointer; }
 .sg-ara { position: relative; display: block; }
-.sg-ara svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--sg-ikincil); pointer-events: none; }
+.sg-ara :is(svg, .sg-fa) { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--sg-ikincil); pointer-events: none; }
 .sg-ara input { width: 100%; box-sizing: border-box; font: inherit; font-size: 15px; min-height: 48px; padding: var(--sg-s3) var(--sg-s4) var(--sg-s3) 42px; border: 0; border-radius: var(--sg-r); background: #fff; box-shadow: inset 0 0 0 1.5px var(--sg-cizgi); color: var(--sg-murekkep); }
 .sg-ara input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--r-k, var(--sg-tema)); }
 .sg-eyebrow, .sg-ust-yazi { display: inline-flex; align-items: center; gap: var(--sg-s2); font-size: 13px; font-weight: 800; font-family: var(--sg-font-ekstra); letter-spacing: .05em; text-transform: uppercase; }
@@ -170,7 +170,7 @@ a.sg-kart:hover, .sg-tarif:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb
 .sg-tarif__ikame b { font-family: var(--sg-font-kalin); font-weight: 700; color: var(--r-k, var(--sg-murekkep)); }
 .sg-tarif__ikame-bas { width: 100%; font-size: 11.5px; font-weight: 800; font-family: var(--sg-font-ekstra); letter-spacing: .05em; text-transform: uppercase; color: var(--r-k, var(--sg-ikincil)); }
 .sg-tarif__ikame--yok { background: #F2F7F3; color: #2F6B3E !important; }
-.sg-tarif__ikame--yok svg { color: #2F6B3E; flex: none; }
+.sg-tarif__ikame--yok :is(svg, .sg-fa) { color: #2F6B3E; flex: none; }
 .sg-tarif__alerjen { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 13px !important; }
 .sg-al { display: inline-flex; padding: 3px 8px; border-radius: var(--sg-r); background: var(--sg-uyari-a); color: var(--sg-uyari-k); box-shadow: inset 0 0 0 1px var(--sg-uyari-c); font-size: 12px; font-weight: 700; font-family: var(--sg-font-kalin); }
 .sg-al--yok { background: #EAF4EC; color: #2F6B3E; box-shadow: none; }
@@ -184,7 +184,7 @@ a.sg-kart:hover, .sg-tarif:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb
 /* 6 · Uyarı satırı (sayfada bir kez) */
 .sg-uyari { background: var(--sg-uyari-a); border-block: 1px solid var(--sg-uyari-c); color: var(--sg-uyari-k); }
 .sg-uyari p { display: flex; align-items: center; gap: var(--sg-s2); margin: 0; min-height: 44px; padding-block: var(--sg-s2); font-size: 14px; font-family: var(--sg-font-kalin); font-weight: 700; }
-.sg-uyari svg { flex: none; }
+.sg-uyari :is(svg, .sg-fa) { flex: none; }
 
 /* 7 · SSS — tek-açık akordeon (Kids kd-sss birebir) */
 .sg-sss__liste { display: grid; gap: var(--sg-s2); }
@@ -334,12 +334,12 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
    Kapı: araclar/radius-kapisi.mjs iki değeri de Gastro'dan ölçer (.btn-login, .chip).
    ===================================================================== */
 :root { --sg-r-etiket: var(--radius-sm, 8px); }
-.sg-uyum, .sg-al, .sg-chip, .nav .sg-mega-serit .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden,
+.sg-uyum, .sg-al, .sg-chip, .sg-r-ikame, .nav .sg-mega-serit .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden,
 .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx { border-radius: var(--sg-r-etiket); }
 /* Kart üstü uyum etiketi = Gastro .r-chip ölçüsü (13px konum, 6/12 dolgu, 11.5px 700), mod renginde dolu */
 .sg-uyum { gap: 5px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; font-family: var(--sg-font-kalin); letter-spacing: .02em; line-height: 1.2; }
 .sg-tarif__medya .sg-uyum { top: 13px; left: 13px; box-shadow: none; }
-.sg-uyum svg { width: 13px; height: 13px; }
+.sg-uyum :is(svg, .sg-fa) { width: 13px; height: 13px; }
 /* Akıllı ikame: her ikame kendi satırında (ayraç yok) */
 .sg-tarif__ikame-oge { display: block; width: 100%; }
 /* Dolu düğmeler (Beyar: "filled buton kullan"): ikincil düğme de dolu — mod tonu zemin, koyu metin, çerçeve yok */
@@ -359,3 +359,28 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
 .sg-satir input:checked ~ .sg-satir__ad { font-family: var(--sg-font-kalin); font-weight: 700; }
 .sg-satir__n { flex: none; color: var(--sg-ikincil); font-size: 13px; }
 @media (prefers-reduced-motion: reduce) { .sg-cbx { transition: none; } }
+
+/* Mega şeridi (Beyar 2 Kas, 5. revize): chip zemini yok, sade metin bağları; logo ile çakışmaz (sola dizili, taşma kesilir) */
+.sg-mega-serit__chipler { justify-content: flex-start; overflow: hidden; gap: 2px; }
+.nav .sg-mega-serit .sg-mega-serit__chip, .nav .sg-mega-serit--kids .sg-mega-serit__chip { background: transparent; color: var(--sg-murekkep); padding: 4px 10px; font-family: var(--sg-font-kalin); font-weight: 700; }
+.nav .sg-mega-serit .sg-mega-serit__chip:hover { background: rgba(255, 255, 255, .7); color: var(--sg-tema-k); }
+.sg-mega-serit__logo { margin-right: var(--sg-s2); }
+
+/* Gastro tarif kartı (.r-card) içinde Sağlık ekleri — köşe Sağlık kutu değeri (12px), kategori .r-chip Gastro 8px */
+.sg-sayfa .r-card.sg-tarif { border-radius: var(--sg-r); display: flex; flex-direction: column; }
+.sg-sayfa .r-card.sg-tarif .r-body { flex: 1; display: flex; flex-direction: column; }
+.sg-sayfa .r-card .r-chip { border-radius: var(--sg-r-etiket); }
+.sg-sayfa .r-card h4 { margin: 0; }
+.sg-sayfa .r-card h4 a { text-decoration: none; }
+.sg-sayfa .r-card .sg-tarif__bag::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.sg-sayfa .r-card.sg-tarif { position: relative; }
+.sg-rd-mod { background: var(--r-k) !important; color: #fff !important; }
+.sg-rd-mod .sg-fa { font-size: 13px !important; }
+.sg-r-ikame { display: grid; gap: 2px; margin: 10px 0 0; padding: 8px 10px; border-radius: var(--sg-r-etiket); background: var(--r-a, var(--sg-zemin-2)); color: var(--sg-murekkep); font-size: 13px; line-height: 1.35; }
+.sg-r-ikame b { font-family: var(--sg-font-kalin); font-weight: 700; color: var(--r-k, var(--sg-murekkep)); }
+.sg-r-ikame__bas { font-size: 11.5px; font-weight: 800; font-family: var(--sg-font-ekstra); letter-spacing: .04em; text-transform: uppercase; color: var(--r-k, var(--sg-ikincil)); }
+.sg-r-ikame--yok { display: flex; align-items: center; gap: 6px; background: #F2F7F3; color: #2F6B3E; }
+.sg-r-foot { margin-top: auto; }
+.sg-r-uyum { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-family: var(--sg-font-kalin); font-weight: 700; color: var(--r-k, var(--sg-tema-k)); }
+.sg-sayfa .r-card .sg-tarif__alerjen { margin: 8px 0 0; }
+.sg-ortala { align-items: stretch; }
