@@ -68,8 +68,9 @@ ok(!(await p.evaluate(() => document.documentElement.classList.contains('sg-ust-
 
 // Sekmeler: Tarifler ↔ Bilgilendirme
 ok(await p.locator('.sg-sekmeler a[aria-current="page"]').textContent().then((x) => /Tarifler/.test(x)) && await p.locator('.sg-sekmeler a[href="saglik-colyak-bilgi.html"]').count() === 1, 'mod sekmeleri: Tarifler (aktif) · Bilgilendirme');
-await p.click('.sg-sekmeler a[href="saglik-colyak-bilgi.html"]'); await p.waitForLoadState('networkidle');
-ok(/colyak-bilgi/.test(p.url()) && await p.locator('.sg-kural').count() === 2 && await p.locator('[data-sg-katalog]').count() === 0, 'Bilgilendirme sekmesi: kurallar var, tarif listesi yok');
+await p.evaluate(() => (window.__sgYukleme = 1));
+await p.click('.sg-sekmeler a[href="saglik-colyak-bilgi.html"]'); await p.waitForTimeout(200);
+ok(/colyak-bilgi/.test(p.url()) && await p.evaluate(() => window.__sgYukleme) === 1 && await p.locator('.sg-kural:visible').count() === 2 && await p.locator('[data-sg-katalog]:visible').count() === 0, 'Bilgilendirme sekmesi sayfa yenilenmeden açılır (adres -bilgi), kurallar görünür, liste gizli');
 // SSS tek-açık
 const d = p.locator('.sg-sss__dugme');
 await d.nth(0).click(); await d.nth(1).click(); await p.waitForTimeout(100);
@@ -79,9 +80,12 @@ ok(acik.filter((x) => x === 'true').length === 1 && acik[1] === 'true', `SSS tek
 // Katalog: ikamesiz filtresi, sayfalama
 await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
 const say = () => p.$$eval('[data-sg-izgara] .sg-tarif', (l) => l.filter((k) => !k.hidden).length);
+const ilk1 = await p.$eval('[data-sg-izgara] .sg-tarif:not([hidden])', (k) => k.dataset.slug);
 const once = await say();
-await p.click('[data-sg-daha]'); await p.waitForTimeout(100);
-ok(await say() === once + 12, `sayfalama: ${once} → +12`);
+await p.click('.pagi .pg[data-sayfa="2"]'); await p.waitForTimeout(200);
+const ilk2 = await p.$eval('[data-sg-izgara] .sg-tarif:not([hidden])', (k) => k.dataset.slug);
+ok(once === 12 && await say() === 12 && ilk1 !== ilk2 && /sayfa=2/.test(p.url()) && await p.locator('.pagi .pg.is-active').textContent() === '2', `Gastro sayfalaması: sayfa 1 → 2 (12'şer kart, ?sayfa=2, aktif .pg)`);
+await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
 await p.click('label.sg-satir:has(input[name="ikamesiz"])'); await p.waitForTimeout(150);
 const ik = await p.$$eval('[data-sg-izgara] .sg-tarif', (l) => l.filter((k) => !k.hidden).map((k) => +k.dataset.ikame));
 ok(ik.length > 0 && ik.every((x) => x === 0), `"Yalnız ikame gerektirmeyenler": ${ik.length} görünen kartın hepsi ikamesiz`);

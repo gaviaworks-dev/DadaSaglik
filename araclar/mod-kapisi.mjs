@@ -53,9 +53,7 @@ for (const sec of [['sut', 'gluten'], ['yerfistigi', 'susam', 'sertkabuklu']]) {
   await ctx.addInitScript((v) => { try { localStorage.setItem('dadagastrosaglik.alerjen.v1', v); } catch (e) {} }, JSON.stringify(sec));
   for (const s of ['saglik.html', ...MODLAR.map((M) => M.dosya)]) {
     const p = await ctx.newPage();
-    await p.goto(TABAN + s, { waitUntil: 'networkidle' });
-    // tüm kartları göster (sayfalama)
-    for (let i = 0; i < 40; i++) { const d = await p.$('[data-sg-daha]:visible'); if (!d) break; await d.click(); await p.waitForTimeout(30); }
+    await p.goto(TABAN + s + (s === 'saglik.html' ? '' : '?adet=999'), { waitUntil: 'networkidle' });   // tüm kartlar tek sayfada (sayfalama boyu)
     const gorunen = await p.$$eval('.sg-tarif', (l) => l.filter((k) => !k.hidden && !k.closest('[hidden]') && k.getBoundingClientRect().height > 0).map((k) => [k.dataset.slug, k.dataset.paketli]));
     const durum = await p.$eval('#sgAlerjenDurum', (d) => !d.hidden).catch(() => false);
     let h = 0;
