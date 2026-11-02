@@ -19,3 +19,7 @@
 - ☑ 4 Kapılar YEREL YEŞİL: mod 14/14 · davranış · varlık 48/48 · radius 28/28 · boşluk 40/40 · denge 44/44 · partner logoları (17 webp/svg) · eksik şeffaf ikon 3 (soya sosu, krema, ayran → mod ikonu yer tutucu; kredi harcanmadı, taban 560)
 - ☑ 5 9 commit (db1bfca…b66def9) · repo gaviaworks-dev/DadaSaglik (public) push · Pages açıldı (main /) · Pages derlendi (b66def9)
 - ☑ 6 CANLI kapılar yeşil: mod 14/14 · davranış · varlık 48/48 · radius 28/28 · denge 44/44 · boşluk 40/40 · görüntüler rapor/tmp/teslim/ (pafta-1440.png, pafta-390.png) · ☐ 7 rapor (6 mod 1440+390 görüntü, partner tablosu, mod başına tarif sayısı) → DUR
+
+## ⚠ Canlı öncesi: kurum izinleri
+- Kurum logoları (banner şeritleri, iş birliği kartları) ve mod ikonu olarak kullanılan kurum site ikonları **yalnız prototipte** kalabilir. Canlıya taşımadan önce her kurumdan yazılı kullanım izni alınmalı; izin gelmeyen kurumun logosu/ikonu kaldırılır (mod ikonunda çizgisel ikon yedeği hazır: ui(M.ikon)).
+- İzin gerekenler: tasks/saglik-kaynaklar.md partner tabloları (16 kurum) + "Mod ikonları" tablosu (6 site ikonu). Hepsi data-yalniz-admin bayraklı.
