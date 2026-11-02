@@ -82,7 +82,7 @@ export default async function (o) {
     <div class="sg-sonuc-bar"><b data-sg-sonuc>${liste.length} tarif</b><div><button type="button" class="sg-filtre-ac sg-btn sg-btn--hafif sg-btn--kucuk" aria-controls="sgFiltre-${M.kod}" aria-expanded="false">${ui('filtre', 18)} Filtrele</button><label><span class="sg-gizli">Sırala</span><select class="sg-sec" data-sg-sirala><option value="onerilen">Önerilen</option><option value="hizli">En hızlı</option><option value="az">A–Z</option></select></label></div></div>
     <div class="sg-izgara sg-izgara--tarif" data-sg-izgara>${liste.map((x, i) => o.tarifKart(x.t, x.r, M, { alerjenGoster: M.kod === 'alerji', sira: i })).join('')}</div>
     <div class="sg-bos" data-sg-bos hidden><h3>Bu süzgeçle tarif kalmadı</h3><p>Filtreleri gevşetin ya da alerjen seçiminizi gözden geçirin.</p></div>
-    <div class="sg-daha"><button type="button" class="sg-btn" data-sg-daha>Daha fazla göster</button></div>
+    <nav class="pagi sg-pagi" data-sg-sayfala aria-label="Sayfalama"></nav>
    </div>
   </div>
  </div>
@@ -111,20 +111,23 @@ export default async function (o) {
 
     const bilgiDosya = M.dosya.replace('.html', '-bilgi.html');
     const sekmeler = (aktif) => `<section class="sg-sekme-bolum" aria-label="${esc(M.ad)} sekmeleri"><div class="wrap"><nav class="sg-sekmeler">`
-      + `<a href="${M.dosya}"${aktif === 'tarif' ? ' aria-current="page"' : ''}>${ui('kitap', 20)}Tarifler <span class="sg-sekmeler__n">${liste.length}</span></a>`
-      + `<a href="${bilgiDosya}"${aktif === 'bilgi' ? ' aria-current="page"' : ''}>${ui('bilgi', 20)}Bilgilendirme</a>`
+      + `<a href="${M.dosya}" data-sg-sekme="tarif"${aktif === 'tarif' ? ' aria-current="page"' : ''}>${ui('kitap', 20)}Tarifler <span class="sg-sekmeler__n">${liste.length}</span></a>`
+      + `<a href="${bilgiDosya}" data-sg-sekme="bilgi"${aktif === 'bilgi' ? ' aria-current="page"' : ''}>${ui('bilgi', 20)}Bilgilendirme</a>`
       + `</nav></div></section>`;
     const bilgiSonu = `<aside class="sg-dolap-bant" data-renk="${M.renk}"><div class="wrap"><a href="${M.dosya}">${ui('kitap', 22)}<span><b>${esc(o.SEKME[M.kod])}</b> moduna uygun ${liste.length} tarif</span><span class="sg-dolap-bant__git">Tariflere git ${ui('ok', 18)}</span></a></div></aside>`;
+    // İki sekmenin içeriği iki sayfada da var; sekme tıklanınca sayfa yenilenmeden panel değişir (saglik.js sekmeKur), adres paylaşılabilir kalır
+    const paneller = (aktif) => `<div class="sg-sekme-panel" data-sg-sekme-panel="tarif"${aktif === 'tarif' ? '' : ' hidden'}>\n${[alerjenSecici, dolapBant, izgara].join('\n')}\n</div>\n`
+      + `<div class="sg-sekme-panel" data-sg-sekme-panel="bilgi"${aktif === 'bilgi' ? '' : ' hidden'}>\n${[kural, riskli, ikame, bilgi, o.partnerBolumu(M), ss, bilgiSonu].join('\n')}\n</div>`;
     return [{
       dosya: M.dosya, baslik: `${M.ad} — Tarifler · Dada Gastro Sağlık (prototip)`,
       aciklama: `${M.slogan} ${liste.length} uyumlu Dada Gastro tarifi ve akıllı ikameler.`,
-      main: o.sayfa([hero, sekmeler('tarif'), alerjenSecici, dolapBant, izgara].join('\n'), M.kod),
+      main: o.sayfa([hero, sekmeler('tarif'), paneller('tarif')].join('\n'), M.kod),
       css: ['mod'], js: ['katalog'], gorsel: sahne ? o.tarifSahne(sahne) : '',
     }, {
       dosya: bilgiDosya, baslik: `${M.ad} — Bilgilendirme · Dada Gastro Sağlık (prototip)`,
       aciklama: `${M.slogan} Kimler için, sistem kuralı, riskli malzemeler, akıllı ikame, yazılar ve sık sorulan sorular.`,
-      main: o.sayfa([hero, sekmeler('bilgi'), kural, riskli, ikame, bilgi, o.partnerBolumu(M), ss, bilgiSonu].join('\n'), M.kod),
-      css: ['mod'], js: [], gorsel: sahne ? o.tarifSahne(sahne) : '',
+      main: o.sayfa([hero, sekmeler('bilgi'), paneller('bilgi')].join('\n'), M.kod),
+      css: ['mod'], js: ['katalog'], gorsel: sahne ? o.tarifSahne(sahne) : '',
     }];
   });
 }

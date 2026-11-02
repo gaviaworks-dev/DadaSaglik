@@ -348,3 +348,23 @@
 .sg-secki-hero + .sg-sekme-bolum { padding-top: var(--sg-s5) !important; padding-bottom: var(--sg-s5) !important; }
 .sg-secki-hero + .sg-sekme-bolum { background: color-mix(in srgb, var(--r-a, var(--sg-tema-a)) 70%, var(--sg-zemin)); }
 .sg-secki-hero + .sg-sekme-bolum::before { height: 100%; }
+/* Köşe üçlüsü = Gastro'nun kendi değerleri (Beyar 2 Kas, 7. revize): kart/panel --radius-lg 16 (Gastro .r-card) · düğme/giriş/satır --radius-md 12 · etiket --radius-sm 8 */
+:root { --sg-r-kart: var(--radius-lg, 16px); }
+.sg-kart, .sg-sayfa .r-card, .sg-sayfa .r-card.sg-tarif, .sg-secki-kutu, .sg-filtre, .sg-dolap, .sg-alerjen-sec, .sg-bant, .sg-sss__oge { border-radius: var(--sg-r-kart); }
+.sg-mod-kart__medya > img { border-radius: var(--sg-r-kart) var(--sg-r-kart) 0 0; }
+@media (max-width: 1024px) { .sg-filtre { border-radius: var(--sg-r-kart) var(--sg-r-kart) 0 0; } }
+
+/* Hero altı panel = Gastro tarif listesi .lst-sec (Beyar 2 Kas, 8. revize): 22px üst köşe, hero'ya 22px biner, üst gölge; renkli çizgi/hilal yok */
+.sg-secki-hero { padding-bottom: calc(22px + var(--sg-s7)); }
+.sg-secki-hero + section, .sg-secki-hero + .sg-sekme-bolum { position: relative; z-index: 1; margin-top: -22px; border-radius: 22px 22px 0 0; box-shadow: 0 -12px 32px rgba(20, 16, 10, .18); background: color-mix(in srgb, var(--r-a, var(--sg-tema-a)) 45%, var(--sg-zemin)) !important; }
+.sg-secki-hero + section::before, .sg-secki-hero + .sg-sekme-bolum::before { content: none !important; display: none !important; }
+.sg-secki-hero + section:not(.sg-sekme-bolum) { padding-top: var(--sg-s7); }
+@media (max-width: 640px) { .sg-secki-hero { padding-bottom: calc(22px + var(--sg-s6)); } }
+/* Sayfalama: Gastro .pagi/.pg; aktif sayfa mod renginde (seçki sayfasındaki "ince marka vurgusu" gibi) */
+.sg-pagi { align-items: center; margin-top: var(--sg-s6); }
+.sg-pagi .pg { font: inherit; font-weight: 500; cursor: pointer; }
+.sg-pagi .pg.is-active { background: var(--r-k, var(--tomato)); border-color: var(--r-k, var(--tomato)); color: #fff; }
+.sg-pagi .pg:not(.is-active):hover { border-color: var(--r-k, var(--tomato)); color: var(--r-k, var(--tomato)); }
+.sg-pagi .pg:focus-visible { outline: 3px solid var(--r-k, var(--sg-tema)); outline-offset: 2px; }
+.sg-pagi .pg-dots { align-self: center; padding: 0 4px; color: var(--sg-ikincil); }
+.sg-pagi .pagi-note { flex-basis: 100%; text-align: center; margin-top: var(--sg-s2); color: var(--sg-ikincil); font-size: 14px; }

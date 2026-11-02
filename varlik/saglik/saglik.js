@@ -153,6 +153,24 @@
       y._sgDongu = goster;
     });
   }
-  function basla() { megaDonguKur(); modHafiza(); sssKur(); uygula(); alerjenSeciciKur(); girisKur(); yapiskanKur(); menuAktifKur(); }
+  /* Mod sekmeleri: Tarifler ↔ Bilgilendirme aynı sayfada; tıklayınca panel değişir (yenileme yok), adres pushState ile güncellenir */
+  function sekmeKur() {
+    var bag = $$('.sg-sekmeler a[data-sg-sekme]'); if (!bag.length || !$('[data-sg-sekme-panel]')) return;
+    function goster(ad, kaydir) {
+      bag.forEach(function (a) { if (a.getAttribute('data-sg-sekme') === ad) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+      $$('[data-sg-sekme-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-sg-sekme-panel') !== ad; if (!p.hidden) $$('.sg-gir', p).forEach(function (x) { x.classList.add('sg-gorundu'); }); });
+      dispatchEvent(new Event('resize'));
+      if (kaydir) { var s = $('.sg-sekme-bolum'); if (s) { var ust = s.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sg-bar-alt')) || 120); if (scrollY > ust) scrollTo(0, ust); } }
+    }
+    bag.forEach(function (a) { a.addEventListener('click', function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      e.preventDefault(); var ad = a.getAttribute('data-sg-sekme');
+      if (a.getAttribute('aria-current') === 'page') return;
+      try { history.pushState({ sgSekme: ad }, '', a.getAttribute('href')); } catch (er) {}
+      goster(ad, true); a.focus();
+    }); });
+    addEventListener('popstate', function () { goster(/-bilgi\.html$/.test(location.pathname) ? 'bilgi' : 'tarif', false); });
+  }
+  function basla() { sekmeKur(); megaDonguKur(); modHafiza(); sssKur(); uygula(); alerjenSeciciKur(); girisKur(); yapiskanKur(); menuAktifKur(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();

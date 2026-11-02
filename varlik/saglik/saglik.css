@@ -384,3 +384,7 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
 .sg-r-uyum { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-family: var(--sg-font-kalin); font-weight: 700; color: var(--r-k, var(--sg-tema-k)); }
 .sg-sayfa .r-card .sg-tarif__alerjen { margin: 8px 0 0; }
 .sg-ortala { align-items: stretch; }
+.sg-bant { border-radius: var(--radius-lg, 16px); }
+/* Kart: ikame kutusu ile alt çizgi (r-foot) arasında boşluk */
+.sg-sayfa .r-card .sg-r-ikame { margin-bottom: 16px; }
+.sg-sayfa .r-card .sg-tarif__alerjen { margin-bottom: 12px; }
