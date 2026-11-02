@@ -46,7 +46,7 @@ for (const w of GENISLIK) {
       document.querySelectorAll('.sg-sayfa section').forEach((sec) => {
         if (sec.closest('[hidden]') || sec.getBoundingClientRect().height < 80) return;
         if (sec.matches(YARDIMCI) || sec.querySelector('.sg-ar-guven, .sg-mguven, .sg-dguven, .sg-onay')) { out.muaf = (out.muaf || 0) + 1; return; }
-        const var_ = [...sec.querySelectorAll('img, video, svg')].some((g) => { const b = g.getBoundingClientRect(); return b.width >= 16 && b.height >= 16 && !g.closest('i'); });
+        const var_ = [...sec.querySelectorAll('img, video, svg, i.fa-solid, [role="img"]')].some((g) => { const b = g.getBoundingClientRect(); return b.width >= 16 && b.height >= 16 && !(g.tagName !== 'I' && g.closest('i')); });
         if (!var_) out.gorselsiz.push((sec.id || sec.className || 'section').slice(0, 40));
       });
       // spacing: ızgara çocukları birbirine bitişik olmasın (aynı satırda ≥ 8px, alt alta ≥ 8px)

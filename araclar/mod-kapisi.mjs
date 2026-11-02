@@ -25,7 +25,7 @@ const ok = (k, m) => { kontrol++; if (!k) { kirmizi++; console.log('✗', m); } 
 const ozet = {};
 for (const M of MODLAR) {
   let html = readFileSync(M.dosya, 'utf8');
-  const kartlar = [...html.matchAll(/<article class="sg-kart sg-tarif[^"]*"[^>]*data-slug="([^"]+)"[\s\S]*?<\/article>/g)];
+  const kartlar = [...html.matchAll(/<article class="[^"]*sg-tarif[^"]*"[^>]*data-slug="([^"]+)"[\s\S]*?<\/article>/g)];
   if (process.env.BOZ && M.kod === 'colyak') kartlar.push(['<article><p class="sg-tarif__ikame"></p></article>', Object.values(T).find((t) => t.malzemeler.some((m) => /bulgur/.test(n(m.ad)))).slug]);
   let hata = 0;
   for (const [kart, slug] of kartlar) {

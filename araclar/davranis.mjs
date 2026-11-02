@@ -47,7 +47,7 @@ await p.goto(T + 'index.html', { waitUntil: 'networkidle' });
 ok(await p.locator('.sg-bant a[href="saglik.html"]').count() > 0, 'kapı A: ana sayfada Sağlık bandı → saglik.html');
 await p.goto(T + 'tarifler.html', { waitUntil: 'networkidle' });
 ok(await p.locator('a.sg-chip-gastro[href="saglik.html"]').count() === 1, 'kapı B: tarifler.html "Sağlık modları" chip');
-ok(await p.locator('.mega [data-sg-dongu-oge="saglik"] a.sg-mega-serit__chip').count() === 6 && await p.locator('.mega [data-sg-dongu-oge="kids"] a.sg-mega-serit__chip').count() === 3, 'kapı C: mega yuvasında Sağlık (6 mod chip) ↔ Kids (3 yaş chip) şeritleri');
+ok(await p.locator('.mega [data-sg-dongu-oge="saglik"] a.sg-mega-serit__chip').count() === 3 && await p.locator('.mega [data-sg-dongu-oge="kids"] a.sg-mega-serit__chip').count() === 3, 'kapı C: mega yuvasında Sağlık (3 mod) ↔ Kids (3 yaş) şeritleri');
 { const g = async () => p.$eval('.mega [data-sg-dongu]', (y) => y.querySelector('.sg-dongu-aktif').dataset.sgDonguOge);
   const once = await g(); await p.$eval('.mega [data-sg-dongu-git="kids"]', (b) => b.click()); const sonra = await g();
   ok(once === 'saglik' && sonra === 'kids', `mega geçişi: ${once} → ${sonra} (nokta düğmesi)`); }

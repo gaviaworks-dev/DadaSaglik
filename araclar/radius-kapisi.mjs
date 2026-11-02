@@ -18,7 +18,7 @@ const SAYFALAR = [...readdirSync('.').filter((f) => /^saglik(-.+)?\.html$/.test(
 const t = await chromium.launch();
 let R = null, R2 = null, kirmizi = 0, toplam = 0;
 // Etiket köşesi (Beyar 2 Kas): Gastro --radius-sm (.r-chip/.chip/.cbx) yalnız etiket/rozet/chip/onay kutusu sınıflarında
-const ETIKET = '.sg-sekmeler__n, .sg-uyum, .sg-al, .sg-chip, .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden, .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx';
+const ETIKET = '.r-chip, .sg-r-ikame, .sg-sekmeler__n, .sg-uyum, .sg-al, .sg-chip, .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden, .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx';
 { // ölçüm: Gastro "Giriş Yap"
   const p = await t.newPage({ viewport: { width: 1440, height: 900 } });
   await p.goto(TABAN + 'index.html', { waitUntil: 'domcontentloaded' });
