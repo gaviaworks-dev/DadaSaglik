@@ -16,14 +16,17 @@ const SAYFALAR = [...readdirSync('.').filter((f) => /^saglik(-.+)?\.html$/.test(
   .filter((s) => !SUZ.length || SUZ.some((x) => s.includes(x)));
 
 const t = await chromium.launch();
-let R = null, kirmizi = 0, toplam = 0;
+let R = null, R2 = null, kirmizi = 0, toplam = 0;
+// Etiket köşesi (Beyar 2 Kas): Gastro --radius-sm (.r-chip/.chip/.cbx) yalnız etiket/rozet/chip/onay kutusu sınıflarında
+const ETIKET = '.sg-uyum, .sg-al, .sg-chip, .sg-mega-serit__chip, .sg-eslesme, .sg-makale__sure, .sg-riskli__neden, .sg-fct-saglik__etiket, .sg-dcip, .sg-cbx';
 { // ölçüm: Gastro "Giriş Yap"
   const p = await t.newPage({ viewport: { width: 1440, height: 900 } });
   await p.goto(TABAN + 'index.html', { waitUntil: 'domcontentloaded' });
   R = await p.evaluate(() => { const b = [...document.querySelectorAll('button, a')].find((e) => /Giriş Yap/.test(e.textContent) && e.offsetWidth); return b ? parseFloat(getComputedStyle(b).borderTopLeftRadius) : null; });
+  R2 = await p.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--radius-sm')) || null);
   await p.close();
   if (!R) { console.log('✗ Gastro "Giriş Yap" düğmesi ölçülemedi'); process.exit(1); }
-  console.log(`Gastro buton köşesi (Giriş Yap): ${R}px → Sağlık tek değer`);
+  console.log(`Gastro buton köşesi (Giriş Yap): ${R}px · Gastro etiket köşesi (--radius-sm): ${R2}px`);
 }
 for (const w of GENISLIK) {
   const ctx = await t.newContext({ viewport: { width: w, height: w < 500 ? 844 : 900 }, reducedMotion: 'reduce' });
@@ -32,7 +35,7 @@ for (const w of GENISLIK) {
     await p.goto(TABAN + s, { waitUntil: 'networkidle' }).catch(() => {});
     if (process.env.BOZ) await p.addStyleTag({ content: process.env.BOZ === 'keskin' ? '.sg-kart, .sg-kutu, .sg-chip { border-radius: 0 !important; }' : '.sg-tarif, .sg-kart, .sg-kutu { border-radius: 8px !important; }' });
     await p.waitForTimeout(200);
-    const hatalar = await p.evaluate((R) => {
+    const hatalar = await p.evaluate(([R, R2, ETIKET]) => {
       const vw = innerWidth, out = [];
       const kdTok = (x) => typeof x.className === 'string' && x.className.split(/\s+/).some((c) => c.startsWith('sg-'));
       const kidsMi = (e) => { if (e.closest('header.header, .topbar, .ust-bant, footer, .footer, .drawer')) return false; for (let x = e; x && x !== document.body; x = x.parentElement) if (kdTok(x)) return true; return false; };
@@ -53,7 +56,8 @@ for (const w of GENISLIK) {
         const gs = typeof e.className === 'string' ? e.className.trim().split(/\s+/).find((x) => x && !x.startsWith('sg-')) : null;
         if (gs && !e.closest('.sg-sayfa, .sg-ust') && [...document.getElementsByClassName(gs)].some((x) => x !== e && !kidsMi(x) && getComputedStyle(x).borderTopLeftRadius === c.borderTopLeftRadius)) continue;
         if (ham.some((x) => x > 0)) {
-          if (ham.some((x) => x > 0 && Math.abs(x - R) > 0.5)) out.push(`farklı köşe ${ad(e)} ${ham.map((x) => Math.round(x * 10) / 10).join('/')} (${Math.round(r.width)}×${Math.round(r.height)})`);
+          const hedef = e.matches(ETIKET) ? R2 : R;
+          if (ham.some((x) => x > 0 && Math.abs(x - hedef) > 0.5)) out.push(`farklı köşe ${ad(e)} ${ham.map((x) => Math.round(x * 10) / 10).join('/')} (${Math.round(r.width)}×${Math.round(r.height)})`);
           continue;
         }
         // keskin köşe: kutu görünümlü mü?
@@ -77,7 +81,7 @@ for (const w of GENISLIK) {
         out.push(`keskin köşe ${ad(e)} (${Math.round(r.width)}×${Math.round(r.height)})`);
       }
       return [...new Set(out)];
-    }, R);
+    }, [R, R2, ETIKET]);
     toplam++;
     if (hatalar.length) { kirmizi++; console.log(`✗ ${w} ${s}: ${hatalar.length} → ${hatalar.slice(0, 6).join(' | ')}`); }
     else console.log(`✓ ${w} ${s}`);
@@ -86,5 +90,5 @@ for (const w of GENISLIK) {
   await ctx.close();
 }
 await t.close();
-console.log(`\nradius kapısı: ${toplam - kirmizi}/${toplam} yeşil (tek değer ${R}px)`);
+console.log(`\nradius kapısı: ${toplam - kirmizi}/${toplam} yeşil (kutu ${R}px · etiket ${R2}px)`);
 process.exit(kirmizi ? 1 : 0);

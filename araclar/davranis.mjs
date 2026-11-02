@@ -24,8 +24,10 @@ const saglik = readdirSync('.').filter((f) => /^saglik(-.+)?\.html$/.test(f));
   for (const f of MODSAY) {
     const h = readFileSync(f, 'utf8'); const b = h.match(/<section class="sg-bolum sg-partnerler"[^>]*>[\s\S]*?<\/section>/);
     if (!b) { ok(false, `${f}: iş birliği bölümü yok`); continue; }
-    const kart = (b[0].match(/class="sg-kart sg-partner"/g) || []).length, et = (b[0].match(/class="sg-etiket-olasi">Olası iş birliği</g) || []).length;
-    ok(/data-yalniz-admin="1"/.test(b[0]) && kart > 0 && et === kart && /rel="noopener nofollow"/.test(b[0]), `${f}: iş birliği yalnız-admin bayraklı, ${kart} kart, her kartta "Olası iş birliği"`);
+    const kart = (b[0].match(/class="sg-kart sg-partner"/g) || []).length, logo = (b[0].match(/class="sg-partner__logo"><img/g) || []).length;
+    const serit = h.match(/<div class="sg-logo-serit[^"]*" data-yalniz-admin="1">[\s\S]*?<\/ul><\/div>/);
+    ok(/data-yalniz-admin="1"/.test(b[0]) && kart > 0 && logo === kart && /rel="noopener nofollow"/.test(b[0]) && !/Olası iş birliği/.test(h), `${f}: iş birliği yalnız-admin, ${kart} kart ${logo} logo, "Olası iş birliği" etiketi yok`);
+    ok(!!serit && (serit[0].match(/<img/g) || []).length === logo, `${f}: hero banner'da yalnız-admin logo şeridi (${serit ? (serit[0].match(/<img/g) || []).length : 0} logo)`);
   }
   // iç bağlar: yerel dosyalar var
   const kirik = [];
@@ -44,7 +46,11 @@ await p.goto(T + 'index.html', { waitUntil: 'networkidle' });
 ok(await p.locator('.sg-bant a[href="saglik.html"]').count() > 0, 'kapı A: ana sayfada Sağlık bandı → saglik.html');
 await p.goto(T + 'tarifler.html', { waitUntil: 'networkidle' });
 ok(await p.locator('a.sg-chip-gastro[href="saglik.html"]').count() === 1, 'kapı B: tarifler.html "Sağlık modları" chip');
-ok(await p.locator('.mega .sg-mega-serit a.sg-mega-serit__chip').count() === 6, 'kapı C: mega menüde 6 mod chip\'i');
+ok(await p.locator('.mega [data-sg-dongu-oge="saglik"] a.sg-mega-serit__chip').count() === 6 && await p.locator('.mega [data-sg-dongu-oge="kids"] a.sg-mega-serit__chip').count() === 3, 'kapı C: mega yuvasında Sağlık (6 mod chip) ↔ Kids (3 yaş chip) şeritleri');
+{ const g = async () => p.$eval('.mega [data-sg-dongu]', (y) => y.querySelector('.sg-dongu-aktif').dataset.sgDonguOge);
+  const once = await g(); await p.$eval('.mega [data-sg-dongu-git="kids"]', (b) => b.click()); const sonra = await g();
+  ok(once === 'saglik' && sonra === 'kids', `mega geçişi: ${once} → ${sonra} (nokta düğmesi)`); }
+ok(await p.locator('a.sg-fct-saglik[href="saglik-kalp.html"]').count() === 1 && await p.locator('a.sg-fct-saglik').count() === 5, 'tarifler.html Beslenme süzgeci: Glutensiz/Diyabete Uygun/Laktozsuz/Süt İçermez/Kalp Dostu → Sağlık modları');
 
 // Alt menü + logo rozeti + sticky
 await p.goto(T + 'saglik-colyak.html', { waitUntil: 'networkidle' });
@@ -70,14 +76,14 @@ const say = () => p.$$eval('[data-sg-izgara] .sg-tarif', (l) => l.filter((k) => 
 const once = await say();
 await p.click('[data-sg-daha]'); await p.waitForTimeout(100);
 ok(await say() === once + 12, `sayfalama: ${once} → +12`);
-await p.click('label.sg-secim:has(input[name="ikamesiz"])'); await p.waitForTimeout(150);
+await p.click('label.sg-satir:has(input[name="ikamesiz"])'); await p.waitForTimeout(150);
 const ik = await p.$$eval('[data-sg-izgara] .sg-tarif', (l) => l.filter((k) => !k.hidden).map((k) => +k.dataset.ikame));
 ok(ik.length > 0 && ik.every((x) => x === 0), `"Yalnız ikame gerektirmeyenler": ${ik.length} görünen kartın hepsi ikamesiz`);
 
 // Alerjen seçimi kalıcı + tüm listelere
 await p.goto(T + 'saglik-alerji.html', { waitUntil: 'networkidle' });
 const alOnce = +(await p.textContent('[data-sg-sonuc]')).match(/\d+/)[0];
-await p.click('label.sg-secim:has(input[value="sut"])'); await p.waitForTimeout(150);
+await p.click('label.sg-satir:has(input[value="sut"])'); await p.waitForTimeout(150);
 const alSonra = +(await p.textContent('[data-sg-sonuc]')).match(/\d+/)[0];
 const depo = await p.evaluate(() => { try { return localStorage.getItem('dadagastrosaglik.alerjen.v1'); } catch (e) { return 'HATA'; } });
 ok(alSonra < alOnce && depo === '["sut"]', `alerjen seçimi: ${alOnce} → ${alSonra} tarif, localStorage ${depo}`);
@@ -91,7 +97,7 @@ await p.evaluate(() => { try { localStorage.removeItem('dadagastrosaglik.alerjen
   const c2 = await tar.newContext(); await c2.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('kapalı'); } }); });
   const p2 = await c2.newPage(); const h2 = []; p2.on('pageerror', (e) => h2.push(e.message));
   await p2.goto(T + 'saglik-alerji.html', { waitUntil: 'networkidle' });
-  await p2.click('label.sg-secim:has(input[value="yumurta"])'); await p2.waitForTimeout(150);
+  await p2.click('label.sg-satir:has(input[value="yumurta"])'); await p2.waitForTimeout(150);
   ok(!h2.length && /Yumurta/.test(await p2.textContent('[data-sg-alerjen-ozet]')), 'localStorage kapalıyken alerjen seçimi çalışır (hata yok)');
   await c2.close();
 }
