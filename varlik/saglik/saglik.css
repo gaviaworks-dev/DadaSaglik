@@ -350,3 +350,36 @@ a.fct-row.sg-fct-saglik { color: inherit; text-decoration: none; }
 .pg-saglik .r-card:hover .r-media { transform: none; }
 .pg-saglik .r-card:hover .r-diet .rd-b { background: rgba(255, 255, 255, .94); }
 .pg-saglik .r-card .sg-tarif__bag::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+
+/* =====================================================================
+   Kurum renkleri (Beyar 2 Kas): mod sekmesinin SEÇİLİ hâli o modun öncü kurumunun kurumsal rengi (resmî logodan ölçüldü;
+   hex + kaynak tasks/saglik-kaynaklar.md "Kurum renkleri"). Sekme yapısı Gastro .disc-tabs/.dt aynen; yalnız seçili zemin + yazı (AA).
+   Ev ikonu (hub) ve Dolap "Modsuz" seçiliyken Gastro turuncusu kalır (data-renk yok).
+   Mod paleti (--r-k metin/vurgu · --r-a açık ton · --r-o orta ton) aynı kurum renginden türetilir: diğer vurgular uyumlu.
+   --sg-kurum dolgu, --sg-kurum-yazi dolgu üstü yazı (kontrast ≥ 4.5).
+   ===================================================================== */
+[data-renk="bugday"]  { --sg-kurum: #F7A600; --sg-kurum-yazi: #211E16; --r-k: #9E6A00; --r-a: #FEF4E0; --r-o: #FDEAC2; } /* Çölyakla Yaşam Derneği */
+[data-renk="mavi"]    { --sg-kurum: #00134E; --sg-kurum-yazi: #FFFFFF; --r-k: #00134E; --r-a: #E0E3EA; --r-o: #C2C6D5; } /* Türkiye Diyabet Vakfı */
+[data-renk="lila"]    { --sg-kurum: #DC911B; --sg-kurum-yazi: #211E16; --r-k: #9E6813; --r-a: #FBF2E4; --r-o: #F7E5C8; } /* AID */
+[data-renk="turkuaz"] { --sg-kurum: #15555B; --sg-kurum-yazi: #FFFFFF; --r-k: #15555B; --r-a: #E3EBEB; --r-o: #C7D6D8; } /* Alerji ile Yaşam Derneği */
+[data-renk="adacayi"] { --sg-kurum: #002581; --sg-kurum-yazi: #FFFFFF; --r-k: #002581; --r-a: #E0E5F0; --r-o: #C2CBE1; } /* Türk Gastroenteroloji Derneği */
+[data-renk="mercan"]  { --sg-kurum: #BF1A20; --sg-kurum-yazi: #FFFFFF; --r-k: #BF1A20; --r-a: #F7E4E4; --r-o: #F0C8C9; } /* Türk Kalp Vakfı */
+.disc-tabs .dt.active[data-renk] { background: var(--sg-kurum); color: var(--sg-kurum-yazi); }
+.sg-pagi .pg.is-active { background: var(--sg-kurum, var(--tomato)); border-color: var(--sg-kurum, var(--tomato)); color: var(--sg-kurum-yazi, #fff); }
+
+/* =====================================================================
+   GÖLGE YOK (Beyar 2 Kas): Health kartları, logo karoları, paneller ve sekme çubuğu box-shadow taşımaz; hover'da da gölge,
+   kalkma, büyüme yok. Çerçeve = Gastro kartı (1px var(--line)); köşe kendi değerinde (kart/panel 16 · karo 12).
+   Kapı: araclar/golge-kapisi.mjs (hesaplanan box-shadow = none, hover dahil).
+   ===================================================================== */
+:is(.sg-kart, .sg-cta-kart, .sg-secki-kutu, .sg-bilgi-kart, .sg-kimler__kart, .sg-sss__oge, .sg-filtre, .sg-alerjen-sec, .sg-dolap, .sg-bant,
+  .sg-logo-serit a, .sg-kurum-kutu__izgara a, .sg-riskli__oge, .sg-dkat, .sg-mz, .sg-bos, .sg-mega-serit, .sg-mod-sec__oge, .sg-icindekiler a, .sg-admin-not),
+:is(.sg-kart, .sg-cta-kart, .sg-secki-kutu, .sg-bilgi-kart, .sg-kimler__kart, .sg-sss__oge, .sg-bant, .sg-logo-serit a, .sg-kurum-kutu__izgara a,
+  .sg-riskli__oge, .sg-dkat, .sg-mz, .sg-mega-serit, .sg-mod-sec__oge, .sg-icindekiler a):hover {
+  box-shadow: none !important; transform: none !important; border: 1px solid var(--line, #ECECEC);
+}
+.sg-mz[aria-pressed="true"] { border-color: var(--r-k, var(--sg-tema)); }
+.sg-mod-kart__ikon, .sg-eslesme, .sg-sss__dugme[aria-expanded="true"] { box-shadow: none !important; }
+.pg-saglik .r-card, .pg-saglik .r-card:hover { box-shadow: none !important; transform: none !important; }
+.sg-ust, html.sg-ust-gizli .sg-ust, .sg-ust .disc-tabs, .sg-sekmeler, .sg-mod-bar__sekmeler { box-shadow: none !important; }
+.sg-secki-hero + section, .sg-secki-hero + .sg-sekme-bolum { box-shadow: none !important; }

@@ -111,8 +111,8 @@ export default async function (o) {
 
     const bilgiDosya = M.dosya.replace('.html', '-bilgi.html');
     const sekmeler = (aktif) => `<section class="sg-sekme-bolum" aria-label="${esc(M.ad)} sekmeleri"><div class="wrap"><nav class="disc-tabs sg-sekmeler">`
-      + `<a class="dt${aktif === 'tarif' ? ' active' : ''}" href="${M.dosya}" data-sg-sekme="tarif"${aktif === 'tarif' ? ' aria-current="page"' : ''}><i class="fa-solid fa-utensils" aria-hidden="true"></i>Tarifler (${liste.length})</a>`
-      + `<a class="dt${aktif === 'bilgi' ? ' active' : ''}" href="${bilgiDosya}" data-sg-sekme="bilgi"${aktif === 'bilgi' ? ' aria-current="page"' : ''}><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Bilgilendirme</a>`
+      + `<a class="dt${aktif === 'tarif' ? ' active' : ''}" data-renk="${M.renk}" href="${M.dosya}" data-sg-sekme="tarif"${aktif === 'tarif' ? ' aria-current="page"' : ''}><i class="fa-solid fa-utensils" aria-hidden="true"></i>Tarifler (${liste.length})</a>`
+      + `<a class="dt${aktif === 'bilgi' ? ' active' : ''}" data-renk="${M.renk}" href="${bilgiDosya}" data-sg-sekme="bilgi"${aktif === 'bilgi' ? ' aria-current="page"' : ''}><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Bilgilendirme</a>`
       + `</nav></div></section>`;
     const bilgiSonu = `<aside class="sg-dolap-bant" data-renk="${M.renk}"><div class="wrap"><a href="${M.dosya}">${ui('kitap', 22)}<span><b>${esc(o.SEKME[M.kod])}</b> moduna uygun ${liste.length} tarif</span><span class="sg-dolap-bant__git">Tariflere git ${ui('ok', 18)}</span></a></div></aside>`;
     // İki sekmenin içeriği iki sayfada da var; sekme tıklanınca sayfa yenilenmeden panel değişir (saglik.js sekmeKur), adres paylaşılabilir kalır

@@ -294,3 +294,15 @@ Menü sekmesi, "Modunu seç" listesi, mod kartları, chip'ler ve Dolap mod barı
 | Sütsüz | Alerji ile Yaşam Derneği | https://www.alerjidernegi.org.tr/wp-content/uploads/2023/04/cropped-Favicon-180x180.png |
 | Düşük FODMAP | Türk Gastroenteroloji Derneği | https://tgd.org.tr/wp-content/uploads/2022/05/favicon.ico (48×48; Türk Gastroenteroloji Vakfı'nın site ikonu yok) |
 | Kalp Dostu | Türk Kalp Vakfı | https://tkv.org.tr/apple-touch-icon.png |
+
+## Kurum renkleri (seçili mod sekmesi · Beyar 2 Kas)
+Renk, kurumun resmî logosundan (yerel ham kopya, aşağıdaki URL'den indirilmiş, değiştirilmemiş) piksel/SVG dolgu ölçümüyle alındı: en geniş alanı kaplayan doygun renk. Yazı rengi WCAG AA (≥ 4.5) için seçildi.
+| Mod | Öncü kurum | Renk | Seçili yazı (kontrast) | Kaynak logo |
+|---|---|---|---|---|
+| Glutensiz | Çölyakla Yaşam Derneği | #F7A600 | #211E16 (8.25) | https://colyak.org.tr/wp-content/uploads/2022/02/colyak-logo.png |
+| Kan Şekeri | Türkiye Diyabet Vakfı | #00134E | #FFFFFF (17.45) | https://www.turkdiab.org/images/turkiye_diyabet_vakfi_logo_TR.svg (SVG dolgusu) |
+| Alerjen | Türkiye Ulusal Alerji ve Klinik İmmünoloji Derneği (AID) | #DC911B | #211E16 (6.43) | https://www.aid.org.tr/wp-content/uploads/2021/08/AID-logo_kare.png |
+| Sütsüz | Alerji ile Yaşam Derneği | #15555B | #FFFFFF (8.46) | https://www.alerjidernegi.org.tr/wp-content/uploads/2023/03/aydlogo.png |
+| Düşük FODMAP | Türk Gastroenteroloji Derneği | #002581 | #FFFFFF (13.28) | https://tgd.org.tr/wp-content/uploads/2022/05/main-logo.svg (SVG dolgusu) |
+| Kalp Dostu | Türk Kalp Vakfı | #BF1A20 | #FFFFFF (6.21) | https://tkv.org.tr/apple-touch-icon.png |
+Metin/vurgu tonu (--r-k) beyaz üstünde AA tutmayan sarı/amberde koyultuldu: Glutensiz #9E6A00, Alerjen #9E6813.
