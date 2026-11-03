@@ -31,7 +31,7 @@
     var M = durum.mod && V && V.modlar[durum.mod];
     if (M) document.querySelector('.sg-sayfa').setAttribute('data-renk', M.renk); else document.querySelector('.sg-sayfa').removeAttribute('data-renk');
     $$('[data-sg-mod-bar] .sg-mod-bar__oge').forEach(function (b) { var on = b.getAttribute('data-mod') === (durum.mod || ''); b.setAttribute('aria-checked', String(on)); b.classList.toggle('active', on); b.tabIndex = b.getAttribute('data-mod') === (durum.mod || '') ? 0 : -1; });
-    $('[data-sg-mod-suzgec-metin]').textContent = M ? M.kisa + ' süzgeci · bu modda riskli malzemeleri dışlar' : (S.alerjenler().length ? 'Alerjen süzgeci · seçtiğin alerjenleri dışlar' : 'Mod süzgeci · önce bir mod seç');
+    $('[data-sg-mod-suzgec-metin]').textContent = M ? (M.kisa + ' süzgeci · bu modda riskli malzemeleri dışlar').split(' ').map(function (w) { return w ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1) : w; }).join(' ') : (S.alerjenler().length ? 'Alerjen süzgeci · seçtiğin alerjenleri dışlar' : 'Mod süzgeci · önce bir mod seç');
   }
   function kartCiz() {
     $$('.sg-mz', kok).forEach(function (b) {
