@@ -9,6 +9,12 @@
 //  L yüksek laktoz · F yüksek FODMAP · SEK eklenen şeker/şurup · GI yüksek glisemik nişasta · NA yüksek sodyum ·
 //  DY doymuş yağ yükü · SA sakatat · AL alkol
 // Kategori (Kiler): sebze, meyve, protein, tahil, sut, yag, baharat, sos, diger · ikon: Kids şeffaf ürün ikonu anahtarı (varsa)
+//
+// Kelime başı (4 Kas 2026): her kural yalnız bir KELİMENİN BAŞINDA eşleşir — desenin önüne `KELIME_BASI` konur
+// (Unicode harf farkında; JS `\b` ASCII'dir ve ş ğ ü ç ı ö'de çalışmaz). Sağ sınır konmaz: Türkçe ek alır (yumurtası,
+// muzlu, domatesli). Birleşik kelimenin içinde geçen ad gerekiyorsa alternatif açıkça yazılır (`\p{L}*ciğer`,
+// `acıbadem`). Eşleşen kelimeyi BÜTÜN kelime olarak içeren çakışmalar (kefir limonu, şeker fasulyesi, koç yumurtası)
+// genel kuraldan ÖNCE gelen özgül kuralla çözülür. Desenlerde `\p{..}` kullanılabilir (kurallar `u` kipinde derlenir).
 
 export const ALERJENLER = [
   ['G', 'gluten', 'Gluten (buğday, arpa, çavdar)'],
@@ -26,31 +32,57 @@ export const ALERJENLER = [
   ['SF', 'sulfit', 'Sülfit'],
 ];
 
+export const KELIME_BASI = '(?<![\\p{L}\\p{M}])';
+
+// Balık adları (balık kuralı ve füme balık kuralı aynı listeyi kullanır).
+const BALIK = '\\p{L}*balı[kğ]|hamsi|levrek|çipura|palamut|kalkan|mezgit|merluza|sazan|pisi|vatoz|mercan|mırmır|ton balığı|alabalık|somon|uskumru|ringa|sardalya|lüfer|istavrit|morina|torik|kefal|barbun(?!ya)|çiroz|sinarit|lakerda|papalina|haddock';
+const FUME = '(füme|tütsülenmiş|tütsülü)';
+// İşlenmiş balık (füme · tuzlu · turşu · konserve): balık adıyla birlikte geçerse B P NA.
+const ISLENMIS_BALIK = '(füme|tütsülenmiş|tütsülü|tuzlu|turşu|konserve)';
+
 // [düzenli ifade, kategori, bayraklar, ikon]
 const R = [
   // — su, buz
-  [/^(su|soğuk su|sıcak su|ılık su|buz|soda)$/, 'diger', ''],
+  [/^(su|soğuk su|sıcak su|ılık su|kaynar su|buz|soda)$/, 'diger', ''],
+  // — ek alerjen (4 Kas 2026): adın taşıdığı alerjeni ilk eşleşen başka kural düşürmesin (birleşik değer = iki kuralın birleşimi)
+  [/(çikolata|kakao)(lı|li|lu|lü) (süt|yoğurt)/, 'sut', 'S L SEK P SK YF SO'],
+  [/(fındık|ceviz|badem|kaju|fıstık)(lı|li|lu|lü) (süt|yoğurt)/, 'sut', 'S L SK'],
+  [/(susam|tahin)(lı|li|lu|lü) (süt|yoğurt)/, 'sut', 'S L SU'],
+  [/(bal|şeker|pekmez|karamel)(lı|li|lu|lü) (süt|yoğurt)/, 'sut', 'S L SEK'],
+  [/\p{L}+(lı|li|lu|lü) süt|(inek|koyun|keçi|manda|deve) sütü/u, 'sut', 'S L', 'sut'],
+  [/\p{L}+(lı|li|lu|lü) yoğurt/u, 'sut', 'S L', 'yogurt'],
+  [/\p{L}+(lı|li|lu|lü) (ayran|kefir)/u, 'sut', 'S L NA'],
+  [/yoğurtlu sos/, 'sos', 'S L P NA F SEK'],
+  [/(çikolata|kakao)\p{L}* dondurma/u, 'sut', 'S L SEK DY P SK YF SO'],
+  [/(fındık|ceviz|badem|kaju|fıstık)\p{L}* dondurma/u, 'sut', 'S L SEK DY SK'],
+  [/dondurma/, 'sut', 'S L SEK DY'],
+  [/yumurta eriştesi|yumurtalı (erişte|makarna)/, 'tahil', 'G F GI P Y', 'makarna'],
+  [/çikolatalı bisküvi/, 'tahil', 'G F P GI S SEK SK YF SO'],
+  [/fındık krema/, 'diger', 'SK S L DY'],
+  [/hindistan ?cevizi şeker/, 'diger', 'SK SEK'],
+  [/hindistan ?cevizi jöle/, 'diger', 'SK SEK P F'],
+  [/balık suyu/, 'diger', 'B P NA KE F'],
   // — hazır soslar / ezmeler / karışımlar (paketli; içerik markaya göre değişir)
   [/soya sosu/, 'sos', 'SO G P NA'],
   [/balık sosu/, 'sos', 'B P NA'],
   [/hoisin/, 'sos', 'SO G P NA SEK F SU'],
-  [/sriracha|acı sos|salsa|ketçap|tartar sos|yoğurtlu sos|kırmızı meyve sosu|domates sos/, 'sos', 'P NA F SEK'],
+  [/sriracha|acı sos|salsa|ketçap|tartar sos|kırmızı meyve sosu|domates sos/, 'sos', 'P NA F SEK'],
   [/mayonez/, 'sos', 'Y H P NA'],
   [/dijon hardal|^hardal$/, 'sos', 'H P NA SF'],
   [/hardal tohumu/, 'baharat', 'H'],
-  [/gochujang|doubanjiang|acı fasulye ezmesi/, 'sos', 'SO G P NA F'],
+  [/gochujang|doubanjiang|acı fasulye ezmesi|doenjang|taucu|fermente soya/, 'sos', 'SO G P NA F'],
   [/köri ezmesi|massaman/, 'sos', 'P NA F K B'],
   [/harissa|acı biber ezmesi|acı biber salçası|aji amarillo/, 'sos', 'P NA F'],
   [/wasabi|kren|yaban turpu/, 'sos', 'P H'],
   [/fıstık ezmesi|yer fıstığı ezmesi/, 'diger', 'YF P'],
   [/karaciğer ezmesi|pate/, 'protein', 'P SA DY NA S'],
   [/garam masala|köri tozu|ras el hanout|fajita|berbere|beş baharat|biryani|nihari|pav bhaji|kmeli|baharat karışımı/, 'baharat', 'P F'],
-  [/(et|tavuk|sebze|balık) suyu/, 'diger', 'P NA KE F'],
+  [/(et|eti|tavuk|sebze|balık|dana|kuzu|kemik) suyu/, 'diger', 'P NA KE F'],
   [/kabartma tozu/, 'diger', 'P G'],
   [/karbonat/, 'diger', 'NA'],
   [/[iı]nstant maya|kuru maya|yaş maya|^maya$/, 'diger', 'P'],
   [/jelatin/, 'diger', 'P'],
-  [/vanilya/, 'baharat', 'P'],
+  [/vanilya(?!lı)/, 'baharat', 'P'],
   // — un, ekmek, tahıl (gluten)
   [/badem unu/, 'tahil', 'SK P'],
   [/nohut unu/, 'tahil', 'P F'],
@@ -84,35 +116,45 @@ const R = [
   [/^bal$/, 'diger', 'SEK F', 'bal'],
   [/pekmez|hurma şurubu|şurup/, 'diger', 'SEK F'],
   [/reçel|jöle/, 'diger', 'SEK P F'],
-  [/kondanse/, 'sut', 'S L SEK P'],
-  [/şeker/, 'diger', 'SEK', 'seker'],
+  [/kondanse|yoğunlaştırılmış süt/, 'sut', 'S L SEK P'],
+  [/şeker fasulye/, 'tahil', 'F'],
+  [/şeker elma/, 'meyve', 'F', 'elma'],
+  [/şeker mısır/, 'sebze', 'F'],
+  [/şeker(?!siz)/, 'diger', 'SEK', 'seker'],
   [/bitter çikolata|çikolata/, 'diger', 'S SEK P SK YF SO'],
   [/kakao/, 'diger', 'P', 'kakao-cikolata'],
   [/keçiboynuzu/, 'diger', 'F'],
   // — süt ürünleri
-  [/hindistan cevizi sütü/, 'diger', 'SK P DY'],
-  [/hindistan cevizi rendesi/, 'diger', 'SK DY'],
+  [/hindistan ?cevizi sütü/, 'diger', 'SK P DY'],
+  [/hindistan ?cevizi rendesi/, 'diger', 'SK DY'],
+  [/hindistan ?cevizi/, 'diger', 'SK DY'],
   [/tereyağı/, 'sut', 'S DY', 'tereyagi'],
   [/kaymak|krema|mascarpone|krem peynir/, 'sut', 'S L DY'],
+  [/(kefir|kafir) limonu yaprağı/, 'baharat', ''],
+  [/(kefir|kafir) limonu/, 'meyve', '', 'limon'],
   [/ayran|kefir/, 'sut', 'S L NA'],
   [/yoğurt/, 'sut', 'S L', 'yogurt'],
   [/^ılık süt$|^süt$|yoğun süt/, 'sut', 'S L', 'sut'],
-  [/lor|süzme lor|taze peynir|tuzsuz taze peynir|keçi peyniri/, 'sut', 'S L', 'lor-peyniri'],
-  [/kaşar|cheddar|çedar|gravyer|halumi|ezine|beyaz peynir|süzme peynir/, 'sut', 'S DY NA', 'kasar'],
+  [/lor|süzme lor|taze peynir|tuzsuz (taze )?peynir|keçi peyniri/, 'sut', 'S L', 'lor-peyniri'],
+  [/kaşar|cheddar|çedar|gravyer|halumi|ezine|beyaz peynir|süzme peynir|muzarella|mozzarella|mozarella/, 'sut', 'S DY NA', 'kasar'],
   // — yumurta
+  [/koç yumurta/, 'protein', 'SA DY'],
+  [/balık yumurta/, 'protein', 'B Y'],
   [/yumurta/, 'protein', 'Y', 'yumurta'],
   // — işlenmiş et, sakatat
-  [/sucuk|sosis|jambon|pastırma|bastırma|kavurma/, 'protein', 'P NA DY SF'],
-  [/ciğer|böbreği/, 'protein', 'SA DY'],
-  [/kuyruk yağı/, 'yag', 'DY'],
+  [new RegExp(`sucu[kğ]|şarküteri|sosis|jambon|pastırma|bastırma|kavurma|salam(?!ura)|pepperoni|peperoni|beyk[ıo]n|bacon|pancetta|prosciutto|chorizo|${FUME} (et|dana|kuzu|sığır|hindi|tavuk|kaz|ördek|kaburga|bonfile)|(dana|kuzu|sığır|hindi|tavuk|kaz|ördek) ${FUME}`, 'u'), 'protein', 'P NA DY SF'],
+  [/balı(k|ğı) \p{L}*ciğer/u, 'protein', 'B SA DY'],
+  [/\p{L}*ciğer|böbre[kğ](?! fasulye|\p{L}* için)|işkembe|yüre[kğ]|beyin|beyni|paça(?!nga)|kelle|şirden|[mb]umbar|bağırsa[kğ]|uykuluk|salgı bezi|kokoreç|dalak|ili[kğ](?!siz)|kemik iliği|(dana|kuzu|sığır|koyun|keçi|tavuk|hindi) (dili?|kalbi|ayağı|damarı|yanak|yanağı)(?!\p{L})/u, 'protein', 'SA DY'],
+  [/kuyruk yağı|iç yağı/, 'yag', 'DY'],
   // — et, tavuk, balık, deniz ürünü
   [/karides/, 'protein', 'K'],
   [/midye|kalamar|ahtapot|mürekkep balığı/, 'protein', 'M'],
   [/ton balığı konservesi/, 'protein', 'B P NA'],
-  [/füme/, 'protein', 'B P NA'],
+  [new RegExp(`${ISLENMIS_BALIK} (.* )?(${BALIK})|(${BALIK})( .*)? ${ISLENMIS_BALIK}|tuzu .*(${BALIK})|(${BALIK}).* tuzu|çiroz|lakerda`, 'u'), 'protein', 'B P NA'],
+  [new RegExp(`${FUME} (toz |pul )?(kırmızı (toz )?biber|paprika|toz biber|pul biber|biber)`, 'u'), 'baharat', '', 'aci-baharat'],
   [/kızarmış hamsi/, 'protein', 'B G'],
   [/somon/, 'protein', 'B', 'somon'],
-  [/balık|hamsi|levrek|çipura|palamut|kalkan|mezgit|merluza|sazan|pisi|vatoz|mercan|mırmır|ton balığı|alabalık/, 'protein', 'B'],
+  [new RegExp(BALIK, 'u'), 'protein', 'B'],
   [/kuzu kaburga|kaburga|yağlı dana kıyma/, 'protein', 'DY'],
   [/kıyma/, 'protein', '', 'kiyma'],
   [/demirhindi/, 'sos', 'F'],
@@ -124,7 +166,7 @@ const R = [
   [/yer fıstığı/, 'diger', 'YF'],
   [/çam fıstığı|dolmalık fıstık/, 'diger', 'SK'],
   [/antep fıstığı/, 'diger', 'SK F'],
-  [/badem|fındık|ceviz/, 'diger', 'SK', 'butun-kuruyemis'],
+  [/badem|acıbadem|fındık|ceviz/, 'diger', 'SK', 'butun-kuruyemis'],
   [/kestane/, 'diger', 'SK F'],
   [/tahin/, 'diger', 'SU', 'tahin'],
   [/susam yağı|susamyağı/, 'yag', 'SU'],
@@ -140,7 +182,8 @@ const R = [
   [/kırmızı mercimek/, 'tahil', 'F', 'kirmizi-mercimek'],
   [/mercimek/, 'tahil', 'F'],
   [/fasulye filizi/, 'sebze', ''],
-  [/fasulye|barbunya|bakla|azuki|pinto/, 'tahil', 'F'],
+  [/soya fasulye|edamame/, 'tahil', 'SO F'],
+  [/fasulye|barbunya|bakla|acıbakla|azuki|pinto/, 'tahil', 'F'],
   [/bezelye/, 'sebze', 'F', 'bezelye'],
   // — soğan, sarımsak
   [/frenk soğanı/, 'baharat', ''],
@@ -172,13 +215,13 @@ const R = [
   [/ıspanak/, 'sebze', '', 'ispanak'],
   [/salatalık/, 'sebze', '', 'salatalik'],
   [/marul|roka|yeşillik|semizotu|radika|pazı|kara lahana|ebegümeci|deniz börülcesi/, 'sebze', ''],
-  [/lahana/, 'sebze', ''],
+  [/lahana|karalahana/, 'sebze', ''],
   [/kohlrabi|turp/, 'sebze', ''],
   [/bamya/, 'sebze', ''],
   [/taze barbunya/, 'sebze', 'F'],
   [/kırmızı ve yeşil biber|dolmalık biber|kapya|sivri biber|yeşil biber|kırmızı biber$|^biber$|sarı dolmalık|acı biber$|acı (yeşil|sarı|kırmızı) biber|taze acı biber|yeşil acı biber|kırmızı acı biber|kırmızı dolmalık biber|kırmızı kapya biber|yeşil sivri biber/, 'sebze', '', 'biber'],
   // — meyve
-  [/kuru (erik|kayısı|incir|üzüm)|kuş üzümü|kuru longan/, 'meyve', 'F SF SEK'],
+  [/kuru (erik|kayısı|incir|üzüm)|kuş üzümü|kuşüzümü|kuru longan/, 'meyve', 'F SF SEK'],
   [/trabzon hurması/, 'meyve', ''],
   [/hurma/, 'meyve', 'F SEK'],
   [/ayva/, 'meyve', 'F', 'ayva'],
@@ -224,14 +267,29 @@ const R = [
   [/zencefil|zerdeçal|karanfil|kakule|muskat|yeni ?bahar|yıldız anason|safran|sumak|sichuan|beyaz biber|karabiber|toz biber|pul biber|biber tozu|kırmızı toz biber|ancho|guajillo|kuru acı biber|kuru kırmızı biber|kurutulmuş kırmızı biber|portakal kabuğu|limon kabuğu|ananas kabuğu/, 'baharat', '', 'aci-baharat'],
 ];
 
+// Derlenmiş tablo: her desen `KELIME_BASI` ile başlar ve `u` kipindedir. Üretici (Gastro `scripts/alan/uret-kural-tablosu.mjs`) bunu okur.
+export const KURALLAR = R.map(([re, kategori, b, ikon]) => [new RegExp(`${KELIME_BASI}(?:${re.source})`, 'u'), kategori, b, ikon || null]);
+
 const _norm = (s) => String(s || '').normalize('NFC').toLocaleLowerCase('tr').replace(/̇/g, '').replace(/\s+/g, ' ').trim();
 export const normal = _norm;
 
-/** Ad → { ad, kategori, bayrak:Set, ikon, belirsiz } */
+// Eşleşme adı (Beyar kararı 4 Kas 2026): parantez içi not asıl malzemeyi ezmez, ilk malzeme adı esastır. Normal adın
+// İLK "(" işaretinden önceki kısmı (sondaki boşluk/virgül/noktalı virgül/iki nokta/nokta atılarak) sınıflandırılır;
+// kapanmamış parantez de aynı kuralla kesilir. Parantez başta ya da önceki kısım boşsa tam ad denenir (sıkı taraf).
+// `ad` alanı değişmez (normal ad); eşleşilen ad ayrıca `eslesme_ad` alanındadır.
+export function eslesmeAdi(n) {
+  const i = n.indexOf('(');
+  if (i <= 0) return n;
+  const on = n.slice(0, i).replace(/[ ,;:.]+$/, '');
+  return on === '' ? n : on;
+}
+
+/** Ad → { ad, eslesme_ad, kategori, bayrak:Set, ikon, belirsiz } */
 export function siniflandir(ad) {
   const n = _norm(ad);
-  for (const [re, kategori, b, ikon] of R) {
-    if (re.test(n)) return { ad: n, kategori, bayrak: new Set(b.split(/\s+/).filter(Boolean)), ikon: ikon || null, belirsiz: false };
+  const e = eslesmeAdi(n);
+  for (const [re, kategori, b, ikon] of KURALLAR) {
+    if (re.test(e)) return { ad: n, eslesme_ad: e, kategori, bayrak: new Set(b.split(/\s+/).filter(Boolean)), ikon: ikon || null, belirsiz: false };
   }
-  return { ad: n, kategori: null, bayrak: new Set(), ikon: null, belirsiz: true };
+  return { ad: n, eslesme_ad: e, kategori: null, bayrak: new Set(), ikon: null, belirsiz: true };
 }
